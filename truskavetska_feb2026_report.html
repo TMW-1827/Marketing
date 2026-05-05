@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Трускавецька — Аналіз продажів, Лютий 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f0f4f8;
+    --surface: #ffffff;
+    --surface2: #eaf1f8;
+    --blue-deep: #0a2a4a;
+    --blue-mid: #1565c0;
+    --blue-bright: #1e88e5;
+    --blue-light: #90caf9;
+    --teal: #00acc1;
+    --green: #43a047;
+    --red: #e53935;
+    --amber: #fb8c00;
+    --text-primary: #0a2a4a;
+    --text-secondary: #546e7a;
+    --text-muted: #90a4ae;
+    --border: #cfd8dc;
+    --shadow: 0 2px 16px rgba(10,42,74,0.09);
+    --shadow-lg: 0 8px 40px rgba(10,42,74,0.14);
+    --radius: 16px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Manrope', sans-serif; background: var(--bg); color: var(--text-primary); min-height: 100vh; }
+
+  .header {
+    background: linear-gradient(135deg, #0a2a4a 0%, #1565c0 60%, #0097a7 100%);
+    position: relative; overflow: hidden; padding: 36px 32px 32px;
+  }
+  .header::before { content:''; position:absolute; top:-60px; right:-80px; width:340px; height:340px; border-radius:50%; background:rgba(255,255,255,0.04); }
+  .header::after  { content:''; position:absolute; bottom:-40px; left:40px; width:200px; height:200px; border-radius:50%; background:rgba(255,255,255,0.03); }
+  .header-inner { max-width:1200px; margin:0 auto; position:relative; z-index:1; display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:20px; }
+  .header-brand { display:flex; align-items:center; gap:14px; }
+  .brand-icon { width:52px; height:52px; background:rgba(255,255,255,0.15); border:2px solid rgba(255,255,255,0.3); border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:26px; }
+  .brand-text h1 { font-family:'Bebas Neue',sans-serif; font-size:clamp(22px,4vw,38px); color:#fff; letter-spacing:2px; line-height:1; }
+  .brand-text p  { font-size:12px; color:rgba(255,255,255,0.65); letter-spacing:1.5px; text-transform:uppercase; margin-top:3px; }
+  .header-meta { text-align:right; }
+  .header-meta .period { font-family:'Bebas Neue',sans-serif; font-size:clamp(28px,5vw,52px); color:rgba(255,255,255,0.9); line-height:1; letter-spacing:3px; }
+  .header-meta .year   { font-size:13px; color:rgba(255,255,255,0.55); letter-spacing:2px; text-transform:uppercase; }
+
+  .wave-divider { background:linear-gradient(135deg,#0a2a4a 0%,#1565c0 60%,#0097a7 100%); line-height:0; }
+  .wave-divider svg { display:block; width:100%; }
+
+  .container { max-width:1200px; margin:0 auto; padding:32px 16px 48px; }
+
+  /* KPI */
+  .kpi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin-bottom:32px; }
+  .kpi-card { background:var(--surface); border-radius:var(--radius); padding:22px 20px; box-shadow:var(--shadow); border-top:4px solid transparent; transition:transform 0.2s,box-shadow 0.2s; animation:fadeUp 0.5s ease both; }
+  .kpi-card:hover { transform:translateY(-3px); box-shadow:var(--shadow-lg); }
+  .kpi-card.blue { border-top-color:var(--blue-bright); }
+  .kpi-card.teal { border-top-color:var(--teal); }
+  .kpi-card.green { border-top-color:var(--green); }
+  .kpi-label { font-size:11px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:8px; }
+  .kpi-value { font-family:'Bebas Neue',sans-serif; font-size:clamp(26px,4vw,38px); line-height:1; color:var(--text-primary); letter-spacing:1px; }
+  .kpi-sub { font-size:12px; color:var(--text-secondary); margin-top:5px; display:flex; align-items:center; gap:5px; }
+  .badge { display:inline-flex; align-items:center; gap:3px; padding:2px 8px; border-radius:20px; font-size:12px; font-weight:700; }
+  .badge.up   { background:#e8f5e9; color:var(--green); }
+  .badge.down { background:#fce4ec; color:var(--red); }
+  .badge.neutral { background:#e3f2fd; color:var(--blue-mid); }
+
+  .section-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(18px,3vw,26px); letter-spacing:2px; color:var(--blue-deep); margin-bottom:16px; display:flex; align-items:center; gap:10px; }
+  .section-title::after { content:''; flex:1; height:2px; background:linear-gradient(to right,var(--blue-light),transparent); border-radius:2px; }
+
+  /* BAR */
+  .chart-section { background:var(--surface); border-radius:var(--radius); padding:24px; box-shadow:var(--shadow); margin-bottom:24px; animation:fadeUp 0.5s ease 0.15s both; }
+  .chart-title { font-size:14px; font-weight:700; color:var(--text-secondary); letter-spacing:0.5px; text-transform:uppercase; margin-bottom:20px; }
+  .bar-list { display:flex; flex-direction:column; gap:10px; }
+  .bar-item { display:grid; grid-template-columns:130px 1fr 110px; align-items:center; gap:10px; }
+  .bar-label { font-size:13px; font-weight:600; color:var(--text-primary); text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .bar-track { height:22px; background:var(--surface2); border-radius:4px; overflow:hidden; }
+  .bar-fill { height:100%; border-radius:4px; background:linear-gradient(90deg,#1565c0,#42a5f5); transition:width 1s cubic-bezier(0.4,0,0.2,1); }
+  .bar-fill.hl { background:linear-gradient(90deg,#00838f,#26c6da); }
+  .bar-value { font-size:12px; font-weight:700; color:var(--text-secondary); text-align:right; }
+
+  /* DYNAMICS */
+  .dynamics-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:12px; margin-bottom:24px; }
+  .dyn-card { background:var(--surface); border-radius:var(--radius-sm); padding:14px 12px; box-shadow:var(--shadow); text-align:center; animation:fadeUp 0.5s ease 0.2s both; transition:transform 0.15s,box-shadow 0.15s; }
+  .dyn-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-lg); }
+  .dyn-card .name { font-size:12px; font-weight:700; color:var(--text-secondary); margin-bottom:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .dyn-card .delta { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:1px; line-height:1; }
+  .dyn-card .delta.up { color:var(--green); }
+  .dyn-card .delta.down { color:var(--red); }
+  .dyn-card .delta.flat { color:var(--amber); }
+  .dyn-card .volume { font-size:11px; color:var(--text-muted); margin-top:4px; }
+
+  /* SHARE */
+  .share-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(155px,1fr)); gap:14px; margin-bottom:24px; }
+  .share-card { background:var(--surface); border-radius:var(--radius); padding:18px 14px; box-shadow:var(--shadow); text-align:center; animation:fadeUp 0.5s ease 0.25s both; transition:transform 0.15s,box-shadow 0.15s; }
+  .share-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-lg); }
+  .share-card .sname { font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:10px; }
+  .gauge-wrap { position:relative; width:80px; height:80px; margin:0 auto 8px; }
+  .gauge-wrap svg { width:80px; height:80px; }
+  .gauge-text { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-family:'Bebas Neue',sans-serif; font-size:18px; color:var(--text-primary); letter-spacing:1px; line-height:1; }
+  .share-vol { font-size:11px; color:var(--text-secondary); font-weight:600; }
+
+  /* TABLE */
+  .ytd-table { width:100%; border-collapse:collapse; font-size:13px; }
+  .ytd-table thead th { background:var(--blue-deep); color:rgba(255,255,255,0.85); padding:10px 12px; text-align:center; font-size:11px; letter-spacing:1px; text-transform:uppercase; font-weight:600; }
+  .ytd-table thead th:first-child { text-align:left; }
+  .ytd-table tbody tr:nth-child(even) { background:var(--surface2); }
+  .ytd-table tbody tr { background:var(--surface); transition:background 0.15s; }
+  .ytd-table tbody tr:hover { background:#e3f2fd; }
+  .ytd-table td { padding:9px 12px; text-align:center; border-bottom:1px solid var(--border); font-weight:500; }
+  .ytd-table td:first-child { text-align:left; font-weight:700; }
+  .cell-up { color:var(--green); font-weight:700; }
+  .cell-down { color:var(--red); font-weight:700; }
+  .table-wrap { background:var(--surface); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow); overflow-x:auto; }
+
+  /* INSIGHTS */
+  .insights-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; margin-bottom:32px; }
+  .insight-card { background:var(--surface); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow); border-left:5px solid var(--blue-bright); animation:fadeUp 0.5s ease 0.35s both; }
+  .insight-card.success { border-left-color:var(--green); }
+  .insight-card.warning { border-left-color:var(--red); }
+  .insight-card.info    { border-left-color:var(--teal); }
+  .insight-card h3 { font-size:13px; font-weight:800; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; color:var(--text-secondary); }
+  .insight-card p  { font-size:13px; line-height:1.6; color:var(--text-primary); }
+  .insight-card ul { list-style:none; }
+  .insight-card ul li { font-size:13px; padding:3px 0; color:var(--text-primary); display:flex; align-items:center; gap:6px; }
+  .insight-card ul li::before { content:'▸'; font-size:10px; }
+  .insight-card.success ul li::before { color:var(--green); }
+  .insight-card.warning ul li::before { color:var(--red); }
+  .insight-card ul li::before { color:var(--blue-bright); }
+  .insight-card.success ul li::before { color:var(--green); }
+  .insight-card.warning ul li::before { color:var(--red); }
+
+  /* TREND */
+  .trend-section { background:var(--surface); border-radius:var(--radius); padding:24px; box-shadow:var(--shadow); margin-bottom:24px; animation:fadeUp 0.5s ease 0.2s both; }
+  .trend-hint { font-size:12px; color:var(--text-muted); margin-bottom:16px; }
+  .trend-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:16px; }
+  .trend-item { background:var(--surface2); border-radius:var(--radius-sm); padding:14px; transition:box-shadow 0.15s; position:relative; }
+  .trend-item:hover { box-shadow:var(--shadow-lg); }
+  .trend-item .tname { font-size:12px; font-weight:700; color:var(--text-secondary); margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; }
+  .trend-item .tcur  { font-family:'Bebas Neue',sans-serif; font-size:20px; }
+  .trend-item svg { display:block; width:100%; overflow:visible; }
+  .trend-item .tfoot { font-size:11px; color:var(--text-secondary); margin-top:4px; }
+
+  /* TOOLTIP */
+  .spark-tooltip {
+    position: fixed;
+    background: var(--blue-deep);
+    color: #fff;
+    padding: 9px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.12s;
+    z-index: 9999;
+    white-space: nowrap;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.35);
+    transform: translate(-50%, calc(-100% - 12px));
+  }
+  .spark-tooltip.visible { opacity: 1; }
+  .spark-tooltip::after {
+    content: '';
+    position: absolute;
+    bottom: -7px; left: 50%;
+    transform: translateX(-50%);
+    border: 7px solid transparent;
+    border-bottom: none;
+    border-top-color: var(--blue-deep);
+  }
+  .tt-month { font-size:10px; opacity:0.65; letter-spacing:1.2px; text-transform:uppercase; margin-bottom:2px; }
+  .tt-val   { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:1px; line-height:1; }
+  .tt-unit  { font-size:10px; opacity:0.6; margin-top:1px; }
+
+  .footer { background:var(--blue-deep); color:rgba(255,255,255,0.45); text-align:center; padding:20px; font-size:11px; letter-spacing:1px; }
+
+  @keyframes fadeUp { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
+
+  @media (max-width:600px) {
+    .header { padding:24px 16px 20px; }
+    .container { padding:20px 12px 40px; }
+    .bar-item { grid-template-columns:85px 1fr 75px; }
+    .kpi-grid { grid-template-columns:1fr 1fr; }
+    .dynamics-grid { grid-template-columns:repeat(3,1fr); }
+    .share-grid { grid-template-columns:repeat(3,1fr); }
+    .ytd-table { font-size:11px; }
+    .ytd-table td, .ytd-table thead th { padding:7px 8px; }
+    .trend-grid { grid-template-columns:1fr 1fr; }
+  }
+  @media (max-width:380px) {
+    .dynamics-grid { grid-template-columns:repeat(2,1fr); }
+    .share-grid { grid-template-columns:repeat(2,1fr); }
+    .trend-grid { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="brand-icon">🍶</div>
+      <div class="brand-text">
+        <h1>Трускавецька</h1>
+        <p>Аналіз вторинних продажів &bull; 23 мережі</p>
+      </div>
+    </div>
+    <div class="header-meta">
+      <div class="period">ЛЮТИЙ</div>
+      <div class="year">2026 рік &bull; Дані в пляшках</div>
+    </div>
+  </div>
+</div>
+<div class="wave-divider">
+  <svg viewBox="0 0 1200 50" preserveAspectRatio="none" height="40">
+    <path d="M0,30 C200,55 400,5 600,30 C800,55 1000,5 1200,30 L1200,0 L0,0 Z" fill="url(#hg)"/>
+    <defs>
+      <linearGradient id="hg" x1="0" x2="1" y1="0" y2="0">
+        <stop offset="0%"   stop-color="#0a2a4a"/>
+        <stop offset="60%"  stop-color="#1565c0"/>
+        <stop offset="100%" stop-color="#0097a7"/>
+      </linearGradient>
+    </defs>
+  </svg>
+</div>
+
+<!-- global tooltip -->
+<div class="spark-tooltip" id="sparkTooltip">
+  <div class="tt-month" id="ttMonth"></div>
+  <div class="tt-val"   id="ttVal"></div>
+  <div class="tt-unit">пляшок</div>
+</div>
+
+<div class="container">
+
+  <!-- KPI -->
+  <div class="kpi-grid">
+    <div class="kpi-card blue" style="animation-delay:.05s">
+      <div class="kpi-label">Продажі Лютий</div>
+      <div class="kpi-value">3,22 млн</div>
+      <div class="kpi-sub"><span class="badge down">▼ 8%</span> vs Січень &bull; пляшок</div>
+    </div>
+    <div class="kpi-card teal" style="animation-delay:.1s">
+      <div class="kpi-label">Частка в категорії</div>
+      <div class="kpi-value">10,2%</div>
+      <div class="kpi-sub"><span class="badge down">▼ 0,5 п.п.</span> vs Січень (10,7%)</div>
+    </div>
+    <div class="kpi-card green" style="animation-delay:.15s">
+      <div class="kpi-label">YTD 2026 vs 2025</div>
+      <div class="kpi-value">+30%</div>
+      <div class="kpi-sub"><span class="badge up">▲</span> 6,72 млн vs 5,17 млн бут.</div>
+    </div>
+    <div class="kpi-card blue" style="animation-delay:.2s">
+      <div class="kpi-label">Без АТБ (лют.)</div>
+      <div class="kpi-value">753 тис</div>
+      <div class="kpi-sub"><span class="badge up">▲ 3%</span> vs Січень &bull; пляшок</div>
+    </div>
+    <div class="kpi-card green" style="animation-delay:.25s">
+      <div class="kpi-label">Топ-лідер лют.</div>
+      <div class="kpi-value">АТБ</div>
+      <div class="kpi-sub">2,47 млн бут. &bull; <span class="badge neutral">17,1%</span></div>
+    </div>
+    <div class="kpi-card teal" style="animation-delay:.3s">
+      <div class="kpi-label">Найбільший ріст</div>
+      <div class="kpi-value">Таврія</div>
+      <div class="kpi-sub"><span class="badge up">▲ 110%</span> MoM</div>
+    </div>
+  </div>
+
+  <div class="section-title">📊 Обсяги продажів по мережах — Лютий 2026</div>
+  <div class="chart-section">
+    <div class="chart-title">Продані пляшки Трускавецької &bull; сортування: найбільше → найменше</div>
+    <div class="bar-list" id="barChart"></div>
+  </div>
+
+  <div class="section-title">📈 Динаміка лютий vs. січень</div>
+  <div class="dynamics-grid" id="dynamicsGrid"></div>
+
+  <div class="section-title">🥧 Частка Трускавецької в категорії</div>
+  <div class="share-grid" id="shareGrid"></div>
+
+  <div class="section-title">💡 Ключові висновки</div>
+  <div class="insights-grid">
+    <div class="insight-card success">
+      <h3>🚀 Лідери зростання (лютий)</h3>
+      <ul>
+        <li>Таврія +110% → 30 672 бут.</li>
+        <li>Велика Кишеня +80% → 25 824 бут.</li>
+        <li>Експансія +84% → 15 133 бут.</li>
+        <li>Делві +77% → 10 410 бут.</li>
+        <li>Обжора +74% → 5 106 бут.</li>
+        <li>Метро +41%, Новус +42%</li>
+      </ul>
+    </div>
+    <div class="insight-card warning">
+      <h3>⚠️ Мережі зі спадом</h3>
+      <ul>
+        <li>Варус −41% → 3 957 бут. (мінімум)</li>
+        <li>Фора −31% → 79 478 бут.</li>
+        <li>Рукавичка −30% → 42 261 бут.</li>
+        <li>АТБ −11% → 2 469 074 бут.</li>
+        <li>Сільпо −11% → 222 967 бут.</li>
+        <li>Категорія загалом −4%</li>
+      </ul>
+    </div>
+    <div class="insight-card info">
+      <h3>📅 YTD 2026 vs 2025 — 2 місяці</h3>
+      <ul>
+        <li>Загалом +30% (6,72 vs 5,17 млн бут.)</li>
+        <li>АТБ +23% (5,23 vs 4,26 млн бут.)</li>
+        <li>Сільпо +86% (474 vs 255 тис бут.)</li>
+        <li>Фора +140% (195 vs 81 тис бут.)</li>
+        <li>Сім23 +102% (68 vs 33 тис бут.)</li>
+        <li>Без АТБ +64%</li>
+      </ul>
+    </div>
+    <div class="insight-card">
+      <h3>🔑 Стратегічні спостереження</h3>
+      <p>Загальне падіння −8% MoM пов'язане зі сезонністю та скороченням категорії −4%. Частка Трускавецької утримується на рівні 10,2% пляшок. Без АТБ зростання +3% — позитивний сигнал диверсифікації. YTD +30% підтверджує стійку тенденцію розширення дистрибуції.</p>
+    </div>
+  </div>
+
+  <div class="section-title">📋 YTD порівняння (2 міс.) — 2024 / 2025 / 2026</div>
+  <div class="table-wrap" style="margin-bottom:32px;animation:fadeUp 0.5s ease 0.3s both;">
+    <table class="ytd-table">
+      <thead>
+        <tr>
+          <th>Мережа</th>
+          <th>2024, бут.</th>
+          <th>2025, бут.</th>
+          <th>2026, бут.</th>
+          <th>25 vs 24</th>
+          <th>26 vs 25</th>
+          <th>Частка 2026</th>
+        </tr>
+      </thead>
+      <tbody id="ytdTable"></tbody>
+    </table>
+  </div>
+
+  <div class="section-title">📉 Тренд 4 місяці (лист–лют) — топ мережі</div>
+  <div class="trend-section">
+    <p class="trend-hint">🖱️ Наведіть на крапку для перегляду точного значення по місяцю</p>
+    <div class="trend-grid" id="trendGrid"></div>
+  </div>
+
+</div>
+
+<div class="footer">
+  Трускавецька &bull; Вторинні продажі (пляшки) &bull; Лютий 2026 &bull; 23 роздрібні мережі
+</div>
+
+<script>
+const networks = [
+  { name:'АТБ',       feb:2469074,jan:2766601,dec:3003872,nov:3297436,mom:-11,share:17.1,ytd24:4696552,ytd25:4261791,ytd26:5235675,dy25:-9,  dy26:23,  sh26:18.3 },
+  { name:'Сільпо',    feb:222967, jan:251359, dec:247405, nov:252716, mom:-11,share:5.9, ytd24:209414, ytd25:255231, ytd26:474326, dy25:22,  dy26:86,  sh26:6.0  },
+  { name:'Рукавичка', feb:42261,  jan:60694,  dec:58300,  nov:57515,  mom:-30,share:10.4,ytd24:35444,  ytd25:63190,  ytd26:102955, dy25:78,  dy26:63,  sh26:12.3 },
+  { name:'Близенько', feb:55312,  jan:45204,  dec:62125,  nov:47469,  mom:22, share:10.0,ytd24:31380,  ytd25:48630,  ytd26:100516, dy25:55,  dy26:107, sh26:9.2  },
+  { name:'Фора',      feb:79478,  jan:115433, dec:115090, nov:101192, mom:-31,share:3.4, ytd24:60371,  ytd25:81356,  ytd26:194911, dy25:35,  dy26:140, sh26:4.0  },
+  { name:'Новус',     feb:70409,  jan:49569,  dec:47944,  nov:43082,  mom:42, share:5.5, ytd24:47566,  ytd25:88784,  ytd26:119978, dy25:87,  dy26:35,  sh26:4.3  },
+  { name:'Метро',     feb:102437, jan:72504,  dec:99595,  nov:96696,  mom:41, share:4.8, ytd24:124728, ytd25:176786, ytd26:174941, dy25:42,  dy26:-1,  sh26:4.0  },
+  { name:'Сім23',     feb:34314,  jan:33317,  dec:42146,  nov:23458,  mom:3,  share:4.7, ytd24:19527,  ytd25:33418,  ytd26:67631,  dy25:71,  dy26:102, sh26:4.8  },
+  { name:'Таврія',    feb:30672,  jan:14576,  dec:25665,  nov:15293,  mom:110,share:3.4, ytd24:32262,  ytd25:37588,  ytd26:45248,  dy25:17,  dy26:20,  sh26:2.4  },
+  { name:'Окко',      feb:21680,  jan:21691,  dec:23468,  nov:24346,  mom:0,  share:5.8, ytd24:15981,  ytd25:42851,  ytd26:43371,  dy25:168, dy26:1,   sh26:5.8  },
+  { name:'В. Кишеня', feb:25824,  jan:14366,  dec:31748,  nov:28810,  mom:80, share:3.2, ytd24:14135,  ytd25:31631,  ytd26:40190,  dy25:124, dy26:27,  sh26:2.4  },
+  { name:'Експансія', feb:15133,  jan:8216,   dec:7542,   nov:4876,   mom:84, share:4.9, ytd24:6002,   ytd25:13536,  ytd26:23349,  dy25:126, dy26:72,  sh26:3.7  },
+  { name:'Траш',      feb:11540,  jan:12453,  dec:7987,   nov:6908,   mom:-7, share:1.9, ytd24:9232,   ytd25:11827,  ytd26:23993,  dy25:28,  dy26:103, sh26:1.9  },
+  { name:'Епіцентр',  feb:11453,  jan:8425,   dec:9394,   nov:7663,   mom:36, share:4.2, ytd24:7879,   ytd25:8673,   ytd26:19878,  dy25:10,  dy26:129, sh26:3.4  },
+  { name:'Делві',     feb:10410,  jan:5870,   dec:0,      nov:0,      mom:77, share:4.6, ytd24:0,      ytd25:0,      ytd26:16280,  dy25:null,dy26:null,sh26:3.4  },
+  { name:'Обжора',    feb:5106,   jan:2930,   dec:5204,   nov:5839,   mom:74, share:4.2, ytd24:158,    ytd25:5746,   ytd26:8036,   dy25:3537,dy26:40,  sh26:3.2  },
+  { name:'Торба',     feb:5281,   jan:4465,   dec:4649,   nov:4464,   mom:18, share:2.4, ytd24:849,    ytd25:5340,   ytd26:9746,   dy25:529, dy26:83,  sh26:2.2  },
+  { name:'Варус',     feb:3957,   jan:6729,   dec:7772,   nov:7227,   mom:-41,share:0.4, ytd24:70847,  ytd25:1907,   ytd26:10686,  dy25:-97, dy26:460, sh26:0.5  },
+  { name:'Еко',       feb:3354,   jan:2809,   dec:2665,   nov:1158,   mom:19, share:1.4, ytd24:0,      ytd25:0,      ytd26:6163,   dy25:null,dy26:null,sh26:1.2  },
+  { name:'Коло',      feb:2218,   jan:1792,   dec:2910,   nov:3207,   mom:24, share:1.0, ytd24:0,      ytd25:0,      ytd26:4010,   dy25:null,dy26:null,sh26:0.9  },
+];
+
+const fmtS = v => {
+  if(!v||v===0) return '—';
+  if(v>=1000000) return (v/1000000).toFixed(2)+' млн';
+  if(v>=1000)   return Math.round(v/1000)+' тис';
+  return v.toLocaleString('uk');
+};
+const fmtB = v => {
+  if(!v||v===0) return '—';
+  if(v>=1000000) return (v/1000000).toFixed(2)+' млн бут.';
+  if(v>=1000)   return Math.round(v/1000)+' тис бут.';
+  return v.toLocaleString('uk')+' бут.';
+};
+const fmtPct = v => v===null ? '—' : (v>0?'+':'')+v+'%';
+
+// ── BAR: sorted by feb desc ──
+const bc = document.getElementById('barChart');
+[...networks].filter(n=>n.feb>0).sort((a,b)=>b.feb-a.feb).forEach((n,i)=>{
+  const pct = (n.feb / networks.reduce((m,x)=>x.feb>m?x.feb:m,0) * 100).toFixed(1);
+  bc.innerHTML += `
+  <div class="bar-item">
+    <div class="bar-label">${n.name}</div>
+    <div class="bar-track"><div class="bar-fill${n.name==='АТБ'?' hl':''}" style="width:0%" data-w="${pct}%"></div></div>
+    <div class="bar-value">${fmtS(n.feb)}</div>
+  </div>`;
+});
+
+// ── DYNAMICS: sorted by mom desc ──
+const dg = document.getElementById('dynamicsGrid');
+[...networks].filter(n=>n.feb>0).sort((a,b)=>b.mom-a.mom).forEach(n=>{
+  const cls = n.mom>0?'up':n.mom<0?'down':'flat';
+  const sign = n.mom>0?'+':'';
+  dg.innerHTML += `<div class="dyn-card">
+    <div class="name">${n.name}</div>
+    <div class="delta ${cls}">${sign}${n.mom}%</div>
+    <div class="volume">${fmtS(n.feb)}</div>
+  </div>`;
+});
+
+// ── SHARE: sorted by share desc ──
+const sg = document.getElementById('shareGrid');
+[...networks].filter(n=>n.feb>0&&n.share>0).sort((a,b)=>b.share-a.share).forEach(n=>{
+  const r=30,cx=40,cy=40,circ=2*Math.PI*r;
+  const dash=(n.share/100)*circ;
+  const col = n.share>=10?'#1565c0':n.share>=5?'#00acc1':n.share>=3?'#43a047':'#fb8c00';
+  sg.innerHTML += `<div class="share-card">
+    <div class="sname">${n.name}</div>
+    <div class="gauge-wrap"><svg viewBox="0 0 80 80">
+      <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#e0e0e0" stroke-width="7"/>
+      <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${col}" stroke-width="7"
+        stroke-dasharray="${dash.toFixed(1)} ${circ.toFixed(1)}" stroke-linecap="round"
+        transform="rotate(-90 ${cx} ${cy})"/>
+    </svg><div class="gauge-text">${n.share}%</div></div>
+    <div class="share-vol">${fmtS(n.feb)}</div>
+  </div>`;
+});
+
+// ── YTD TABLE: sorted by ytd26 desc ──
+const ytd = document.getElementById('ytdTable');
+[...networks].filter(n=>n.ytd26>0).sort((a,b)=>b.ytd26-a.ytd26).forEach(n=>{
+  const c25 = n.dy25===null?'—':`<span class="${n.dy25>0?'cell-up':'cell-down'}">${fmtPct(n.dy25)}</span>`;
+  const c26 = n.dy26===null?'—':`<span class="${n.dy26>0?'cell-up':'cell-down'}">${fmtPct(n.dy26)}</span>`;
+  ytd.innerHTML += `<tr>
+    <td>${n.name}</td>
+    <td>${n.ytd24>0?fmtS(n.ytd24):'—'}</td>
+    <td>${n.ytd25>0?fmtS(n.ytd25):'—'}</td>
+    <td><strong>${fmtS(n.ytd26)}</strong></td>
+    <td>${c25}</td><td>${c26}</td>
+    <td>${n.sh26}%</td>
+  </tr>`;
+});
+
+// ── TREND: sorted by feb desc, interactive dots ──
+const tg = document.getElementById('trendGrid');
+const months = ['Листопад','Грудень','Січень','Лютий'];
+[...networks].filter(n=>n.feb>4000).sort((a,b)=>b.feb-a.feb).forEach(n=>{
+  const vals = [n.nov,n.dec,n.jan,n.feb];
+  const mx = Math.max(...vals), mn = Math.min(...vals);
+  const W=200,H=60,P=12;
+  const col = n.mom>0?'#43a047':n.mom<0?'#e53935':'#fb8c00';
+  const sign = n.mom>0?'+':'';
+  const uid = 'g'+Math.random().toString(36).slice(2,8);
+
+  const pts = vals.map((v,i)=>({
+    x: P + i*(W-P*2)/3,
+    y: H-P - ((v-mn)/(mx-mn||1))*(H-P*2),
+    v, m: months[i]
+  }));
+  const poly  = pts.map(p=>`${p.x},${p.y}`).join(' ');
+  const area  = `M${pts[0].x},${H} `+pts.map(p=>`L${p.x},${p.y}`).join(' ')+` L${pts[3].x},${H} Z`;
+  const dots  = pts.map(p=>`
+    <circle cx="${p.x}" cy="${p.y}" r="5" fill="${col}" stroke="white" stroke-width="2"
+      class="sdot" data-m="${p.m}" data-v="${p.v.toLocaleString('uk')}" style="cursor:pointer"/>
+    <circle cx="${p.x}" cy="${p.y}" r="16" fill="transparent" class="shit"
+      data-m="${p.m}" data-v="${p.v.toLocaleString('uk')}"/>
+  `).join('');
+  const lbls  = pts.map((p,i)=>{
+    const labels = ['лис','гру','січ','лют'];
+    return `<text x="${p.x}" y="${H+2}" font-size="8.5" fill="#90a4ae" text-anchor="middle" dominant-baseline="hanging">${labels[i]}</text>`;
+  }).join('');
+
+  const wrap = document.createElement('div');
+  wrap.className = 'trend-item';
+  wrap.innerHTML = `
+    <div class="tname"><span>${n.name}</span><span class="tcur" style="color:${col}">${sign}${n.mom}%</span></div>
+    <svg viewBox="0 0 ${W} ${H+14}" width="100%" height="74" overflow="visible">
+      <defs>
+        <linearGradient id="${uid}" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="${col}" stop-opacity="0.18"/>
+          <stop offset="100%" stop-color="${col}" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <path d="${area}" fill="url(#${uid})"/>
+      <polyline points="${poly}" fill="none" stroke="${col}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+      ${lbls}
+      ${dots}
+    </svg>
+    <div class="tfoot">Лютий: <strong>${fmtS(n.feb)} бут.</strong></div>
+  `;
+  tg.appendChild(wrap);
+});
+
+// ── TOOLTIP logic ──
+const tip   = document.getElementById('sparkTooltip');
+const ttM   = document.getElementById('ttMonth');
+const ttV   = document.getElementById('ttVal');
+
+function showTip(el, cx, cy) {
+  const m = el.dataset.m, v = el.dataset.v;
+  if(!m) return;
+  ttM.textContent = m;
+  ttV.textContent = v;
+  tip.style.left = cx+'px';
+  tip.style.top  = cy+'px';
+  tip.classList.add('visible');
+}
+function hideTip() { tip.classList.remove('visible'); }
+
+document.addEventListener('mouseover', e=>{
+  const el = e.target.closest('.sdot,.shit');
+  if(el) showTip(el, e.clientX, e.clientY);
+});
+document.addEventListener('mousemove', e=>{
+  if(tip.classList.contains('visible')){
+    tip.style.left = e.clientX+'px';
+    tip.style.top  = e.clientY+'px';
+  }
+});
+document.addEventListener('mouseout', e=>{
+  if(e.target.closest('.sdot,.shit') && !e.relatedTarget?.closest('.sdot,.shit')) hideTip();
+});
+document.addEventListener('click', e=>{
+  if(!e.target.closest('.sdot,.shit')) hideTip();
+});
+document.addEventListener('touchstart', e=>{
+  const el = e.target.closest('.sdot,.shit');
+  if(!el){ hideTip(); return; }
+  const t = e.touches[0];
+  showTip(el, t.clientX, t.clientY);
+  e.preventDefault();
+},{passive:false});
+
+// ── ANIMATE BARS ──
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    document.querySelectorAll('.bar-fill').forEach(el=>{ el.style.width=el.dataset.w; });
+  },200);
+});
+</script>
+</body>
+</html>
