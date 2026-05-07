@@ -213,12 +213,21 @@ body{
 
 /* === Tables === */
 .table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface)}
-table{width:100%;border-collapse:collapse;font-size:13px;min-width:560px}
-th,td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--border)}
-th{background:var(--bg-3);color:var(--text-muted);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.08em}
+table{width:100%;border-collapse:collapse;font-size:12px;min-width:700px}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--border)}
+th{background:var(--bg-3);color:var(--text-muted);font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:0.08em;white-space:nowrap}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:rgba(94,184,255,0.04)}
-td.num{font-family:'JetBrains Mono',monospace;text-align:right}
+td.num{font-family:'JetBrains Mono',monospace;text-align:right;white-space:nowrap}
+td.center,th.center{text-align:center}
+#networkTable td:nth-child(1){white-space:nowrap;font-size:12px}
+#networkTable td:nth-child(2){white-space:nowrap;font-size:11px;font-family:'JetBrains Mono',monospace;text-align:right}
+#networkTable td:nth-child(4){white-space:nowrap;font-size:11px;font-family:'JetBrains Mono',monospace;text-align:right}
+#networkTable td:nth-child(6){white-space:nowrap;font-size:11px;font-family:'JetBrains Mono',monospace;text-align:right}
+#networkTable td:nth-child(3),#networkTable th:nth-child(3),
+#networkTable td:nth-child(5),#networkTable th:nth-child(5),
+#networkTable td:nth-child(7),#networkTable th:nth-child(7),
+#networkTable td:nth-child(8),#networkTable th:nth-child(8){text-align:center}
 .badge{display:inline-block;padding:3px 10px;border-radius:100px;font-size:12px;font-weight:600;font-family:'JetBrains Mono',monospace}
 .badge.up{background:rgba(93,211,148,0.18);color:var(--green)}
 .badge.down{background:rgba(239,107,107,0.18);color:var(--red)}
@@ -242,6 +251,18 @@ td.num{font-family:'JetBrains Mono',monospace;text-align:right}
 .metric .delta.up{background:rgba(93,211,148,0.15);color:var(--green)}
 .metric .delta.down{background:rgba(239,107,107,0.15);color:var(--red)}
 .metric .delta.flat{background:rgba(148,168,200,0.1);color:var(--text-muted)}
+
+/* Network tabs */
+.net-tabs-wrap{display:flex;flex-wrap:wrap;gap:6px;padding-bottom:4px}
+.net-tab{
+  background:var(--bg-3);border:1px solid var(--border);
+  border-radius:100px;padding:6px 14px;
+  font-size:12px;font-weight:500;font-family:inherit;
+  color:var(--text-muted);cursor:pointer;
+  transition:all 0.18s;white-space:nowrap;
+}
+.net-tab:hover{border-color:var(--border-strong);color:var(--text)}
+.net-tab.active{background:var(--accent);border-color:var(--accent);color:var(--bg);font-weight:600}
 
 /* Footer */
 .footer{margin-top:60px;padding:32px 24px;border-top:1px solid var(--border);text-align:center;color:var(--text-dim);font-size:12px}
@@ -401,29 +422,29 @@ td.num{font-family:'JetBrains Mono',monospace;text-align:right}
 <div class="section-header">
 <div class="pre">Розділ 3 / 8</div>
 <h2>Мережі: де Трускавецька зміцнила, а де віддала позиції</h2>
-<p>Зміцнення позицій (зростання частки) у 19 із 20 топ-мереж. Найсильніше — у Рукавичці (+4,2 в.п.), Сільпо (+3,2 в.п.), АТБ (+2,8 в.п.). Найпомітніше відставання — у Сім23, Близенько, Епіцентрі та Траші, де конкуренти ростуть швидше за Трускавецьку.</p>
+<p>Трускавецька зростає швидше за конкурентів у всіх 20 топ-мережах. Найбільше зростання частки — у Рукавичці (+4,20 в.п.), Близенько (+3,58 в.п.), Сільпо (+3,15 в.п.) та АТБ (+2,76 в.п.). У Делві та Еко бренд з'явився з нуля — нові точки дистрибуції. У Сім23, Близенько, Епіцентрі та Траші ринок росте швидко, але Трускавецька росте ще швидше.</p>
 </div>
 
 <div class="kpi-grid">
 <div class="kpi success">
 <div class="kpi-label">Мереж із зростанням частки</div>
-<div class="kpi-value">19<span style="font-size:18px;color:var(--text-muted);font-weight:400;">/20</span></div>
-<div class="kpi-sub">Лише в Сільпо позиції тримаються</div>
+<div class="kpi-value">20<span style="font-size:18px;color:var(--text-muted);font-weight:400;">/20</span></div>
+<div class="kpi-sub">У всіх мережах частка зросла або з'явилась</div>
 </div>
 <div class="kpi success">
 <div class="kpi-label">Найбільший приріст частки</div>
-<div class="kpi-value">+4,23 <span style="font-size:14px;color:var(--text-muted)">в.п.</span></div>
-<div class="kpi-sub">Делві (з 0% до 4,23%)</div>
+<div class="kpi-value">+4,20 <span style="font-size:14px;color:var(--text-muted)">в.п.</span></div>
+<div class="kpi-sub">Рукавичка · 8,42% → 12,62%</div>
 </div>
 <div class="kpi">
 <div class="kpi-label">Найбільший приріст обсягу</div>
 <div class="kpi-value">+1,49M</div>
 <div class="kpi-sub">АТБ · 7,76M → 9,25M</div>
 </div>
-<div class="kpi warn">
-<div class="kpi-label">Найбільший дисбаланс</div>
-<div class="kpi-value">Сім23</div>
-<div class="kpi-sub">Конкуренти +36% vs Трускавецька +93%</div>
+<div class="kpi success">
+<div class="kpi-label">Нові мережі (з нуля)</div>
+<div class="kpi-value">Делві, Еко</div>
+<div class="kpi-sub">Розширення дистрибуції</div>
 </div>
 </div>
 
@@ -433,33 +454,36 @@ td.num{font-family:'JetBrains Mono',monospace;text-align:right}
 <div class="chart-wrap tall"><canvas id="chartNetworkShare" role="img" aria-label="Зміна частки Трускавецької">Зміна частки</canvas></div>
 </div>
 
-<div class="two-col">
-<div class="chart-card">
-<h3>Темп зростання: Трускавецька vs конкуренти у мережі</h3>
-<div class="desc">Якщо темп Трускавецької вищий — мережа працює на нашу користь. Нижче — програємо боротьбу.</div>
-<div class="chart-wrap tall"><canvas id="chartNetworkGrowth" role="img" aria-label="Темп зростання у мережах">Темп зростання у мережах</canvas></div>
-</div>
-<div class="chart-card">
+<div class="chart-card" style="margin-bottom:24px">
 <h3>Топ мереж за обсягом Трускавецької Q1 2026</h3>
 <div class="desc">АТБ домінує (78% обсягу), решта мереж формують конкурентний фонд.</div>
 <div class="chart-wrap tall"><canvas id="chartNetworkVolume" role="img" aria-label="Обсяги Трускавецької по мережах">Обсяги по мережах</canvas></div>
+</div>
+
+<div class="chart-card">
+<h3>Темп зростання по мережах: Трускавецька vs кожен конкурент</h3>
+<div class="desc">Оберіть мережу щоб побачити темп зростання кожного бренду окремо. "Решта категорії" — всі інші бренди разом.</div>
+<div class="net-tabs-wrap" id="networkTabsWrap"></div>
+<div style="position:relative;width:100%;height:320px;margin-top:16px">
+  <canvas id="chartNetworkGrowth" role="img" aria-label="Темп зростання у мережах"></canvas>
 </div>
 </div>
 
 <div class="chart-card">
 <h3>Деталізація по топ-20 мережах</h3>
-<div class="desc">Клікніть на заголовок колонки для сортування. Зеленим виділено мережі, де Трускавецька росте швидше за конкурентів.</div>
+<div class="desc">Динаміка категорії (загальний ринок мережі), динаміка Трускавецької та її позиція за темпом серед 5-6 топ-брендів у мережі (Трускавецька, Моршинська, Карпатська Дж., Миргородська, Buvette, Девайтіс).</div>
 <div class="table-wrap">
 <table id="networkTable">
 <thead>
 <tr>
 <th>Мережа</th>
-<th>Категорія Q1'26</th>
+<th>Категорія Q1'25 → Q1'26</th>
+<th>Δ категорії</th>
 <th>Трускавецька Q1'25 → Q1'26</th>
-<th>Δ обсягу</th>
+<th>Δ ТМ</th>
 <th>Частка Q1'25 → Q1'26</th>
 <th>Δ частки</th>
-<th>Темп: ТМ vs конкур.</th>
+<th>Позиція за темпом</th>
 </tr>
 </thead>
 <tbody id="networkTableBody"></tbody>
@@ -467,8 +491,20 @@ td.num{font-family:'JetBrains Mono',monospace;text-align:right}
 </div>
 </div>
 
-<div class="insight warn">
-<strong>На що звернути увагу:</strong> Близенько (+19% конкуренти, +94% Трускавецька), Епіцентр (+35% конкуренти, +163% ТМ), Траш (+28% vs +75%), Сім23 (+36% vs +93%) — у цих мережах ринок розширюється швидко. Підтримувати ріст вище ринкового тут критично, бо інакше частку легко втратити навіть у разі зростання обсягів.
+<div class="insight success">
+<strong>Загальна картина:</strong> Трускавецька — №1 за темпом зростання у <strong>11 з 18 мереж</strong> (де є дані), №2 у решті 7. Жодного третього або нижчого місця. Це означає що в кожній мережі ТМ або веде ринок, або дихає в спину лідеру.
+</div>
+
+<div class="insight warn" style="margin-top:16px">
+<strong>На що звернути увагу:</strong>
+
+<br><br><strong>1. Мережі-локомотиви (категорія росте >20%):</strong> Сім23 (+37,9%), Епіцентр (+37,3%), Траш (+28,2%), Близенько (+23,8%), Торба (+20,8%). Тут ринок розширюється швидко — Трускавецька росте ще швидше у Епіцентрі (#1, +163%), Близенько (#1, +94%), Торбі (#1, +97%), але у Сім23 (#2, +93% при лідері Девайтіс +104%) і Траші (#2, +75% при лідері Карпатська Дж. +98%) є простір для прискорення.
+
+<br><br><strong>2. Мережі що скорочуються:</strong> Експансія (-24,7%), Варус (-3,4%), Коло (-2,9%). У всіх трьох Трускавецька росте проти течії — це здобуті частки за рахунок конкурентів.
+
+<br><br><strong>3. Мережі де Трускавецька #2:</strong> у 7 мережах попереду інший бренд. Найвразливіші — <strong>Велика Кишеня</strong> (Buvette +329% з низької бази) і <strong>Експансія</strong> (Девайтіс +401% з мікро-бази). У Новусі (Девайтіс), Таврії (Карпатська Дж.), Сім23 (Девайтіс), Рукавичці (Buvette), Траші (Карпатська Дж.) лідери з реальним обсягом — варто моніторити.
+
+<br><br><strong>4. Найбільший прибуток в обсязі дають:</strong> АТБ (+1,49M пляшок), Сільпо (+418K), Фора (+150K), Близенько (+88K), Метро (+65K) — це 88% від загального приросту.
 </div>
 
 </section>
@@ -1578,7 +1614,505 @@ td.num{font-family:'JetBrains Mono',monospace;text-align:right}
       "q26_feb": 23494,
       "q26_mar": 40058
     }
-  ]
+  ],
+  "brands_by_network": {
+    "АТБ": {
+      "Своя Лінія (PL АТБ)": {
+        "q25": 12223334,
+        "q26": 13476814
+      },
+      "Моршинська": {
+        "q25": 12910367,
+        "q26": 12871175
+      },
+      "Миргородська": {
+        "q25": 3934844,
+        "q26": 4305496
+      },
+      "Buvette": {
+        "q25": 6159633,
+        "q26": 4721243
+      },
+      "Карпатська Джерельна": {
+        "q25": 1674518,
+        "q26": 1921363
+      }
+    },
+    "Сільпо": {
+      "Моршинська": {
+        "q25": 5134429,
+        "q26": 5238370
+      },
+      "Карпатська Джерельна": {
+        "q25": 1057916,
+        "q26": 1560214
+      },
+      "Трускавецька": {
+        "q25": 485026,
+        "q26": 902787
+      },
+      "Миргородська": {
+        "q25": 1096674,
+        "q26": 1119340
+      },
+      "Девайтіс": {
+        "q25": 86898,
+        "q26": 125132
+      },
+      "Buvette": {
+        "q25": 328911,
+        "q26": 203
+      }
+    },
+    "Фора": {
+      "Моршинська": {
+        "q25": 2496373,
+        "q26": 2686712
+      },
+      "Карпатська Джерельна": {
+        "q25": 1187187,
+        "q26": 1228587
+      },
+      "Миргородська": {
+        "q25": 1051960,
+        "q26": 1024296
+      },
+      "Трускавецька": {
+        "q25": 200717,
+        "q26": 350248
+      }
+    },
+    "Метро": {
+      "Моршинська": {
+        "q25": 3110633,
+        "q26": 3353926
+      },
+      "Buvette": {
+        "q25": 732034,
+        "q26": 682515
+      },
+      "Карпатська Джерельна": {
+        "q25": 489728,
+        "q26": 560406
+      },
+      "Трускавецька": {
+        "q25": 298078,
+        "q26": 363365
+      },
+      "Миргородська": {
+        "q25": 295754,
+        "q26": 346938
+      },
+      "Девайтіс": {
+        "q25": 21956,
+        "q26": 8860
+      }
+    },
+    "Новус": {
+      "Моршинська": {
+        "q25": 1705876,
+        "q26": 1847495
+      },
+      "Карпатська Джерельна": {
+        "q25": 626358,
+        "q26": 777821
+      },
+      "Миргородська": {
+        "q25": 327593,
+        "q26": 364312
+      },
+      "Трускавецька": {
+        "q25": 135527,
+        "q26": 186107
+      },
+      "Девайтіс": {
+        "q25": 36034,
+        "q26": 66803
+      },
+      "Buvette": {
+        "q25": 102892,
+        "q26": 5
+      }
+    },
+    "Варус": {
+      "Моршинська": {
+        "q25": 985082,
+        "q26": 879193
+      },
+      "Миргородська": {
+        "q25": 362971,
+        "q26": 365446
+      },
+      "Карпатська Джерельна": {
+        "q25": 242055,
+        "q26": 250008
+      },
+      "Buvette": {
+        "q25": 376381,
+        "q26": 235420
+      },
+      "Девайтіс": {
+        "q25": 32633,
+        "q26": 45805
+      },
+      "Трускавецька": {
+        "q25": 0,
+        "q26": 20680
+      }
+    },
+    "Таврія": {
+      "Моршинська": {
+        "q25": 973551,
+        "q26": 975078
+      },
+      "Карпатська Джерельна": {
+        "q25": 352417,
+        "q26": 397642
+      },
+      "Миргородська": {
+        "q25": 208706,
+        "q26": 219682
+      },
+      "Buvette": {
+        "q25": 230412,
+        "q26": 195065
+      },
+      "Трускавецька": {
+        "q25": 55022,
+        "q26": 58340
+      },
+      "Девайтіс": {
+        "q25": 4786,
+        "q26": 4692
+      }
+    },
+    "Велика Кишеня": {
+      "Моршинська": {
+        "q25": 654845,
+        "q26": 582705
+      },
+      "Карпатська Джерельна": {
+        "q25": 501291,
+        "q26": 550850
+      },
+      "Миргородська": {
+        "q25": 278151,
+        "q26": 218757
+      },
+      "Buvette": {
+        "q25": 20625,
+        "q26": 88559
+      },
+      "Трускавецька": {
+        "q25": 47615,
+        "q26": 75252
+      },
+      "Девайтіс": {
+        "q25": 13045,
+        "q26": 18293
+      }
+    },
+    "Сім23": {
+      "Моршинська": {
+        "q25": 648879,
+        "q26": 822124
+      },
+      "Карпатська Джерельна": {
+        "q25": 287374,
+        "q26": 477243
+      },
+      "Девайтіс": {
+        "q25": 112855,
+        "q26": 229740
+      },
+      "Миргородська": {
+        "q25": 83573,
+        "q26": 104045
+      },
+      "Трускавецька": {
+        "q25": 54652,
+        "q26": 105542
+      },
+      "Buvette": {
+        "q25": 0,
+        "q26": 1
+      }
+    },
+    "Траш": {
+      "Моршинська": {
+        "q25": 551182,
+        "q26": 619286
+      },
+      "Карпатська Джерельна": {
+        "q25": 203245,
+        "q26": 402038
+      },
+      "Миргородська": {
+        "q25": 231172,
+        "q26": 305341
+      },
+      "Buvette": {
+        "q25": 192546,
+        "q26": 178562
+      },
+      "Девайтіс": {
+        "q25": 17460,
+        "q26": 27619
+      },
+      "Трускавецька": {
+        "q25": 19304,
+        "q26": 33756
+      }
+    },
+    "Близенько": {
+      "Моршинська": {
+        "q25": 539434,
+        "q26": 450391
+      },
+      "Карпатська Джерельна": {
+        "q25": 286974,
+        "q26": 473148
+      },
+      "Трускавецька": {
+        "q25": 92863,
+        "q26": 180488
+      },
+      "Девайтіс": {
+        "q25": 97789,
+        "q26": 181133
+      },
+      "Buvette": {
+        "q25": 40448,
+        "q26": 56412
+      },
+      "Миргородська": {
+        "q25": 32109,
+        "q26": 28681
+      }
+    },
+    "Рукавичка": {
+      "Карпатська Джерельна": {
+        "q25": 394379,
+        "q26": 429423
+      },
+      "Моршинська": {
+        "q25": 188381,
+        "q26": 174077
+      },
+      "Трускавецька": {
+        "q25": 98476,
+        "q26": 150639
+      },
+      "Девайтіс": {
+        "q25": 0,
+        "q26": 58826
+      },
+      "Сірко (PL Рукавичка)": {
+        "q25": 13394,
+        "q26": 21192
+      },
+      "Buvette": {
+        "q25": 16256,
+        "q26": 25955
+      },
+      "Миргородська": {
+        "q25": 0,
+        "q26": 2
+      }
+    },
+    "Окко": {
+      "Моршинська": {
+        "q25": 489302,
+        "q26": 371816
+      },
+      "Карпатська Джерельна": {
+        "q25": 219058,
+        "q26": 212254
+      },
+      "Трускавецька": {
+        "q25": 0,
+        "q26": 0
+      },
+      "Миргородська": {
+        "q25": 92053,
+        "q26": 76200
+      },
+      "Buvette": {
+        "q25": 107325,
+        "q26": 67291
+      }
+    },
+    "Експансія": {
+      "Моршинська": {
+        "q25": 332873,
+        "q26": 262223
+      },
+      "Карпатська Джерельна": {
+        "q25": 122110,
+        "q26": 150824
+      },
+      "Миргородська": {
+        "q25": 89975,
+        "q26": 83142
+      },
+      "Трускавецька": {
+        "q25": 15588,
+        "q26": 31793
+      },
+      "Buvette": {
+        "q25": 5824,
+        "q26": 5093
+      },
+      "Девайтіс": {
+        "q25": 1165,
+        "q26": 5836
+      }
+    },
+    "Епіцентр": {
+      "Моршинська": {
+        "q25": 258953,
+        "q26": 334431
+      },
+      "Карпатська Джерельна": {
+        "q25": 103925,
+        "q26": 159654
+      },
+      "Миргородська": {
+        "q25": 43798,
+        "q26": 57959
+      },
+      "Трускавецька": {
+        "q25": 14020,
+        "q26": 36821
+      },
+      "Buvette": {
+        "q25": 35815,
+        "q26": 24912
+      },
+      "Девайтіс": {
+        "q25": 0,
+        "q26": 0
+      }
+    },
+    "Еко": {
+      "Моршинська": {
+        "q25": 293777,
+        "q26": 255767
+      },
+      "Карпатська Джерельна": {
+        "q25": 100490,
+        "q26": 126753
+      },
+      "Миргородська": {
+        "q25": 168903,
+        "q26": 122034
+      },
+      "Девайтіс": {
+        "q25": 79067,
+        "q26": 79392
+      },
+      "Трускавецька": {
+        "q25": 0,
+        "q26": 10769
+      },
+      "Buvette": {
+        "q25": 0,
+        "q26": 0
+      }
+    },
+    "Коло": {
+      "Моршинська": {
+        "q25": 330813,
+        "q26": 308049
+      },
+      "Карпатська Джерельна": {
+        "q25": 158158,
+        "q26": 156087
+      },
+      "Миргородська": {
+        "q25": 46754,
+        "q26": 41185
+      },
+      "Девайтіс": {
+        "q25": 13956,
+        "q26": 21582
+      },
+      "Трускавецька": {
+        "q25": 27,
+        "q26": 8219
+      },
+      "Buvette": {
+        "q25": 3438,
+        "q26": 4865
+      }
+    },
+    "Делві": {
+      "Buvette": {
+        "q25": 94897,
+        "q26": 92335
+      },
+      "Моршинська": {
+        "q25": 101765,
+        "q26": 79767
+      },
+      "Трускавецька": {
+        "q25": 0,
+        "q26": 32192
+      },
+      "Миргородська": {
+        "q25": 24319,
+        "q26": 16648
+      }
+    },
+    "Торба": {
+      "Моршинська": {
+        "q25": 157841,
+        "q26": 202134
+      },
+      "Девайтіс": {
+        "q25": 68401,
+        "q26": 102614
+      },
+      "Buvette": {
+        "q25": 92328,
+        "q26": 76319
+      },
+      "Миргородська": {
+        "q25": 31420,
+        "q26": 35838
+      },
+      "Трускавецька": {
+        "q25": 17470,
+        "q26": 24884
+      },
+      "Карпатська Джерельна": {
+        "q25": 0,
+        "q26": 0
+      }
+    },
+    "Обжора": {
+      "Моршинська": {
+        "q25": 128114,
+        "q26": 102497
+      },
+      "Buvette": {
+        "q25": 30194,
+        "q26": 29709
+      },
+      "Миргородська": {
+        "q25": 36614,
+        "q26": 30037
+      },
+      "Карпатська Джерельна": {
+        "q25": 74159,
+        "q26": 70500
+      },
+      "Трускавецька": {
+        "q25": 9757,
+        "q26": 13613
+      }
+    }
+  }
 }</script>
 <script>
 // ===== Глобальні налаштування Chart.js =====
@@ -1991,29 +2525,156 @@ function initNetworks(){
     }
   });
 
-  // Growth comparison
-  const compareData = [...enriched].filter(n=>n.diffT!==null && n.t25>1000).sort((a,b)=>b.t26-a.t26).slice(0,15);
-  new Chart(document.getElementById('chartNetworkGrowth'), {
+  // Growth comparison — вкладки по мережах
+  const networkNames = [...new Set(
+    [...enriched].filter(n=>n.diffT!==null && n.t25>1000).sort((a,b)=>b.t26-a.t26).map(n=>n.name)
+  )];
+
+  const brandColors = {
+    'Трускавецька':           COLORS.trusk,
+    'Моршинська':             COLORS.morsh,
+    'Карпатська Джерельна':   COLORS.karp,
+    'Миргородська':           COLORS.myrh,
+    'Buvette':                COLORS.buvet,
+    'Девайтіс':               COLORS.devay,
+    'Решта категорії':        'rgba(100,115,148,0.45)',
+  };
+  const brandOrder = ['Трускавецька','Моршинська','Карпатська Джерельна','Миргородська','Buvette','Девайтіс','Решта категорії'];
+
+  // Будуємо вкладки
+  const tabsWrap = document.getElementById('networkTabsWrap');
+  networkNames.forEach((name, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'net-tab' + (i===0?' active':'');
+    btn.textContent = name;
+    btn.dataset.network = name;
+    tabsWrap.appendChild(btn);
+  });
+
+  // Функція отримання даних по мережі
+  function getNetworkBrandData(networkName){
+    const bbn = data.brands_by_network[networkName] || {};
+    const netEnriched = enriched.find(n=>n.name===networkName);
+    return brandOrder.map(brand => {
+      let growth = null;
+      if(brand === 'Трускавецька'){
+        growth = netEnriched && netEnriched.diffT !== null ? netEnriched.diffT : null;
+      } else if(brand === 'Решта категорії'){
+        growth = netEnriched ? netEnriched.diffCompetitor : null;
+      } else {
+        const bd = bbn[brand];
+        if(bd && bd.q25 > 0) growth = (bd.q26/bd.q25-1)*100;
+      }
+      return {brand, growth};
+    }).filter(d => d.growth !== null && d.growth !== undefined);
+  }
+
+  // Плагін: стрілка + значення над обрізаними стовпчиками
+  const cappedLabelPlugin = {
+    id: 'cappedLabels',
+    afterDatasetsDraw(chart) {
+      const {ctx, scales:{x,y}, data} = chart;
+      const ds = data.datasets[0];
+      if(!ds || !ds._realData || !ds._hasCapped) return;
+      const meta = chart.getDatasetMeta(0);
+      ds._realData.forEach((realVal, i) => {
+        if(realVal === null || realVal <= 100) return;
+        const bar = meta.data[i];
+        if(!bar) return;
+        const bx = bar.x;
+        const topY = y.getPixelForValue(100);
+        const label = '+' + realVal.toFixed(0) + '%';
+        ctx.save();
+        // Стрілка вгору
+        ctx.fillStyle = '#5eb8ff';
+        ctx.beginPath();
+        ctx.moveTo(bx, topY - 14);
+        ctx.lineTo(bx - 5, topY - 6);
+        ctx.lineTo(bx + 5, topY - 6);
+        ctx.closePath();
+        ctx.fill();
+        // Текст
+        ctx.fillStyle = '#5eb8ff';
+        ctx.font = '600 11px Manrope';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'bottom';
+        ctx.fillText(label, bx, topY - 16);
+        ctx.restore();
+      });
+    }
+  };
+
+  // Створюємо chart
+  let netGrowthChart = new Chart(document.getElementById('chartNetworkGrowth'), {
     type:'bar',
-    data:{
-      labels:compareData.map(n=>n.name),
-      datasets:[
-        {label:'Трускавецька', data:compareData.map(n=>n.diffT), backgroundColor:COLORS.trusk, borderRadius:4},
-        {label:'Конкуренти', data:compareData.map(n=>n.diffCompetitor), backgroundColor:'rgba(100,115,148,0.6)', borderRadius:4}
-      ]
-    },
+    plugins:[cappedLabelPlugin],
+    data:{labels:[], datasets:[]},
     options:{
-      responsive:true, maintainAspectRatio:false, indexAxis:'y',
+      responsive:true, maintainAspectRatio:false, indexAxis:'x',
       scales:{
-        x:{grid:{color:'rgba(96,165,250,0.07)'},ticks:{callback:v=>v.toFixed(0)+'%'}},
-        y:{grid:{display:false},ticks:{font:{size:11}}}
+        y:{
+          grid:{color:'rgba(96,165,250,0.07)'},
+          ticks:{callback:v=>v.toFixed(0)+'%'},
+          title:{display:true, text:'Темп зростання Q1 2026 vs Q1 2025, %', color:'#94a8c8'}
+        },
+        x:{grid:{display:false},ticks:{font:{size:12}}}
       },
       plugins:{
-        legend:{position:'bottom'},
-        tooltip:{callbacks:{label:c=>c.dataset.label+': '+fmtPct(c.parsed.x)}}
+        legend:{display:false},
+        tooltip:{callbacks:{
+          title: items => items[0]?.label || '',
+          label: c => {
+            // Показуємо реальне значення, а не обрізане
+            const realVal = c.dataset._realData ? c.dataset._realData[c.dataIndex] : c.parsed.y;
+            return fmtPct(realVal);
+          },
+        }}
       }
     }
   });
+
+  function updateNetworkChart(networkName){
+    const items = getNetworkBrandData(networkName);
+    const realValues = items.map(d=>d.growth);
+    const hasCapped = realValues.some(v => v !== null && v > 100);
+    const cappedValues = hasCapped
+      ? realValues.map(v => v === null ? null : Math.min(v, 100))
+      : realValues;
+
+    // Межа осі Y
+    const minVal = Math.min(0, ...realValues.filter(v=>v!==null));
+    const maxVal = Math.max(...realValues.filter(v=>v!==null));
+    netGrowthChart.options.scales.y.max = hasCapped ? 100 : Math.ceil(maxVal / 10) * 10 + 5;
+    netGrowthChart.options.scales.y.min = minVal < 0 ? Math.max(minVal - 10, -120) : undefined;
+    netGrowthChart.options.scales.y.ticks.callback = v =>
+      hasCapped && v === 100 ? '100%+' : v.toFixed(0) + '%';
+
+    netGrowthChart.data.labels = items.map(d=>d.brand);
+    netGrowthChart.data.datasets = [{
+      data: cappedValues,
+      _realData: realValues,
+      _hasCapped: hasCapped,
+      backgroundColor: items.map(d=> d.brand==='Трускавецька'
+        ? COLORS.trusk
+        : d.growth >= 0 ? 'rgba(100,115,148,0.5)' : 'rgba(239,107,107,0.4)'),
+      borderColor: items.map(d=> d.brand==='Трускавецька' ? COLORS.trusk : 'transparent'),
+      borderWidth: items.map(d=> d.brand==='Трускавецька' ? 2 : 0),
+      borderRadius: 6,
+    }];
+    netGrowthChart.update();
+  }
+
+  // Обробники вкладок
+  tabsWrap.querySelectorAll('.net-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabsWrap.querySelectorAll('.net-tab').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      updateNetworkChart(btn.dataset.network);
+    });
+  });
+
+  // Ініціалізуємо першу вкладку
+  updateNetworkChart(networkNames[0]);
 
   // Volume top
   const top10 = [...enriched].sort((a,b)=>b.t26-a.t26).slice(0,10);
@@ -2044,17 +2705,60 @@ function initNetworks(){
   const sortedTable = [...enriched].sort((a,b)=>b.cat26-a.cat26);
   sortedTable.forEach(n => {
     const tr = document.createElement('tr');
-    const winning = (n.diffT!==null && n.diffT > n.diffCompetitor + 5);
-    const losing = (n.diffT!==null && n.diffT < n.diffCompetitor - 5);
-    const indicator = winning ? '🟢 переможця' : (losing ? '🔴 програш' : '⚪️ нейтрально');
+
+    // Динаміка категорії
+    const diffCatPct = n.cat25>0 ? (n.cat26/n.cat25-1)*100 : 0;
+
+    // Позиція Трускавецької за темпом серед усіх брендів у мережі
+    const bbn = data.brands_by_network[n.name] || {};
+    const brandGrowths = [];
+    // Додаємо Трускавецьку
+    if(n.diffT !== null) brandGrowths.push({name:'Трускавецька', g: n.diffT});
+    // Додаємо конкурентів
+    const competitorNames = ['Моршинська','Карпатська Джерельна','Миргородська','Buvette','Девайтіс'];
+    competitorNames.forEach(b => {
+      const bd = bbn[b];
+      if(bd && bd.q25>0) brandGrowths.push({name:b, g:(bd.q26/bd.q25-1)*100});
+    });
+    // Сортуємо за темпом спадання
+    brandGrowths.sort((a,b)=>b.g-a.g);
+    const truskPos = brandGrowths.findIndex(b=>b.name==='Трускавецька');
+    const totalBrands = brandGrowths.length;
+
+    // Позначка позиції
+    let posLabel = '—';
+    let posBadgeClass = 'flat';
+    if(n.t25 === 0 && n.t26 > 0){
+      posLabel = '🆕 нова мережа';
+      posBadgeClass = 'flat';
+    } else if(truskPos !== -1){
+      const pos = truskPos + 1;
+      if(pos === 1){
+        posLabel = '🥇 1-е з ' + totalBrands;
+        posBadgeClass = 'up';
+      } else if(pos === 2){
+        posLabel = '🥈 2-е з ' + totalBrands;
+        posBadgeClass = 'up';
+      } else if(pos === 3){
+        posLabel = '🥉 3-є з ' + totalBrands;
+        posBadgeClass = 'flat';
+      } else {
+        posLabel = pos + '-е з ' + totalBrands;
+        posBadgeClass = 'down';
+      }
+    }
+
+    const fmtCell = v => v >= 1e6 ? (v/1e6).toLocaleString('uk-UA',{maximumFractionDigits:2})+'M' : fmtK(v);
+
     tr.innerHTML = `
       <td><strong>${n.name}</strong></td>
-      <td class="num">${fmtM(n.cat26)}</td>
-      <td class="num">${fmt(n.t25)} → ${fmt(n.t26)}</td>
-      <td class="num"><span class="badge ${n.diffT>=0?'up':'down'}">${n.diffT===null?'—':fmtPct(n.diffT)}</span></td>
+      <td class="num">${fmtCell(n.cat25)} → ${fmtCell(n.cat26)}</td>
+      <td><span class="badge ${diffCatPct>=0?'up':'down'}">${fmtPct(diffCatPct)}</span></td>
+      <td class="num">${fmtCell(n.t25)} → ${fmtCell(n.t26)}</td>
+      <td><span class="badge ${n.diffT!==null&&n.diffT>=0?'up':'down'}">${n.diffT===null?'<span style="color:var(--accent);font-size:11px">🆕 нова</span>':fmtPct(n.diffT)}</span></td>
       <td class="num">${n.sh25.toFixed(2)}% → ${n.sh26.toFixed(2)}%</td>
-      <td class="num"><span class="badge ${n.diffShare>=0?'up':'down'}">${fmtPctPt(n.diffShare)}</span></td>
-      <td>${indicator}</td>`;
+      <td><span class="badge ${n.diffShare>=0?'up':'down'}">${fmtPctPt(n.diffShare)}</span></td>
+      <td><span class="badge ${posBadgeClass}" style="font-size:11px">${posLabel}</span></td>`;
     tbody.appendChild(tr);
   });
 }
