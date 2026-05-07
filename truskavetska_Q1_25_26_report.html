@@ -298,7 +298,7 @@ td.num{font-family:'JetBrains Mono',monospace;text-align:right}
 <div class="section-header">
 <div class="pre">Розділ 1 / 8</div>
 <h2>Огляд: Трускавецька зростає у 6× швидше за ринок</h2>
-<p>Категорія додала 4,4% (+4,4 млн пляшок), Трускавецька з Private Label — 27,2% (+2,5 млн), а сам бренд (без Private Label) показав вибухове зростання +66% (+1,1 млн). Частка з PL у категорії перетнула психологічну позначку 11%.</p>
+<p>Категорія додала 4,4% (+4,4 млн пляшок), Трускавецька з Private Label — 27,2% (+2,5 млн), а сам бренд (без Private Label) показав зростання +66% (+1,1 млн). Частка з PL у категорії перетнула психологічну позначку 11%.</p>
 </div>
 
 <div class="kpi-grid">
@@ -391,7 +391,7 @@ td.num{font-family:'JetBrains Mono',monospace;text-align:right}
 </div>
 
 <div class="insight">
-<strong>Ключові спостереження:</strong> Трускавецька з PL обігнала Buvette за абсолютним обсягом (11,9M проти 6,6M пляшок) і займає 3-тю позицію в категорії після Моршинської та Карпатської Джерельної. Рост частки на +2,04 в.п. — найбільший серед усіх топ-брендів.
+<strong>Ключові спостереження:</strong> Трускавецька з PL утримує <strong>2-ге місце</strong> в категорії після Моршинської (33,8M) обидва періоди, але суттєво <strong>зміцнила цю позицію</strong>: у Q1 2025 відрив від найближчого переслідувача (Buvette) становив ~0,6M пляшок, а у Q1 2026 — вже ~1,8M пляшок над Карпатською Дж. Серед конкурентів-переслідувачів відбулась перестановка: Buvette просіла з 3-го на 5-те місце (-24%), натомість Карпатська Дж. піднялась з 5-го на 3-тє (+22%). Зростання частки <strong>Трускавецька з PL на +2,04 в.п.</strong> (з 9,38% до 11,42%) — найбільше серед усіх топ-брендів.
 </div>
 
 </section>
@@ -478,7 +478,7 @@ td.num{font-family:'JetBrains Mono',monospace;text-align:right}
 <div class="section-header">
 <div class="pre">Розділ 4 / 8</div>
 <h2>Регіони: де нарощуємо, де втрачаємо</h2>
-<p>Майже всі області в плюсі. Лідери за абсолютним приростом — Київська, Дніпропетровська, Львівська. Найпотужніші темпи (без PL) — Дніпропетровська (+128%), Чернігівська (+92%), Хмельницька (+91%). Єдина область у мінусі (з PL) — Херсонська (-5%).</p>
+<p>Майже всі області в плюсі. Лідери за абсолютним приростом — Київська, Дніпропетровська, Львівська. Найвищі темпи зростання (без PL) — Дніпропетровська (+128%), Чернігівська (+92%), Хмельницька (+91%). Єдина область у мінусі (з PL) — Херсонська (-5%).</p>
 </div>
 
 <div class="toggle-group" id="geoToggle">
@@ -535,7 +535,7 @@ td.num{font-family:'JetBrains Mono',monospace;text-align:right}
 </div>
 <div class="chart-card">
 <h3>Найбільші зростання SKU (Q1 2026 vs Q1 2025)</h3>
-<div class="desc">PET 7л — абсолютний хіт зростання за рахунок розширення дистрибуції.</div>
+<div class="desc">PET 7л — найвищий темп зростання серед усіх форматів за рахунок розширення дистрибуції.</div>
 <div class="chart-wrap"><canvas id="chartSkuGrowth" role="img" aria-label="Зростання SKU">Зростання SKU</canvas></div>
 </div>
 </div>
@@ -1814,13 +1814,77 @@ function initCompetitors(){
   });
 
   // Share chart
-  const shareData = competitors.filter(c=>c.label!=='Трускавецька без PL').map(c=>({
+  const shareData = competitors.map(c=>({
     ...c,
     sh25:(c.d25/data.summary.q1_2025.category*100),
     sh26:(c.d26/data.summary.q1_2026.category*100)
   }));
+
+  // Plugin для відображення зміни в.п. над парою стовпчиків
+  const sharePointsPlugin = {
+    id:'sharePoints',
+    afterDatasetsDraw: (chart) => {
+      const {ctx, scales:{x,y}} = chart;
+      const meta25 = chart.getDatasetMeta(0);
+      const meta26 = chart.getDatasetMeta(1);
+      const ds25 = chart.data.datasets[0].data;
+      const ds26 = chart.data.datasets[1].data;
+      
+      ds25.forEach((v25, i) => {
+        const v26 = ds26[i];
+        const diff = v26 - v25;
+        const bar25 = meta25.data[i];
+        const bar26 = meta26.data[i];
+        // Позиція по центру пари стовпчиків
+        const cx = (bar25.x + bar26.x) / 2;
+        const topY = Math.min(bar25.y, bar26.y) - 8;
+        
+        // Колір залежно від зміни
+        const isPositive = diff >= 0;
+        const color = isPositive ? '#5dd394' : '#ef6b6b';
+        const text = (isPositive?'+':'') + diff.toFixed(2) + ' в.п.';
+        
+        ctx.save();
+        ctx.font = '600 11px Manrope';
+        const textWidth = ctx.measureText(text).width;
+        const padX = 6, padY = 3;
+        const boxW = textWidth + padX*2;
+        const boxH = 18;
+        const boxX = cx - boxW/2;
+        const boxY = topY - boxH;
+        
+        // Фон з обвідкою
+        ctx.fillStyle = isPositive ? 'rgba(93,211,148,0.18)' : 'rgba(239,107,107,0.18)';
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 1;
+        const r = 4;
+        ctx.beginPath();
+        ctx.moveTo(boxX+r, boxY);
+        ctx.lineTo(boxX+boxW-r, boxY);
+        ctx.quadraticCurveTo(boxX+boxW, boxY, boxX+boxW, boxY+r);
+        ctx.lineTo(boxX+boxW, boxY+boxH-r);
+        ctx.quadraticCurveTo(boxX+boxW, boxY+boxH, boxX+boxW-r, boxY+boxH);
+        ctx.lineTo(boxX+r, boxY+boxH);
+        ctx.quadraticCurveTo(boxX, boxY+boxH, boxX, boxY+boxH-r);
+        ctx.lineTo(boxX, boxY+r);
+        ctx.quadraticCurveTo(boxX, boxY, boxX+r, boxY);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        
+        // Текст
+        ctx.fillStyle = color;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(text, cx, boxY + boxH/2);
+        ctx.restore();
+      });
+    }
+  };
+
   new Chart(document.getElementById('chartShareBrands'), {
     type:'bar',
+    plugins:[sharePointsPlugin],
     data:{
       labels:shareData.map(c=>c.label),
       datasets:[
@@ -1830,13 +1894,22 @@ function initCompetitors(){
     },
     options:{
       responsive:true, maintainAspectRatio:false,
+      layout:{padding:{top:28}},
       scales:{
         y:{grid:{color:'rgba(96,165,250,0.07)'},ticks:{callback:v=>v+'%'}},
         x:{grid:{display:false},ticks:{font:{size:11}, maxRotation:30, minRotation:30}}
       },
       plugins:{
         legend:{position:'bottom'},
-        tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.parsed.y.toFixed(2)+'%'}}
+        tooltip:{callbacks:{
+          label:c=>c.dataset.label+': '+c.parsed.y.toFixed(2)+'%',
+          afterBody:(items)=>{
+            if(items.length<2) return '';
+            const i = items[0].dataIndex;
+            const diff = shareData[i].sh26 - shareData[i].sh25;
+            return 'Δ: '+(diff>=0?'+':'')+diff.toFixed(2)+' в.п.';
+          }
+        }}
       }
     }
   });
