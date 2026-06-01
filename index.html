@@ -1,24 +1,194 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-    <meta charset="UTF-8" name="robots" content="noindex, nofollow">
-    <title>Звіти Marketing</title>
-    <style>
-        body { font-family: sans-serif; line-height: 1.6; padding: 20px; max-width: 600px; margin: auto; }
-        h1 { border-bottom: 2px solid #eee; }
-        ul { list-style: none; padding: 0; }
-        li { background: #f4f4f4; margin: 5px 0; padding: 10px; border-radius: 5px; }
-        a { text-decoration: none; color: #007bff; font-weight: bold; }
-        a:hover { text-decoration: underline; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Заборона індексації пошуковими системами -->
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+  <meta name="googlebot" content="noindex, nofollow">
+
+  <title>Маркетингові звіти</title>
+
+  <style>
+    :root {
+      --bg: #f4f1ea;
+      --ink: #1a1814;
+      --muted: #6b6459;
+      --line: #d8d2c4;
+      --card: #fbf9f3;
+      --accent-alex: #b03a4a;
+      --accent-trusk: #2d6e6a;
+      --shadow: 0 1px 2px rgba(26,24,20,.06), 0 8px 24px rgba(26,24,20,.05);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+      padding: 48px 24px;
+      background-image:
+        radial-gradient(circle at 1px 1px, rgba(26,24,20,.04) 1px, transparent 0);
+      background-size: 22px 22px;
+    }
+
+    .wrap { max-width: 760px; margin: 0 auto; }
+
+    header {
+      border-bottom: 2px solid var(--ink);
+      padding-bottom: 20px;
+      margin-bottom: 48px;
+    }
+
+    header .eyebrow {
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    header h1 {
+      font-size: 42px;
+      font-weight: 400;
+      letter-spacing: -.01em;
+      line-height: 1.05;
+    }
+
+    .brand {
+      margin-bottom: 44px;
+    }
+
+    .brand-head {
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+      margin-bottom: 18px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand-head h2 {
+      font-size: 26px;
+      font-weight: 400;
+    }
+
+    .dot {
+      width: 11px; height: 11px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      transform: translateY(-2px);
+    }
+
+    .alex .dot { background: var(--accent-alex); }
+    .trusk .dot { background: var(--accent-trusk); }
+
+    .section-label {
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 22px 0 12px;
+    }
+
+    .reports {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 12px;
+    }
+
+    .reports a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px 16px;
+      text-decoration: none;
+      color: var(--ink);
+      box-shadow: var(--shadow);
+      transition: transform .15s ease, border-color .15s ease;
+    }
+
+    .reports a:hover {
+      transform: translateY(-2px);
+    }
+
+    .alex .reports a:hover { border-color: var(--accent-alex); }
+    .trusk .reports a:hover { border-color: var(--accent-trusk); }
+
+    .reports .label { font-size: 16px; }
+
+    .reports .arrow {
+      font-family: 'Courier New', monospace;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    footer {
+      margin-top: 56px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      letter-spacing: .08em;
+      color: var(--muted);
+    }
+  </style>
 </head>
 <body>
-    <h1>Список маркетингових звітів</h1>
-    <ul>
-        <li><a href="truskavetska_mar2026_report.html">Truskavetska — Березень 2026</a></li>
-        <li><a href="truskavetska_feb2026_report.html">Truskavetska — Лютий 2026</a></li>
-        <li><a href="alex_mar2026_report.html">Alex — Березень 2026</a></li>
-        <li><a href="alex_feb2026_report.html">Alex — Лютий 2026</a></li>
-    </ul>
+  <div class="wrap">
+    <header>
+      <div class="eyebrow">Внутрішні документи</div>
+      <h1>Маркетингові звіти</h1>
+    </header>
+
+    <!-- ALEX -->
+    <section class="brand alex">
+      <div class="brand-head">
+        <span class="dot"></span>
+        <h2>Алекс</h2>
+      </div>
+
+      <div class="section-label">Щомісячні звіти</div>
+      <ul class="reports">
+        <li><a href="alex_feb2026_report.html"><span class="label">Лютий 2026</span><span class="arrow">→</span></a></li>
+        <li><a href="alex_mar2026_report.html"><span class="label">Березень 2026</span><span class="arrow">→</span></a></li>
+        <li><a href="alex_apr2026_report.html"><span class="label">Квітень 2026</span><span class="arrow">→</span></a></li>
+      </ul>
+    </section>
+
+    <!-- TRUSKAVETSKA -->
+    <section class="brand trusk">
+      <div class="brand-head">
+        <span class="dot"></span>
+        <h2>Трускавецька</h2>
+      </div>
+
+      <div class="section-label">Щомісячні звіти</div>
+      <ul class="reports">
+        <li><a href="truskavetska_feb2026_report.html"><span class="label">Лютий 2026</span><span class="arrow">→</span></a></li>
+        <li><a href="truskavetska_mar2026_report.html"><span class="label">Березень 2026</span><span class="arrow">→</span></a></li>
+        <li><a href="truskavetska_apr2026_report.html"><span class="label">Квітень 2026</span><span class="arrow">→</span></a></li>
+      </ul>
+
+      <div class="section-label">Квартальні звіти</div>
+      <ul class="reports">
+        <li><a href="truskavetska_Q1_25_26_report.html"><span class="label">Q1 2025–2026</span><span class="arrow">→</span></a></li>
+      </ul>
+    </section>
+
+    <footer>
+      Конфіденційно · Не для індексації
+    </footer>
+  </div>
 </body>
 </html>
