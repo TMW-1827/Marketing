@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Порівняння мінеральних вод Закарпаття — бальнеологічні висновки</title>
+<style>
+  :root{
+    --bg:#f6f3ec;
+    --ink:#1f2a23;
+    --ink-soft:#4b5a50;
+    --line:#d9d2c2;
+    --paper:#ffffff;
+    --accent:#1f6f5c;
+    --accent-deep:#134a3d;
+    --accent-soft:#e4efe9;
+    --warn:#9a5b22;
+    --warn-soft:#f6ecdd;
+    --chip:#eef2ee;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family: "Georgia", "Noto Serif", "Times New Roman", serif;
+    line-height:1.5;
+    padding-bottom:60px;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px;}
+
+  header.hero{
+    background:
+      radial-gradient(1200px 400px at 10% -10%, rgba(31,111,92,.18), transparent 60%),
+      radial-gradient(900px 400px at 100% 0%, rgba(154,91,34,.12), transparent 55%),
+      var(--accent-deep);
+    color:#f3efe4;
+    padding:56px 0 40px;
+    border-bottom:6px solid var(--accent);
+  }
+  header.hero .eyebrow{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    text-transform:uppercase;
+    letter-spacing:.18em;
+    font-size:12px;
+    color:#bcd9cd;
+    margin:0 0 14px;
+  }
+  header.hero h1{
+    font-size:clamp(28px,4vw,42px);
+    margin:0 0 14px;
+    font-weight:700;
+    max-width:820px;
+  }
+  header.hero p{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    color:#d9e6df;
+    max-width:680px;
+    font-size:15px;
+    margin:0;
+  }
+
+  .toc{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin:28px 0 0;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+  }
+  .toc a{
+    color:#eaf4ef;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.25);
+    padding:7px 14px;
+    border-radius:999px;
+    font-size:13px;
+    text-decoration:none;
+    transition:.15s;
+  }
+  .toc a:hover{background:rgba(255,255,255,.2);}
+
+  section{padding:46px 0;}
+  section.summary{padding-top:40px;}
+
+  h2.section-title{
+    font-size:26px;
+    margin:0 0 6px;
+    color:var(--accent-deep);
+  }
+  .section-sub{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    color:var(--ink-soft);
+    font-size:14px;
+    margin:0 0 26px;
+    max-width:760px;
+  }
+
+  /* ===== Summary table ===== */
+  .table-scroll{overflow-x:auto;border-radius:12px;box-shadow:0 1px 0 var(--line);}
+  table.summary-table{
+    width:100%;
+    border-collapse:collapse;
+    background:var(--paper);
+    min-width:980px;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:13.5px;
+  }
+  table.summary-table caption{display:none;}
+  table.summary-table th, table.summary-table td{
+    padding:11px 14px;
+    border-bottom:1px solid var(--line);
+    text-align:left;
+    vertical-align:top;
+  }
+  table.summary-table thead th{
+    background:var(--accent-deep);
+    color:#f3efe4;
+    font-weight:600;
+    position:sticky;
+    top:0;
+    white-space:nowrap;
+  }
+  table.summary-table tbody tr:nth-child(even){background:#faf8f2;}
+  table.summary-table tbody tr:hover{background:var(--accent-soft);}
+  table.summary-table td.name{font-weight:700;color:var(--accent-deep);white-space:nowrap;}
+  table.summary-table td.num{font-variant-numeric:tabular-nums;white-space:nowrap;}
+  .pill{
+    display:inline-block;
+    padding:2px 9px;
+    border-radius:999px;
+    background:var(--chip);
+    font-size:12px;
+    white-space:nowrap;
+  }
+
+  /* ===== Cards grid ===== */
+  .cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(330px,1fr));
+    gap:22px;
+  }
+  .card{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:14px;
+    overflow:hidden;
+    scroll-margin-top:24px;
+    box-shadow:0 1px 2px rgba(20,30,25,.04);
+  }
+  .card-head{
+    padding:20px 22px 16px;
+    border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg, var(--accent-soft), transparent);
+  }
+  .card-head .water-name{
+    font-size:21px;
+    font-weight:700;
+    color:var(--accent-deep);
+    margin:0 0 4px;
+  }
+  .card-head .water-meta{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px 10px;
+    margin-top:8px;
+  }
+  .card-head .water-meta span{
+    background:#fff;
+    border:1px solid var(--line);
+    padding:3px 9px;
+    border-radius:999px;
+  }
+  .card-body{padding:18px 22px 22px;font-family:"Helvetica Neue",Arial,sans-serif;font-size:13.5px;}
+  .card-body h4{
+    font-size:11.5px;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--accent);
+    margin:16px 0 8px;
+  }
+  .card-body h4:first-child{margin-top:0;}
+  .mineral-box{
+    background:var(--chip);
+    border-radius:10px;
+    padding:12px 14px;
+    font-size:13px;
+  }
+  .mineral-box .big{
+    font-size:20px;
+    font-weight:700;
+    color:var(--accent-deep);
+    font-family:"Georgia",serif;
+  }
+  table.ion-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:6px;}
+  table.ion-table td{padding:4px 0;border-bottom:1px dashed var(--line);}
+  table.ion-table td.v{text-align:right;font-variant-numeric:tabular-nums;color:var(--ink-soft);white-space:nowrap;}
+  ul.tight{margin:0;padding-left:18px;}
+  ul.tight li{margin-bottom:4px;}
+  .scope-box{
+    background:var(--warn-soft);
+    border-left:3px solid var(--warn);
+    padding:8px 12px;
+    border-radius:0 8px 8px 0;
+    font-size:12.5px;
+    color:#5c3b14;
+  }
+  .source-note{
+    font-size:11.5px;
+    color:#9a9384;
+    margin-top:14px;
+    border-top:1px dashed var(--line);
+    padding-top:10px;
+  }
+
+  /* ===== legend / footnote ===== */
+  .legend{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:14px 18px;
+    margin-top:18px;
+  }
+  .legend b{color:var(--accent-deep);}
+
+  footer{
+    font-family:"Helvetica Neue",Arial,sans-serif;
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:12px;
+    padding:30px 0 10px;
+  }
+
+  @media (max-width:640px){
+    header.hero{padding:40px 0 30px;}
+    section{padding:32px 0;}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Закарпатська область · Мукачівський / Хустський район</p>
+    <h1>Порівняння природних мінеральних вод за медичними (бальнеологічними) висновками</h1>
+    <p>Зведення даних із семи офіційних висновків ДУ «Український НДІ медичної реабілітації та курортології МОЗ України» щодо складу, мінералізації, медичних показань та протипоказань мінеральних вод Закарпаття.</p>
+    <nav class="toc">
+      <a href="#summary">Зведена таблиця</a>
+      <a href="#luzhanska4">Лужанська 4</a>
+      <a href="#luzhanska15">Лужанська 15</a>
+      <a href="#shayanska">Шаянська</a>
+      <a href="#kupel">Поляна Купель</a>
+      <a href="#kvasova5">Поляна Квасова 5</a>
+      <a href="#kvasova8">Поляна Квасова 8</a>
+      <a href="#kvasova1013">Поляна Квасова (10-к/13-р)</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="summary" id="summary">
+    <h2 class="section-title">Зведена таблиця: ключові параметри</h2>
+    <p class="section-sub">Дані взято з розділу «Об'єкт повинен відповідати таким вимогам щодо безпечності для здоров'я людини» кожного висновку (ДСТУ 878-93 / ГСТУ 42.10-02-96).</p>
+
+    <div class="table-scroll">
+      <table class="summary-table">
+        <thead>
+          <tr>
+            <th>Назва води</th>
+            <th>№ висновку / дата</th>
+            <th>Свердловина</th>
+            <th>Тип</th>
+            <th>Мінералізація, г/л</th>
+            <th>Гідрокарбонат-іони, mg/l</th>
+            <th>Хлорид-іони, mg/l</th>
+            <th>Сульфат-іони, mg/l</th>
+            <th>Кальцій, mg/l</th>
+            <th>Магній, mg/l</th>
+            <th>Натрій+калій, mg/l</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="name">Лужанська 4</td>
+            <td class="num">№95, 17.01.2025</td>
+            <td>№ 4-Е, с. Солочин</td>
+            <td><span class="pill">лікувально-столова</span></td>
+            <td class="num">2,7–4,8</td>
+            <td class="num">1900–3200</td>
+            <td class="num">не більше 100</td>
+            <td class="num">не більше 50</td>
+            <td class="num">50–200</td>
+            <td class="num">не більше 30</td>
+            <td class="num">600–1200</td>
+          </tr>
+          <tr>
+            <td class="name">Лужанська 15</td>
+            <td class="num">№605, 15.11.2022</td>
+            <td>№ 15, с. Голубине</td>
+            <td><span class="pill">лікувально-столова</span></td>
+            <td class="num">2,5–5,0</td>
+            <td class="num">1700–3450</td>
+            <td class="num">не більше 100</td>
+            <td class="num">не більше 50</td>
+            <td class="num">не більше 150</td>
+            <td class="num">не більше 50</td>
+            <td class="num">500–1250</td>
+          </tr>
+          <tr>
+            <td class="name">Шаянська</td>
+            <td class="num">№575, 23.12.2019</td>
+            <td>№ 242-р, с. Шаян</td>
+            <td><span class="pill">лікувально-столова</span></td>
+            <td class="num">1,5–3,5</td>
+            <td class="num">1000,0–2200,0</td>
+            <td class="num">не більше 200,0</td>
+            <td class="num">не більше 120,0</td>
+            <td class="num">не більше 150,0</td>
+            <td class="num">не більше 100,0</td>
+            <td class="num">350,0–900,0</td>
+          </tr>
+          <tr>
+            <td class="name">Поляна Купель</td>
+            <td class="num">№563, 17.01.2023</td>
+            <td>№ 2-Р, № 3-Р, с. Поляна</td>
+            <td><span class="pill">лікувально-столова</span></td>
+            <td class="num">7,0–10,5</td>
+            <td class="num">4500–7000</td>
+            <td class="num">200–600</td>
+            <td class="num">не більше 25,0</td>
+            <td class="num">50–125</td>
+            <td class="num">не більше 50,0</td>
+            <td class="num">2000–2800</td>
+          </tr>
+          <tr>
+            <td class="name">Поляна Квасова 5</td>
+            <td class="num">№610, 13.02.2024</td>
+            <td>№ 5-к, с. Поляна</td>
+            <td><span class="pill">лікувально-столова</span></td>
+            <td class="num">4,5–7,5</td>
+            <td class="num">3200–5000</td>
+            <td class="num">150–400</td>
+            <td class="num">не більше 25</td>
+            <td class="num">не більше 150</td>
+            <td class="num">не більше 50</td>
+            <td class="num">1200–2000</td>
+          </tr>
+          <tr>
+            <td class="name">Поляна Квасова 8</td>
+            <td class="num">№253, 17.10.2025</td>
+            <td>№ 8-к(р), с. Поляна</td>
+            <td><span class="pill">лікувально-столова</span></td>
+            <td class="num">7,0–10,0</td>
+            <td class="num">4900–6500</td>
+            <td class="num">300–500</td>
+            <td class="num">не більше 25</td>
+            <td class="num">не більше 150</td>
+            <td class="num">не більше 50</td>
+            <td class="num">1700–2800</td>
+          </tr>
+          <tr>
+            <td class="name">Поляна Квасова<br><span style="font-weight:400;font-size:12px;color:var(--ink-soft)">(10-к / 13-р)</span></td>
+            <td class="num">№650, 26.05.2026</td>
+            <td>№ 10-к, № 13-р, с. Поляна</td>
+            <td><span class="pill">лікувально-столова /<br>внутр.+зовн. застосування</span></td>
+            <td class="num">8,0–12,0</td>
+            <td class="num">5300–8000</td>
+            <td class="num">300–650</td>
+            <td class="num">не більше 50</td>
+            <td class="num">не більше 150</td>
+            <td class="num">не більше 50</td>
+            <td class="num">2100–3200</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="legend">
+      <b>Примітка щодо найменувань:</b> вода «Поляна Купель» (висновок №563 від 17.01.2023, свердловини № 2-Р, № 3-Р) — це окрема торгова назва, відмінна від «Поляна Квасова 5» (висновок №610 від 13.02.2024, свердловина № 5-к). Згідно з листом МПП «Алекс» від 21.04.2021 № 78, вода зі свердловини № 5-к раніше називалась «Поляна Купель 5», а потім перейменована на «Поляна Квасова 5». «Поляна Квасова» (висновок №650 від 26.05.2026) узагальнює свердловини № 10-к і № 13-р і відрізняється від «Поляна Квасова 5» та «Поляна Квасова 8», які видобуваються з інших свердловин (№ 5-к і № 8-к(р) відповідно).
+    </div>
+  </section>
+
+  <section id="cards">
+    <h2 class="section-title">Детальні картки по кожній воді</h2>
+    <p class="section-sub">Медичні показання наведено за кодами МКХ-11 так, як вони зазначені у висновках.</p>
+
+    <div class="cards">
+
+      <!-- Лужанська 4 -->
+      <article class="card" id="luzhanska4">
+        <div class="card-head">
+          <div class="water-name">Лужанська 4</div>
+          <div class="water-meta">
+            <span>№95 від 17.01.2025</span>
+            <span>Свердловина № 4-Е</span>
+            <span>с. Солочин, Мукачівський р-н</span>
+            <span>ТОВ «Санаторій «Квітка полонини»</span>
+          </div>
+        </div>
+        <div class="card-body">
+          <h4>Мінералізація та склад</h4>
+          <div class="mineral-box">
+            <div class="big">2,7–4,8 г/л</div>
+            <table class="ion-table">
+              <tr><td>Гідрокарбонат-іони</td><td class="v">1900–3200 mg/l</td></tr>
+              <tr><td>Хлорид-іони</td><td class="v">≤ 100 mg/l</td></tr>
+              <tr><td>Сульфат-іони</td><td class="v">≤ 50 mg/l</td></tr>
+              <tr><td>Іони кальцію</td><td class="v">50–200 mg/l</td></tr>
+              <tr><td>Іони магнію</td><td class="v">≤ 30 mg/l</td></tr>
+              <tr><td>Натрій та калій</td><td class="v">600–1200 mg/l</td></tr>
+              <tr><td>Ортоборна кислота</td><td class="v">35–100 mg/l</td></tr>
+            </table>
+          </div>
+
+          <h4>Сфера застосування</h4>
+          <p>Санаторно-курортна сфера, внутрішнє застосування у лікувальній практиці, промислове фасування мінеральної природної лікувально-столової води.</p>
+
+          <h4>Основні медичні показання</h4>
+          <ul class="tight">
+            <li>Хронічний гастрит (неатрофічний / атрофічний)</li>
+            <li>Виразкова хвороба шлунку та дванадцятипалої кишки</li>
+            <li>Хронічний холецистит, панкреатит</li>
+            <li>Токсичне/медикаментозне ураження печінки, хронічні гепатити</li>
+            <li>Синдром подразненого кишечника, хронічний пієлонефрит</li>
+            <li>Неалкогольна жирова хвороба печінки</li>
+            <li>Цукровий діабет 2 типу</li>
+          </ul>
+
+          <h4>Основні протипоказання</h4>
+          <p class="scope-box">Гострі запальні процеси органів травлення та сечовидільної системи, виразки, хвороба Крона, гострий холецистит/панкреатит, сечокам'яна хвороба, серцева недостатність (BD10) — повний перелік за кодами МКХ у первинному документі.</p>
+
+          <div class="source-note">Джерело: Медичний (бальнеологічний) висновок від 17.01.2025 р. № 95, ДУ «Укр. НДІ медичної реабілітації та курортології МОЗ України».</div>
+        </div>
+      </article>
+
+      <!-- Лужанська 15 -->
+      <article class="card" id="luzhanska15">
+        <div class="card-head">
+          <div class="water-name">Лужанська 15</div>
+          <div class="water-meta">
+            <span>№605 від 15.11.2022</span>
+            <span>Свердловина № 15</span>
+            <span>с. Голубине, Мукачівський р-н</span>
+            <span>ПП фірма «Глобус»</span>
+          </div>
+        </div>
+        <div class="card-body">
+          <h4>Мінералізація та склад</h4>
+          <div class="mineral-box">
+            <div class="big">2,5–5,0 г/л</div>
+            <table class="ion-table">
+              <tr><td>Гідрокарбонат-іони</td><td class="v">1700–3450 mg/l</td></tr>
+              <tr><td>Хлорид-іони</td><td class="v">≤ 100,0 mg/l</td></tr>
+              <tr><td>Сульфат-іони</td><td class="v">≤ 50 mg/l</td></tr>
+              <tr><td>Іони кальцію</td><td class="v">≤ 150 mg/l</td></tr>
+              <tr><td>Іони магнію</td><td class="v">≤ 50 mg/l</td></tr>
+              <tr><td>Натрій та калій</td><td class="v">500–1250 mg/l</td></tr>
+              <tr><td>Ортоборна кислота</td><td class="v">35–100 mg/l</td></tr>
+            </table>
+          </div>
+
+          <h4>Сфера застосування</h4>
+          <p>Промислове фасування мінеральної природної лікувально-столової води, торгівельна мережа.</p>
+
+          <h4>Основні медичні показання</h4>
+          <ul class="tight">
+            <li>Виразкова хвороба шлунку та дванадцятипалої кишки</li>
+            <li>Хронічний неатрофічний гастрит</li>
+            <li>Синдром подразненого кишечника (закрепи/діарея/змішаний тип)</li>
+            <li>Алкогольна та неалкогольна жирова хвороба печінки</li>
+            <li>Токсичне/медикаментозне ураження печінки</li>
+            <li>Хронічний панкреатит, хронічний пієлонефрит</li>
+          </ul>
+
+          <h4>Основні протипоказання</h4>
+          <p class="scope-box">Гострі запальні процеси органів травлення та сечовидільної системи, виразки в гострій фазі, хвороба Крона, виразковий коліт, жовчокам'яна хвороба у гострій формі, серцева недостатність (BD10).</p>
+
+          <div class="source-note">Джерело: Медичний (бальнеологічний) висновок від 15.11.2022 р. № 605, ДУ «Укр. НДІ медичної реабілітації та курортології МОЗ України».</div>
+        </div>
+      </article>
+
+      <!-- Шаянська -->
+      <article class="card" id="shayanska">
+        <div class="card-head">
+          <div class="water-name">Шаянська</div>
+          <div class="water-meta">
+            <span>№575 від 23.12.2019</span>
+            <span>Свердловина № 242-р</span>
+            <span>с. Шаян, Хустський р-н</span>
+            <span>ДП «Санаторій «Шаян»</span>
+          </div>
+        </div>
+        <div class="card-body">
+          <h4>Мінералізація та склад</h4>
+          <div class="mineral-box">
+            <div class="big">1,5–3,5 г/л</div>
+            <table class="ion-table">
+              <tr><td>Гідрокарбонат-іони</td><td class="v">1000,0–2200,0 mg/l</td></tr>
+              <tr><td>Хлорид-іони</td><td class="v">≤ 200,0 mg/l</td></tr>
+              <tr><td>Сульфат-іони</td><td class="v">≤ 120,0 mg/l</td></tr>
+              <tr><td>Іони кальцію</td><td class="v">≤ 150,0 mg/l</td></tr>
+              <tr><td>Іони магнію</td><td class="v">≤ 100,0 mg/l</td></tr>
+              <tr><td>Натрій та калій</td><td class="v">350,0–900,0 mg/l</td></tr>
+              <tr><td>Метакремнієва кислота</td><td class="v">50,0–150,0 mg/l</td></tr>
+            </table>
+          </div>
+
+          <h4>Сфера застосування</h4>
+          <p>Питне лікування у санаторно-курортній сфері та промислове фасування мінеральної природної лікувально-столової води.</p>
+
+          <h4>Основні медичні показання</h4>
+          <ul class="tight">
+            <li>Хронічний неатрофічний / атрофічний гастрит, функціональна диспепсія</li>
+            <li>Неалкогольна жирова хвороба печінки (стеатоз, стеатогепатит)</li>
+            <li>Хронічні захворювання жовчного міхура, дисфункціональні розлади біліарного тракту</li>
+            <li>Постхолецистектомічний синдром, синдром подразненого кишечника</li>
+            <li>Хронічний коліт, хронічний пієлонефрит, хронічний цистит</li>
+            <li>Сечокам'яна хвороба, сечокислий діатез</li>
+            <li>Цукровий діабет 1 і 2 типу у фазі компенсації</li>
+          </ul>
+
+          <h4>Основні протипоказання</h4>
+          <p class="scope-box">Загострення запальних процесів шлунка, дванадцятипалої кишки, жовчного міхура; ускладнена жовчокам'яна хвороба; хвороба Крона; неспецифічний виразковий коліт; злоякісні новоутворення органів травлення; портальна гіпертензія; ниркова недостатність у стадії декомпенсації.</p>
+
+          <div class="source-note">Джерело: Медичний (бальнеологічний) висновок від 23.12.2019 р. № 575, ДУ «Укр. НДІ медичної реабілітації та курортології МОЗ України».</div>
+        </div>
+      </article>
+
+      <!-- Поляна Купель -->
+      <article class="card" id="kupel">
+        <div class="card-head">
+          <div class="water-name">Поляна Купель</div>
+          <div class="water-meta">
+            <span>№563 від 17.01.2023</span>
+            <span>Свердловини № 2-Р, № 3-Р</span>
+            <span>с. Поляна, Мукачівський р-н</span>
+            <span>ТОВ «Санаторій «Поляна»</span>
+          </div>
+        </div>
+        <div class="card-body">
+          <h4>Мінералізація та склад</h4>
+          <div class="mineral-box">
+            <div class="big">7,0–10,5 г/л</div>
+            <table class="ion-table">
+              <tr><td>Гідрокарбонат-іони</td><td class="v">4500–7000 mg/l</td></tr>
+              <tr><td>Хлорид-іони</td><td class="v">200–600 mg/l</td></tr>
+              <tr><td>Сульфат-іони</td><td class="v">≤ 25,0 mg/l</td></tr>
+              <tr><td>Іони кальцію</td><td class="v">50–125 mg/l</td></tr>
+              <tr><td>Іони магнію</td><td class="v">≤ 50,0 mg/l</td></tr>
+              <tr><td>Натрій та калій</td><td class="v">2000–2800 mg/l</td></tr>
+              <tr><td>Ортоборна кислота</td><td class="v">100–250 mg/l</td></tr>
+            </table>
+          </div>
+
+          <h4>Сфера застосування</h4>
+          <p>Питне лікування у санаторно-курортній сфері та промислове фасування мінеральної природної лікувально-столової води «Поляна Купель».</p>
+
+          <h4>Основні медичні показання</h4>
+          <ul class="tight">
+            <li>Хронічний неатрофічний гастрит</li>
+            <li>Виразкова хвороба шлунку та дванадцятипалої кишки (неактивна фаза)</li>
+            <li>Синдром подразненого кишечника</li>
+            <li>Алкогольна, неалкогольна жирова хвороба та токсичне ураження печінки</li>
+            <li>Хронічний холецистит, панкреатит, гепатити</li>
+            <li>Хронічний пієлонефрит, хронічний цистит, сечокам'яна хвороба</li>
+          </ul>
+
+          <h4>Основні протипоказання</h4>
+          <p class="scope-box">Гострі запальні процеси органів травлення та сечовидільної системи; виразки в гострій фазі; хвороба Крона; виразковий коліт; гострий холецистит/панкреатит; серцева недостатність (BD10).</p>
+
+          <div class="source-note">Джерело: Медичний (бальнеологічний) висновок від 17.01.2023 р. № 563, ДУ «Укр. НДІ медичної реабілітації та курортології МОЗ України».</div>
+        </div>
+      </article>
+
+      <!-- Поляна Квасова 5 -->
+      <article class="card" id="kvasova5">
+        <div class="card-head">
+          <div class="water-name">Поляна Квасова 5</div>
+          <div class="water-meta">
+            <span>№610 від 13.02.2024</span>
+            <span>Свердловина № 5-к</span>
+            <span>с. Поляна, Мукачівський р-н</span>
+            <span>МПП «Алекс»</span>
+          </div>
+        </div>
+        <div class="card-body">
+          <h4>Мінералізація та склад</h4>
+          <div class="mineral-box">
+            <div class="big">4,5–7,5 г/л</div>
+            <table class="ion-table">
+              <tr><td>Гідрокарбонат-іони</td><td class="v">3200–5000 mg/l</td></tr>
+              <tr><td>Хлорид-іони</td><td class="v">150–400 mg/l</td></tr>
+              <tr><td>Сульфат-іони</td><td class="v">≤ 25 mg/l</td></tr>
+              <tr><td>Іони кальцію</td><td class="v">≤ 150 mg/l</td></tr>
+              <tr><td>Іони магнію</td><td class="v">≤ 50 mg/l</td></tr>
+              <tr><td>Натрій та калій</td><td class="v">1200–2000 mg/l</td></tr>
+              <tr><td>Ортоборна кислота</td><td class="v">35,0–210,0 mg/l</td></tr>
+            </table>
+          </div>
+
+          <h4>Сфера застосування</h4>
+          <p>Промислове фасування мінеральної природної лікувально-столової води «Поляна Квасова 5» (раніше — «Поляна Купель 5», перейменована листом МПП «Алекс» від 21.04.2021 № 78).</p>
+
+          <h4>Основні медичні показання</h4>
+          <ul class="tight">
+            <li>Хронічний неатрофічний гастрит</li>
+            <li>Виразкова хвороба шлунку та дванадцятипалої кишки</li>
+            <li>Хронічний панкреатит</li>
+            <li>Синдром подразненого кишечника (закрепи / діарея)</li>
+            <li>Токсичне ураження печінки, хронічні вірусні гепатити</li>
+            <li>Цукровий діабет 1 та 2 типу</li>
+          </ul>
+
+          <h4>Основні протипоказання</h4>
+          <p class="scope-box">Гострі запальні процеси органів травлення та сечовидільної системи; виразки в гострій фазі; хвороба Крона; виразковий коліт; гострий холецистит/панкреатит; серцева недостатність (BD10).</p>
+
+          <div class="source-note">Джерело: Медичний (бальнеологічний) висновок від 13.02.2024 р. № 610, ДУ «Укр. НДІ медичної реабілітації та курортології МОЗ України».</div>
+        </div>
+      </article>
+
+      <!-- Поляна Квасова 8 -->
+      <article class="card" id="kvasova8">
+        <div class="card-head">
+          <div class="water-name">Поляна Квасова 8</div>
+          <div class="water-meta">
+            <span>№253 від 17.10.2025</span>
+            <span>Свердловина № 8-к(р)</span>
+            <span>с. Поляна, Мукачівський р-н</span>
+            <span>МПП «Алекс»</span>
+          </div>
+        </div>
+        <div class="card-body">
+          <h4>Мінералізація та склад</h4>
+          <div class="mineral-box">
+            <div class="big">7,0–10,0 г/л</div>
+            <table class="ion-table">
+              <tr><td>Гідрокарбонат-іони</td><td class="v">4900–6500 mg/l</td></tr>
+              <tr><td>Хлорид-іони</td><td class="v">300–500 mg/l</td></tr>
+              <tr><td>Сульфат-іони</td><td class="v">≤ 25 mg/l</td></tr>
+              <tr><td>Іони кальцію</td><td class="v">≤ 150 mg/l</td></tr>
+              <tr><td>Іони магнію</td><td class="v">≤ 50 mg/l</td></tr>
+              <tr><td>Натрій та калію</td><td class="v">1700–2800 mg/l</td></tr>
+              <tr><td>Ортоборна кислота</td><td class="v">100–250 mg/l</td></tr>
+            </table>
+          </div>
+
+          <h4>Сфера застосування</h4>
+          <p>Промислове фасування мінеральної природної лікувально-столової води «Поляна Квасова 8» (торгівельна мережа) та використання фасованої води у санаторно-курортній сфері для внутрішнього застосування.</p>
+
+          <h4>Основні медичні показання</h4>
+          <ul class="tight">
+            <li>Хронічний неатрофічний / атрофічний гастрит</li>
+            <li>Функціональна диспепсія, хронічний панкреатит</li>
+            <li>Синдром подразненого кишечника</li>
+            <li>Цукровий діабет 2 типу, порушення толерантності до глюкози</li>
+            <li>Синдром інсулінорезистентності</li>
+            <li>Хронічний пієлонефрит</li>
+          </ul>
+
+          <h4>Основні протипоказання</h4>
+          <p class="scope-box">Гострі запальні процеси органів травлення та сечовидільної системи; виразки в гострій фазі; хвороба Крона; виразковий коліт; гострий холецистит/панкреатит; серцева недостатність (BD10).</p>
+
+          <div class="source-note">Джерело: Медичний (бальнеологічний) висновок від 17.10.2025 р. № 253, ДНП «Укр. НДІ реабілітації та курортології МОЗ України».</div>
+        </div>
+      </article>
+
+      <!-- Поляна Квасова 10-13 -->
+      <article class="card" id="kvasova1013">
+        <div class="card-head">
+          <div class="water-name">Поляна Квасова<br><span style="font-size:14px;font-weight:400;color:var(--ink-soft)">(свердловини № 10-к та № 13-р)</span></div>
+          <div class="water-meta">
+            <span>№650 від 26.05.2026</span>
+            <span>Свердловини № 10-к, № 13-р</span>
+            <span>с. Поляна, Мукачівський р-н</span>
+            <span>ДП «Санаторій «Сонячне Закарпаття»</span>
+          </div>
+        </div>
+        <div class="card-body">
+          <h4>Мінералізація та склад</h4>
+          <div class="mineral-box">
+            <div class="big">8,0–12,0 г/л</div>
+            <table class="ion-table">
+              <tr><td>Гідрокарбонат-іони</td><td class="v">5300–8000 mg/l</td></tr>
+              <tr><td>Хлорид-іони</td><td class="v">300–650 mg/l</td></tr>
+              <tr><td>Сульфат-іони</td><td class="v">≤ 50 mg/l</td></tr>
+              <tr><td>Іони кальцію</td><td class="v">≤ 150 mg/l</td></tr>
+              <tr><td>Іони магнію</td><td class="v">≤ 50 mg/l</td></tr>
+              <tr><td>Натрій та калій</td><td class="v">2100–3200 mg/l</td></tr>
+              <tr><td>Ортоборна кислота</td><td class="v">100,0–250,0 mg/l</td></tr>
+              <tr><td>Діоксид вуглецю</td><td class="v">1000–3200 mg/l</td></tr>
+            </table>
+          </div>
+
+          <h4>Сфера застосування</h4>
+          <p>Використання у лікувальній практиці при внутрішньому <b>та зовнішньому</b> застосуванні, промислове фасування мінеральної природної лікувально-столової води «Поляна Квасова». Найширший спектр застосування серед розглянутих вод — єдина з переліку, що має окремий розділ медичних показань для зовнішнього застосування (бальнеотерапія).</p>
+
+          <h4>Основні медичні показання (внутрішнє застосування)</h4>
+          <ul class="tight">
+            <li>Функціональна диспепсія, гастроезофагеальна рефлюксна хвороба</li>
+            <li>Виразкова хвороба шлунку та дванадцятипалої кишки</li>
+            <li>Хронічний неатрофічний гастрит</li>
+            <li>Жовчокам'яна хвороба, хронічний холецистит</li>
+            <li>Алкогольна/неалкогольна жирова хвороба печінки</li>
+            <li>Цукровий діабет 2 типу</li>
+          </ul>
+
+          <h4>Медичні показання (зовнішнє застосування)</h4>
+          <ul class="tight">
+            <li>Захворювання серцево-судинної системи (есенціальна гіпертензія I ст.)</li>
+            <li>Гінекологічні захворювання (хронічний сальпінгіт, безпліддя, ендометріоз тощо)</li>
+            <li>Деякі неінфекційні коліти/проктити</li>
+          </ul>
+
+          <h4>Основні протипоказання</h4>
+          <p class="scope-box">Включають загальний перелік (гострі запальні процеси, виразки, хвороба Крона, серцева недостатність) <b>плюс</b> розширений перелік протипоказань до зовнішнього застосування: активний ревматоїдний артрит, виражений синовіт, коронарний атеросклероз, гіпертонічна хвороба II-III ст., злоякісні пухлини, фіброз/цироз печінки тощо.</p>
+
+          <div class="source-note">Джерело: Медичний (бальнеологічний) висновок (узагальнений) від 26.05.2026 р. № 650, ДНТ «Укр. НДІ реабілітації та курортології МОЗ України».</div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <section id="notes">
+    <h2 class="section-title">Загальні спостереження</h2>
+    <p class="section-sub"></p>
+    <ul style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:var(--ink-soft);max-width:820px;">
+      <li><b>Усі сім вод</b> — гідрокарбонатного типу з переважанням натрію/калію, видобуваються в Мукачівському (6 джерел) та Хустському (1 джерело — Шаянська) районах Закарпатської області.</li>
+      <li><b>За мінералізацією</b> води утворюють чіткий градієнт: Шаянська (1,5–3,5 г/л, найслабша) → Лужанська 15 і Лужанська 4 (~2,5–5,0 г/л) → Поляна Квасова 5 (4,5–7,5 г/л) → Поляна Купель і Поляна Квасова 8 (7–10,5 г/л) → Поляна Квасова 10-к/13-р (8–12 г/л, найміцніша).</li>
+      <li><b>Усі води</b> показані при хронічному гастриті, виразковій хворобі шлунку та дванадцятипалої кишки, захворюваннях жовчовивідної системи та печінки — це спільне «ядро» показань курортології Закарпаття.</li>
+      <li><b>Унікальність висновку № 650</b> («Поляна Квасова», 10-к/13-р) — єдиний документ із розділом зовнішнього застосування (бальнеотерапія при гінекологічних та серцево-судинних станах), що суттєво розширює протипоказання.</li>
+      <li>Усі висновки видані / поновлені ДУ (пізніше — ДНП/ДНТ) «Український науково-дослідний інститут медичної реабілітації та курортології МОЗ України» (м. Одеса) і затверджені на засіданні Вченої ради за підписом директора Костянтина Бабова.</li>
+    </ul>
+  </section>
+
+</main>
+
+<footer>
+  Сторінку згенеровано на основі сканованих медичних (бальнеологічних) висновків з проєктних файлів · дані наведено без змін відповідно до офіційних документів
+</footer>
+
+</body>
+</html>
