@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Навчальний портал ТМ «Трускавецька» — для внутрішнього використання</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Sofia+Sans+Extra+Condensed:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#005EB8;        /* Pantone 300 C */
+  --green:#00966C;       /* Pantone 7724 C */
+  --red:#C5003E;         /* Pantone 1935 C */
+  --silver:#8A8D8F;      /* Pantone 877 C */
+  --blue-deep:#003C77;
+  --ink:#0B2137;
+  --ink-soft:#4A5F73;
+  --line:#D9E2EB;
+  --paper:#F2F6FA;
+  --card:#FFFFFF;
+  --warn:#B3261E;
+  --warn-bg:#FCEEED;
+  --ok-bg:#E9F5F0;
+  --amber:#9A6700;
+  --amber-bg:#FFF7E0;
+  --disp:"Sofia Sans Extra Condensed","Arial Narrow",Impact,sans-serif;
+  --body:"Montserrat","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--disp);font-weight:800;letter-spacing:.005em;line-height:1.02;margin:0}
+h1{font-size:clamp(38px,5.2vw,62px);text-transform:uppercase}
+h2{font-size:clamp(28px,3.4vw,40px);text-transform:uppercase}
+h3{font-size:23px;text-transform:uppercase;letter-spacing:.01em}
+h4{font-size:16.5px;font-family:var(--body);font-weight:700;margin:0}
+p{margin:0 0 14px}
+a{color:var(--blue)}
+code,.mono{font-family:var(--mono);font-size:.92em;font-variant-numeric:tabular-nums}
+
+/* ---------- Верхнє меню ---------- */
+.hdr{position:sticky;top:0;z-index:40;background:#fff;border-bottom:1px solid var(--line);box-shadow:0 1px 0 rgba(11,33,55,.04)}
+.hdrtop{display:flex;align-items:center;gap:20px;padding:12px 26px;max-width:1400px;margin:0 auto}
+.logo{font-family:var(--disp);font-weight:900;font-size:27px;text-transform:uppercase;letter-spacing:.01em;line-height:1;color:var(--red);text-decoration:none;flex:0 0 auto}
+.logo em{font-style:normal;color:var(--red)}
+.logo span{display:block;font-family:var(--body);font-size:9px;letter-spacing:.15em;color:var(--ink-soft);font-weight:600;margin-top:4px}
+.menubtn{display:none;align-items:center;gap:6px;background:var(--paper);border:1px solid var(--line);
+  border-radius:8px;padding:8px 11px;font-family:var(--body);font-size:12.5px;font-weight:600;
+  color:var(--ink);cursor:pointer;flex:0 0 auto;max-width:46vw}
+.menubtn .cur{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.menubtn .car{color:var(--ink-soft);font-size:10px;transition:transform .18s}
+.menubtn[aria-expanded="true"]{background:#EAF2FB;border-color:#C2D9F0}
+.menubtn[aria-expanded="true"] .car{transform:rotate(180deg)}
+.scrim{position:fixed;inset:0;background:rgba(11,33,55,.32);z-index:35;display:none}
+.scrim.show{display:block}
+.searchbox{flex:1;max-width:430px;position:relative}
+.searchbox input{width:100%;padding:9px 13px 9px 40px;border:1px solid var(--line);border-radius:8px;font-family:var(--body);font-size:13.5px;background:var(--paper);color:var(--ink)}
+.searchbox input:focus{outline:2px solid var(--blue);outline-offset:-1px;border-color:transparent;background:#fff}
+.searchbox .ico{position:absolute;left:13px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:#93A7B9;pointer-events:none;display:block}
+.searchbox .ico svg{display:block;width:16px;height:16px}
+.searchbox .clr{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:none;color:#93A7B9;font-size:19px;line-height:1;padding:5px 8px;cursor:pointer;display:none;border-radius:6px}
+.searchbox .clr:hover{color:var(--ink);background:var(--line)}
+.searchbox.filled .clr{display:block}
+.searchbox.filled input{padding-right:34px}
+.searchres button.act{background:#EAF2FB}
+.searchres .more{padding:9px 14px;font-size:11.5px;color:var(--ink-soft);background:#F7FAFC;border-top:1px solid var(--line)}
+.tabs a:focus-visible,.searchres button:focus-visible,.btn:focus-visible,.chip:focus-visible,.bt:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:6px}
+.searchres{position:absolute;top:calc(100% + 6px);left:0;right:0;background:#fff;border:1px solid var(--line);border-radius:9px;box-shadow:0 12px 34px rgba(11,33,55,.16);max-height:62vh;overflow-y:auto;display:none;z-index:50}
+.searchres.show{display:block}
+.searchres button{display:block;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:10px 14px;font-family:var(--body);font-size:13px;cursor:pointer;color:var(--ink)}
+.searchres button:hover{background:var(--paper)}
+.searchres button:last-child{border-bottom:0}
+.searchres .hint{font-size:11px;color:var(--ink-soft);display:block;margin-top:2px}
+.searchres .empty{padding:14px;font-size:13px;color:var(--ink-soft)}
+.prog{margin-left:auto;display:flex;align-items:center;gap:10px;font-size:11.5px;color:var(--ink-soft);white-space:nowrap;flex:0 0 auto}
+.progbar{width:96px;height:6px;background:var(--line);border-radius:4px;overflow:hidden}
+.progbar i{display:block;height:100%;background:var(--green);width:0;transition:width .35s}
+
+.tabs{display:flex;flex-wrap:wrap;justify-content:center;align-items:stretch;row-gap:2px;padding:2px 16px 0;max-width:1400px;margin:0 auto}
+.tabgroup{display:flex;flex-wrap:wrap;justify-content:center;align-items:stretch;border-left:1px solid var(--line);padding-left:10px;margin-right:10px}
+.tabgroup:first-child{border-left:0;padding-left:0}
+.tabgroup:last-child{margin-right:0}
+.tabs a{padding:9px 11px 8px;font-size:12.5px;font-weight:500;white-space:nowrap;color:var(--ink-soft);text-decoration:none;border-bottom:3px solid transparent;transition:.14s;display:flex;align-items:center;gap:5px;border-radius:6px 6px 0 0}
+.tabs a:hover{color:var(--ink);background:var(--paper)}
+.tabs a.on{color:var(--blue);border-bottom-color:var(--blue);font-weight:700;background:var(--paper)}
+.tabs a .ck{color:var(--green);font-size:10.5px;opacity:0}
+.tabs a.done .ck{opacity:1}
+.tabs .glab{display:flex;align-items:center;font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:#9DB1C4;font-weight:700;padding-right:8px;white-space:nowrap}
+
+.wrap{padding:34px 26px 90px;max-width:1060px;margin:0 auto}
+section.pane{display:none;animation:fade .22s ease}
+section.pane.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--blue);margin-bottom:12px;font-weight:600}
+.lede{font-size:17px;line-height:1.62;color:var(--ink-soft);max-width:68ch;margin-bottom:28px}
+.rule{height:3px;background:var(--ink);width:52px;margin:18px 0 26px}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-bottom:18px}
+.card>h3,.card>h4{margin-bottom:12px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:14px}
+
+.stat{background:#fff;border:1px solid var(--line);border-left:3px solid var(--blue);border-radius:10px;padding:16px 18px}
+.stat .v{font-family:var(--disp);font-size:38px;font-weight:900;line-height:.94;color:var(--blue)}
+.stat .v small{font-size:18px;font-weight:700}
+.stat .k{font-size:11.5px;color:var(--ink-soft);margin-top:7px;line-height:1.45}
+.stat.g{border-left-color:var(--green)}
+.stat.g .v{color:var(--green)}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);font-weight:600;background:#F7FAFC}
+td.num,th.num{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:#fff}
+.tablewrap table{font-size:13px}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:#F7FAFC}
+td.why{color:var(--ink-soft);font-size:12.5px;line-height:1.55;max-width:460px}
+
+.tag{display:inline-block;padding:3px 9px;border-radius:20px;font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}
+.tag.b{background:#E4EFFA;color:var(--blue-deep)}
+.tag.g{background:var(--ok-bg);color:#00694C}
+.tag.a{background:var(--amber-bg);color:var(--amber)}
+.tag.r{background:var(--warn-bg);color:var(--warn)}
+.tag.n{background:#EEF2F6;color:var(--ink-soft)}
+
+.note{border-radius:10px;padding:15px 18px;margin:16px 0;font-size:14px;border:1px solid}
+.note.ok{background:var(--ok-bg);border-color:#B7E0D0}
+.note.warn{background:var(--warn-bg);border-color:#F0C4C0}
+.note.info{background:#EAF2FB;border-color:#C2D9F0}
+.note.amber{background:var(--amber-bg);border-color:#EBD9A0}
+.note b{display:block;margin-bottom:5px;font-size:13px;text-transform:uppercase;letter-spacing:.05em}
+
+ul.clean{list-style:none;padding:0;margin:0}
+ul.clean li{padding:9px 0 9px 26px;border-bottom:1px solid var(--line);position:relative;font-size:14px}
+ul.clean li:last-child{border-bottom:0}
+ul.clean li::before{content:"";position:absolute;left:4px;top:17px;width:7px;height:7px;border-radius:50%;background:var(--blue)}
+ul.clean.g li::before{background:var(--green)}
+ul.clean.x li::before{content:"×";background:none;left:2px;top:8px;width:auto;height:auto;color:var(--warn);font-weight:700;font-size:17px}
+ul.clean.v li::before{content:"✓";background:none;left:2px;top:9px;width:auto;height:auto;color:var(--green);font-weight:700;font-size:14px}
+
+.btn{display:inline-flex;align-items:center;gap:7px;background:var(--blue);color:#fff;border:0;border-radius:8px;padding:11px 20px;font-family:var(--body);font-size:13.5px;font-weight:600;cursor:pointer;transition:background .15s}
+.btn:hover{background:var(--blue-deep)}
+.btn.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
+.btn.ghost:hover{background:var(--paper)}
+.btn.gr{background:var(--green)}
+.btn.gr:hover{background:#00734F}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+select,input[type=text],input[type=number]{font-family:var(--body);font-size:13.5px;padding:9px 11px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+select:focus,input:focus{outline:2px solid var(--blue);outline-offset:-1px}
+label.fld{display:block;font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-soft);font-weight:600;margin-bottom:5px}
+
+/* ---------- Полиця в масштабі ---------- */
+.shelf{background:linear-gradient(180deg,#fff 0%,#E8EFF6 100%);border:1px solid var(--line);border-radius:12px;padding:26px 20px 0;overflow-x:auto}
+.shelfrow{display:flex;align-items:flex-end;gap:14px;min-height:238px}
+.shelfsep{flex:0 0 1px;align-self:stretch;background:var(--line);margin:0 10px 26px}
+.shelfhdr{display:flex;margin-bottom:7px}
+.shelfhdr i{flex:0 0 auto}
+.shelfhdr span{font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:#9DB1C4;font-weight:700;padding-bottom:5px;border-bottom:1px solid var(--line)}
+.bt{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;cursor:pointer;background:none;border:0;padding:0;font-family:var(--body)}
+.bt .cap,.bt .neck,.bt .body{display:block}
+.bt .cap{width:46%;height:7px;border-radius:2px 2px 0 0}
+.bt .neck{width:38%;height:9px}
+.bt .body{width:100%;border-radius:4px 4px 3px 3px;transition:transform .16s,box-shadow .16s}
+.bt:hover .body{transform:translateY(-5px);box-shadow:0 8px 18px rgba(11,33,55,.22)}
+.bt .dots{display:flex;gap:3px;justify-content:center;height:9px;align-items:center;margin-top:7px}
+.bt .dots i{width:8px;height:8px;border-radius:50%;border:1.5px solid;display:block}
+.shelfdiv{flex:0 0 auto;width:0;border-left:1px dashed #A9BACB;align-self:stretch;margin:0 13px}
+.bt .lbl{font-size:9.5px;color:var(--ink-soft);margin-top:5px;text-align:center;line-height:1.3;font-weight:600;font-family:var(--mono);min-height:25px;display:block}
+.bt .lbl u{text-decoration:none;color:#93A7B9;font-size:8.5px;letter-spacing:.06em}
+.bt .lbl em{font-style:normal;color:var(--red)}
+.shelfbase{height:9px;background:var(--ink);border-radius:2px;margin-top:2px}
+.shelfnote{font-size:11.5px;color:var(--ink-soft);padding:12px 2px 16px;line-height:1.5}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:11.5px;color:var(--ink-soft);margin-top:12px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:13px;height:13px;border-radius:3px;display:inline-block}
+#tip{position:fixed;z-index:80;background:var(--ink);color:#fff;border-radius:10px;padding:12px 14px;font-size:12px;line-height:1.5;pointer-events:none;opacity:0;transition:opacity .12s;width:232px;box-shadow:0 12px 32px rgba(11,33,55,.3)}
+#tip.show{opacity:1}
+#tip b.t{display:block;font-family:var(--disp);font-size:19px;text-transform:uppercase;letter-spacing:.01em;line-height:1.05;margin-bottom:2px}
+#tip .sub{color:#9DB4CA;font-size:11px;margin-bottom:8px}
+#tip .r{display:flex;justify-content:space-between;gap:12px;border-top:1px solid rgba(255,255,255,.13);padding:4px 0 0;margin-top:4px}
+#tip .r span{color:#9DB4CA}
+#tip .r i{font-style:normal;font-family:var(--mono);font-size:11.5px;font-variant-numeric:tabular-nums}
+
+/* ---------- Каталог ---------- */
+.filters{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
+.chip{background:#fff;border:1px solid var(--line);border-radius:20px;padding:7px 15px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:var(--body);color:var(--ink-soft);transition:.15s}
+.chip:hover{border-color:var(--blue);color:var(--blue)}
+.chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.skugrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(262px,1fr));gap:14px}
+.sku{background:#fff;border:1px solid var(--line);border-radius:11px;padding:15px 16px;cursor:pointer;transition:.15s}
+.sku:hover{border-color:var(--blue);box-shadow:0 5px 16px rgba(11,33,55,.09)}
+.sku .top{display:flex;gap:13px;align-items:flex-start;margin-bottom:10px}
+.sku .mini{flex:0 0 26px;display:flex;flex-direction:column;align-items:center}
+.sku .nm{font-family:var(--disp);font-size:22px;font-weight:800;text-transform:uppercase;line-height:.98;letter-spacing:.01em}
+.sku .gs{font-size:11.5px;color:var(--ink-soft);margin-top:3px}
+.sku .ean{font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);border-top:1px solid var(--line);padding-top:9px;margin-top:10px}
+.sku .tags{display:flex;gap:5px;flex-wrap:wrap}
+.modalbg{position:fixed;inset:0;background:rgba(11,33,55,.55);z-index:60;display:none;align-items:flex-start;justify-content:center;padding:34px 18px;overflow-y:auto}
+.modalbg.show{display:flex}
+.modal{background:#fff;border-radius:14px;max-width:640px;width:100%;padding:26px 28px 30px;position:relative}
+.modal .x{position:absolute;right:14px;top:12px;border:0;background:none;font-size:24px;cursor:pointer;color:var(--ink-soft);line-height:1;padding:4px 8px}
+.kv{display:grid;grid-template-columns:1fr auto;gap:2px 14px;font-size:13.5px;margin:0}
+.kv dt{color:var(--ink-soft);padding:7px 0;border-bottom:1px solid var(--line)}
+.kv dd{margin:0;padding:7px 0;border-bottom:1px solid var(--line);text-align:right;font-weight:600}
+.kv dd.mono{font-family:var(--mono);font-weight:500}
+
+/* ---------- Калькулятори / тест ---------- */
+.calcrow{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-bottom:16px}
+.calcrow>div{flex:1 1 165px}
+.out{background:var(--ink);color:#fff;border-radius:11px;padding:18px 20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:16px}
+.out div span{display:block;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#8FA6BC;margin-bottom:5px}
+.out div b{font-family:var(--disp);font-size:28px;font-weight:900;line-height:1}
+.out div b small{font-size:13px;font-weight:700;color:#B9CBDB}
+.gap{background:#122E49;color:#DCE7F1;border-radius:0 0 11px 11px;margin-top:-11px;padding:13px 20px;font-size:13px;border-top:1px solid rgba(255,255,255,.12)}
+.gap b{color:#fff}
+
+.q{background:#fff;border:1px solid var(--line);border-radius:11px;padding:18px 20px;margin-bottom:12px}
+.q .qt{font-weight:600;margin-bottom:12px;font-size:14.5px}
+.q .qt i{font-family:var(--mono);font-style:normal;color:var(--blue);margin-right:8px;font-size:12.5px}
+.opt{display:block;width:100%;text-align:left;background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin-bottom:7px;font-family:var(--body);font-size:13.5px;cursor:pointer;transition:.12s;color:var(--ink)}
+.opt:hover:not(:disabled){border-color:var(--blue);background:#F5F9FD}
+.opt.right{border-color:var(--green);background:var(--ok-bg);font-weight:600}
+.opt.wrong{border-color:var(--warn);background:var(--warn-bg)}
+.opt:disabled{cursor:default}
+.expl{font-size:12.5px;color:var(--ink-soft);margin-top:9px;padding-top:9px;border-top:1px dashed var(--line);display:none}
+.expl.show{display:block}
+
+.cert{background:#fff;border:2px solid var(--ink);border-radius:12px;padding:38px 40px;text-align:center;margin-top:18px}
+.cert .ttl{font-family:var(--disp);font-size:36px;font-weight:900;text-transform:uppercase;line-height:1;margin-bottom:6px}
+.cert .who{font-family:var(--disp);font-size:31px;font-weight:800;color:var(--blue);margin:20px 0 6px;text-transform:uppercase}
+.cert .meta{font-size:12.5px;color:var(--ink-soft);margin-top:16px;line-height:1.7}
+
+.donebar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);border-radius:11px;padding:15px 20px;margin-top:30px}
+.donebar p{margin:0;font-size:13px;color:var(--ink-soft);flex:1 1 220px}
+.footer{font-size:11.5px;color:var(--ink-soft);border-top:1px solid var(--line);margin-top:36px;padding-top:16px;line-height:1.7}
+
+.sw{display:flex;gap:11px;flex-wrap:wrap}
+.sw>div{flex:1 1 118px;min-width:110px}
+.sw .chipc{height:54px;border-radius:8px;border:1px solid rgba(11,33,55,.12)}
+.sw .lb{font-family:var(--mono);font-size:11px;margin-top:7px;line-height:1.5}
+
+/* ---------- Планшет ---------- */
+@media(max-width:900px){
+  .hdrtop{flex-wrap:wrap;padding:10px 16px;gap:10px 12px}
+  .searchbox{order:3;flex:1 1 100%;max-width:none}
+  .prog{margin-left:auto}
+  .tabs{padding:2px 8px 0}
+  .tabs a{padding:8px 9px 7px;font-size:12px}
+  .tabgroup{padding-left:8px;margin-right:8px}
+  .wrap{padding:24px 16px 80px}
+  .tabs .glab{display:none}
+  .grid2{grid-template-columns:1fr}
+}
+
+/* ---------- Телефон ---------- */
+@media(max-width:640px){
+  body{font-size:14.5px}
+  .hdrtop{padding:9px 14px;padding-left:max(14px,env(safe-area-inset-left));padding-right:max(14px,env(safe-area-inset-right))}
+  .logo{font-size:22px}
+  .logo span{font-size:8px;letter-spacing:.12em;margin-top:3px}
+  .prog{font-size:11px;gap:7px}
+  .progbar{width:64px}
+  /* Safari на iOS збільшує сторінку при фокусі, якщо кегль поля менший за 16px */
+  .searchbox input{font-size:16px;padding:10px 13px 10px 40px}
+  .searchbox.filled input{padding-right:38px}
+  .searchres{max-height:56vh}
+  .searchres button{padding:12px 14px;font-size:13.5px}
+  /* межі груп у меню лишаються помітними, коли підписи груп сховані */
+  .tabgroup+.tabgroup{border-left:1px solid var(--line);padding-left:7px;margin-left:7px}
+
+  /* меню ховається при прокрутці вниз і повертається при прокрутці вгору */
+  /* Меню-шторка: розкривається поверх контенту, тому нічого не зсувається */
+  .menubtn{display:inline-flex}
+  .tabs{position:absolute;left:0;right:0;top:100%;display:none;flex-direction:column;
+        align-items:stretch;justify-content:flex-start;background:#fff;padding:6px 10px 12px;
+        border-bottom:1px solid var(--line);box-shadow:0 14px 30px rgba(11,33,55,.15);
+        max-height:min(70vh,460px);overflow-y:auto;-webkit-overflow-scrolling:touch}
+  .tabs.open{display:flex}
+  .tabs .glab{display:flex;width:100%;padding:10px 6px 4px;font-size:9px}
+  .tabgroup+.glab,.tabgroup+.tabgroup{border-top:1px solid var(--line);margin-top:4px;padding-top:4px}
+  .tabs .tabgroup{gap:3px}
+  .tabgroup{width:100%;flex-wrap:wrap;justify-content:flex-start;border-left:0;padding:0;margin:0}
+  .tabgroup+.tabgroup{border-left:0;padding-left:0;margin-left:0}
+  .tabs a{border-radius:7px;border-bottom:0;padding:8px 10px;font-size:13px;flex:0 0 auto}
+  .tabs a.on{background:#EAF2FB;border-bottom:0}
+  .tabgroup{padding-left:0;margin-right:0;border-left:0}
+
+  .wrap{padding:20px 14px 72px;padding-left:max(14px,env(safe-area-inset-left));padding-right:max(14px,env(safe-area-inset-right))}
+  .rule{margin:14px 0 20px}
+  .lede{font-size:15.5px;margin-bottom:22px}
+  .card{padding:17px 16px;border-radius:11px}
+  .grid3{grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:11px}
+  .stat{padding:13px 14px}
+  .stat .v{font-size:31px}
+  .stat .v small{font-size:15px}
+
+  /* показники калькуляторів — у два стовпці, а не в три вузькі */
+  .out{grid-template-columns:repeat(2,1fr);gap:14px;padding:16px}
+  .out div b{font-size:24px}
+  .gap{padding:12px 16px;font-size:12.5px}
+  .calcrow{gap:10px}
+  .calcrow>div{flex:1 1 100%!important}
+
+  /* таблиці: щільніші, з підказкою про горизонтальну прокрутку */
+  .tablewrap{position:relative}
+  .tablewrap table{font-size:12px}
+  th,td{padding:7px 8px}
+  td.why{font-size:11.5px;max-width:none}
+  .tablewrap.scrollable::after{content:"";position:absolute;top:0;right:0;bottom:0;width:22px;pointer-events:none;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.96))}
+
+  /* картки товарів в один стовпець */
+  .skugrid{grid-template-columns:1fr;gap:11px}
+  .chip{padding:6px 12px;font-size:12px}
+  .filters{gap:7px}
+
+  /* модалка — як нижня шторка */
+  .modalbg{padding:0;align-items:flex-end}
+  .modal{border-radius:14px 14px 0 0;padding:22px 18px calc(26px + env(safe-area-inset-bottom));max-height:92vh;overflow-y:auto}
+  .modal .x{font-size:28px;padding:6px 10px}
+  .kv{grid-template-columns:1fr;gap:0}
+  .kv dt{border-bottom:0;padding:8px 0 0;font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+  .kv dd{text-align:left;padding:1px 0 8px;font-size:14.5px}
+
+  /* полиця */
+  .shelf{padding:20px 14px 0}
+  .shelfrow{gap:10px;min-height:0}
+  .shelfsep{margin:0 6px 26px}
+  .legend{gap:9px 14px;font-size:11px}
+  .shelfnote{font-size:11px;padding:10px 0 14px}
+
+  #tip{width:min(260px,calc(100vw - 24px))}
+  .cert{padding:26px 18px}
+  .cert .ttl{font-size:27px}
+  .cert .who{font-size:25px}
+  .q{padding:15px 15px}
+  .opt{padding:11px 13px}
+  .donebar{padding:14px 16px}
+  .btn{padding:12px 18px}
+}
+
+/* ---------- Вузький телефон ---------- */
+@media(max-width:380px){
+  .logo{font-size:20px}
+  .logo span{display:none}
+  .tabs a{padding:8px 9px;font-size:12.5px}
+  .prog span{display:none}
+  .menubtn{font-size:12px;padding:7px 9px;max-width:42vw}
+  .out{grid-template-columns:1fr 1fr;gap:12px}
+  .out div b{font-size:22px}
+  .grid3{grid-template-columns:1fr}
+  .stat .v{font-size:29px}
+}
+
+/* ---------- Пристрої без наведення: підказку показуємо по дотику ---------- */
+@media(hover:none){
+  .bt:hover .body{transform:none;box-shadow:none}
+  .bt:active .body{transform:translateY(-4px)}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+@media print{
+  .hdr,.donebar,.filters,.btn,.shelf{display:none!important}
+  body{background:#fff}
+  .wrap{max-width:100%;padding:0}
+  section.pane{display:none!important}
+  section.pane.on{display:block!important}
+}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdrtop">
+    <a class="logo" href="#start" data-go="start">Трускавець<em>ка</em><span>Навчальний портал</span></a>
+    <button class="menubtn" id="menubtn" type="button" aria-expanded="false" aria-controls="tabs"><span class="cur">Розділи</span><span class="car">▼</span></button>
+    <div class="searchbox">
+      <span class="ico" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="7" cy="7" r="4.6"/><path d="M10.4 10.4 14 14" stroke-linecap="round"/></svg></span>
+      <input type="search" id="search" placeholder="Штрих-код, об'єм або розділ" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-label="Пошук по порталу" aria-autocomplete="list" aria-expanded="false" aria-controls="searchres" role="combobox">
+      <button class="clr" id="searchclr" type="button" aria-label="Очистити пошук">×</button>
+      <div class="searchres" id="searchres" role="listbox"></div>
+    </div>
+    <div class="prog">
+      <span id="progtxt">0 / 12</span>
+      <div class="progbar"><i id="progbar"></i></div>
+    </div>
+  </div>
+  <nav class="tabs" id="tabs" aria-label="Розділи порталу"></nav>
+</header>
+
+<main class="wrap" id="wrap"></main>
+<div class="scrim" id="scrim"></div>
+<div id="tip" role="tooltip" aria-hidden="true"></div>
+<div class="modalbg" id="modalbg"><div class="modal" id="modal"></div></div>
+
+<script>
+/* ============ ДАНІ ============
+   Джерела: паспорти товару Listex (09.07.2026), логістичні картки МПП «Алекс» (16.04.26),
+   прайс для дистриб'юторів липень 2026, бренд-гайд «Трускавецька» 2025, truskavetska.ua
+   ============================================================ */
+
+var SKUS=[
+ {id:1,vol:"0,5 л",pack:"ПЕТ",gas:"негазована",line:"Класична",ean:"4820124820171",eanBox:"4820124820218",box:8,layer:30,layers:5,pallet:1200,wu:0.54,wb:4.3,wp:676,dw:6,dh:23,shelf:12,uktzed:"2201101100",pw:8.25,pwv:9.90,rw:14.46,pc:8.50,pcv:10.20,rc:14.88},
+ {id:2,vol:"0,5 л",pack:"ПЕТ",gas:"слабогазована",line:"Класична",ean:"4820124820317",eanBox:"4820124820324",box:8,layer:30,layers:5,pallet:1200,wu:0.54,wb:4.3,wp:676,dw:6,dh:23,shelf:9,uktzed:"2201101900",pw:8.25,pwv:9.90,rw:14.46,pc:8.50,pcv:10.20,rc:14.88},
+ {id:3,vol:"0,5 л",pack:"ПЕТ",gas:"сильногазована",line:"Класична",ean:"4820124820188",eanBox:"4820124820225",box:8,layer:30,layers:5,pallet:1200,wu:0.54,wb:4.3,wp:676,dw:6,dh:23,shelf:9,uktzed:"2201101900",pw:8.25,pwv:9.90,rw:14.46,pc:8.50,pcv:10.20,rc:14.88},
+ {id:4,vol:"0,75 л",pack:"ПЕТ",gas:"негазована",line:"Класична",ean:"4820124820560",eanBox:"4820124820669",box:8,layer:20,layers:5,pallet:800,wu:0.776,wb:6.3,wp:662,dw:7,dh:25,shelf:12,uktzed:"2201101100",pw:9.50,pwv:11.40,rw:16.56,pc:10.00,pcv:12.00,rc:16.92},
+ {id:5,vol:"0,75 л",pack:"ПЕТ",gas:"слабогазована",line:"Класична",ean:"4820124820553",eanBox:"4820124820683",box:8,layer:20,layers:5,pallet:800,wu:0.776,wb:6.3,wp:662,dw:7,dh:25,shelf:9,uktzed:"2201101900",pw:9.50,pwv:11.40,rw:16.56,pc:10.00,pcv:12.00,rc:16.92},
+ {id:6,vol:"0,75 л",pack:"ПЕТ",gas:"сильногазована",line:"Класична",ean:"4820124820546",eanBox:"4820124820676",box:8,layer:20,layers:5,pallet:800,wu:0.776,wb:6.3,wp:662,dw:7,dh:25,shelf:9,uktzed:"2201101900",pw:9.50,pwv:11.40,rw:16.56,pc:10.00,pcv:12.00,rc:16.92},
+ {id:7,vol:"0,75 л",pack:"ПЕТ",gas:"негазована",line:"SPORT",ean:"4820124820539",eanBox:"4820124820652",box:8,layer:20,layers:5,pallet:800,wu:0.776,wb:6.3,wp:662,dw:7,dh:28,shelf:12,uktzed:"2201101100",pw:11.25,pwv:13.50,rw:19.80,pc:11.75,pcv:14.10,rc:20.40,note:"Ширина пляшки така сама, як у класичної 0,75 л ПЕТ. Висота більша — 28 см проти 25 — через корок типу спорт «фліп-топ»"},
+ {id:8,vol:"1,5 л",pack:"ПЕТ",gas:"негазована",line:"Класична",ean:"4820124820164",eanBox:"4820124820201",box:6,layer:21,layers:4,pallet:504,wu:1.54,wb:9.28,wp:804.41,dw:8.8,dh:34.5,shelf:12,uktzed:"2201101100",pw:12.95,pwv:15.54,rw:22.50,pc:14.00,pcv:16.80,rc:23.52},
+ {id:9,vol:"1,5 л",pack:"ПЕТ",gas:"слабогазована",line:"Класична",ean:"4820124820300",eanBox:"4820124820294",box:6,layer:21,layers:4,pallet:504,wu:1.54,wb:9.28,wp:804.41,dw:8.8,dh:34.5,shelf:9,uktzed:"2201101900",pw:12.95,pwv:15.54,rw:22.50,pc:14.00,pcv:16.80,rc:23.52},
+ {id:10,vol:"1,5 л",pack:"ПЕТ",gas:"сильногазована",line:"Класична",ean:"4820124820157",eanBox:"4820124820195",box:6,layer:21,layers:4,pallet:504,wu:1.54,wb:9.28,wp:804.41,dw:8.8,dh:34.5,shelf:9,uktzed:"2201101900",pw:12.95,pwv:15.54,rw:22.50,pc:14.00,pcv:16.80,rc:23.52},
+ {id:11,vol:"2,0 л",pack:"ПЕТ",gas:"негазована",line:"Класична",ean:"4820124820751",eanBox:"4820124820799",box:6,layer:16,layers:4,pallet:384,wu:2.0,wb:12,wp:791,dw:9,dh:34,shelf:12,uktzed:"2201101100",pw:15.00,pwv:18.00,rw:24.00,pc:16.00,pcv:19.20,rc:25.02},
+ {id:12,vol:"2,0 л",pack:"ПЕТ",gas:"слабогазована",line:"Класична",ean:"4820124820775",eanBox:"4820124820812",box:6,layer:16,layers:4,pallet:384,wu:2.0,wb:12,wp:791,dw:9,dh:34,shelf:9,uktzed:"2201101900",pw:15.00,pwv:18.00,rw:24.00,pc:16.00,pcv:19.20,rc:25.02},
+ {id:13,vol:"2,0 л",pack:"ПЕТ",gas:"сильногазована",line:"Класична",ean:"4820124820768",eanBox:"4820124820805",box:6,layer:16,layers:4,pallet:384,wu:2.0,wb:12,wp:791,dw:9,dh:34,shelf:9,uktzed:"2201101900",pw:15.00,pwv:18.00,rw:24.00,pc:16.00,pcv:19.20,rc:25.02},
+ {id:14,vol:"0,3 л",pack:"Скло",gas:"негазована",line:"Класична",ean:"4820124820577",eanBox:"4820124820614",box:12,layer:18,layers:6,pallet:1296,wu:0.56,wb:6.8,wp:734.4,dw:5.5,dh:21,shelf:12,uktzed:"2201101100",pw:19.50,pwv:23.40,rw:33.00,pc:19.95,pcv:23.94,rc:34.20},
+ {id:15,vol:"0,3 л",pack:"Скло",gas:"слабогазована",line:"Класична",ean:"4820124820584",eanBox:"4820124820621",box:12,layer:18,layers:6,pallet:1296,wu:0.56,wb:6.8,wp:734.4,dw:5.5,dh:21,shelf:12,uktzed:"2201101900",pw:19.50,pwv:23.40,rw:33.00,pc:19.95,pcv:23.94,rc:34.20},
+ {id:16,vol:"0,75 л",pack:"Скло",gas:"негазована",line:"Класична",ean:"4820124820690",eanBox:"4820124820713",box:6,layer:21,layers:4,pallet:504,wu:1.171,wb:7.1,wp:596.4,dw:7.5,dh:26,shelf:12,uktzed:"2201101100",pw:25.00,pwv:30.00,rw:42.00,pc:25.50,pcv:30.60,rc:43.20},
+ {id:17,vol:"0,75 л",pack:"Скло",gas:"слабогазована",line:"Класична",ean:"4820124820706",eanBox:"4820124820720",box:6,layer:21,layers:4,pallet:504,wu:1.171,wb:7.1,wp:596.4,dw:7.5,dh:26,shelf:12,uktzed:"2201101900",pw:25.00,pwv:30.00,rw:42.00,pc:25.50,pcv:30.60,rc:43.20},
+ {id:18,vol:"7,0 л",pack:"ПЕТ",gas:"негазована",line:"Особлива",ean:"4820124820478",eanBox:"4820124820485",box:2,layer:17,layers:3,pallet:102,wu:7.1,wb:14.2,wp:750,dw:16,dh:36.5,shelf:12,uktzed:"2201900000",pw:42.50,pwv:51.00,rw:69.00,pc:50.00,pcv:60.00,rc:81.00,note:"Вода питна негазована оброблена — інша категорія, не мінеральна"}
+];
+SKUS.forEach(function(s){
+  s.cat = s.line==="Особлива" ? "Вода питна негазована оброблена" : "Вода мінеральна природна столова";
+  s.name = (s.line==="Особлива" ? "Особлива " : "") + s.vol + " " + s.pack + ", " + s.gas + (s.line==="SPORT" ? " SPORT" : "");
+});
+
+/* Групи для калькуляторів і таблиць: об'єм + тара, без поділу за газацією.
+   Палетизація й ціна всередині кожної групи однакові. SPORT — окремо. */
+var GROUPS=[
+ {key:"g03s", label:"0,3 л скло",            src:14},
+ {key:"g075g",label:"0,75 л скло",           src:16},
+ {key:"g05",  label:"0,5 л ПЕТ",             src:1},
+ {key:"g075", label:"0,75 л ПЕТ",            src:4},
+ {key:"g075s",label:"0,75 л ПЕТ · SPORT",    src:7},
+ {key:"g15",  label:"1,5 л ПЕТ",             src:8},
+ {key:"g20",  label:"2,0 л ПЕТ",             src:11},
+ {key:"g70",  label:"7,0 л ПЕТ · Особлива",  src:18}
+];
+GROUPS.forEach(function(g){
+  var s=SKUS.filter(function(x){return x.id===g.src;})[0];
+  ["box","layer","layers","pallet","wu","wb","wp","pw","pwv","rw","pc","pcv","rc","vol","pack","line","dw","dh","cat"].forEach(function(k){ g[k]=s[k]; });
+  g.litres=parseFloat(s.vol.replace(",",".").replace(" л",""));
+  g.items=SKUS.filter(function(x){ return x.vol===s.vol && x.pack===s.pack && x.line===s.line; });
+  g.gases=g.items.map(function(x){ return x.gas; });
+});
+
+/* Кольорове кодування каталогу: негазована — біла, слабогазована — зелена, сильногазована — синя */
+var FILL={"негазована":"#FFFFFF","слабогазована":"#00966C","сильногазована":"#005EB8"};
+var STROKE={"негазована":"#9DB1C4","слабогазована":"#00734F","сильногазована":"#003C77"};
+function fillOf(s){ return FILL[s.gas]; }
+
+/* Єдиний порядок показу для всього порталу: спершу скло, далі ПЕТ;
+   усередині — за зростанням об'єму, SPORT одразу після своєї 0,75 л, «Особлива» в кінці. */
+var GASORD={"негазована":0,"слабогазована":1,"сильногазована":2};
+function ordKey(s){
+  return [ s.pack==="Скло"?0:1,
+           s.line==="Особлива"?99:parseFloat(s.vol.replace(",",".")),
+           s.line==="SPORT"?1:0,
+           GASORD[s.gas] ];
+}
+function byOrder(a,b){
+  var ka=ordKey(a), kb=ordKey(b);
+  for(var i=0;i<ka.length;i++){ if(ka[i]!==kb[i]) return ka[i]-kb[i]; }
+  return 0;
+}
+var SKUS_ORD=SKUS.slice().sort(byOrder);
+/* Єдиний порядок сортування по всьому порталу: спершу СКЛО, далі ПЕТ;
+   всередині — за об'ємом, класична лінійка, потім SPORT і «Особлива» */
+function packRank(p){ return p==="Скло"?0:1; }
+function lineRank(l){ return l==="Класична"?0:(l==="SPORT"?1:2); }
+function gasRank(g){ return g==="негазована"?0:(g==="слабогазована"?1:2); }
+function volNum(v){ return parseFloat(v.replace(",",".").replace(" л","")); }
+function skuOrder(a,b){
+  return packRank(a.pack)-packRank(b.pack) || volNum(a.vol)-volNum(b.vol) ||
+         lineRank(a.line)-lineRank(b.line) || gasRank(a.gas)-gasRank(b.gas);
+}
+function strokeOf(s){ return STROKE[s.gas]; }
+
+/* ============ КОНТЕНТ РОЗДІЛІВ ============ */
+var S=[];
+
+S.push({id:"start",g:1,nav:"Старт",short:"Старт",track:false,html:
+'<div class="eyebrow">Для внутрішнього використання</div>'+
+'<h1>Все про воду<br>«Трускавецька»</h1>'+
+'<div class="rule"></div>'+
+'<p class="lede">Портал зібраний з офіційних матеріалів бренду: паспортів товару, логістичних карток, прайсу, результатів клінічних досліджень і бренд-гайду. Проходьте розділи по порядку — наприкінці тест і сертифікат.</p>'+
+'<div class="grid3" style="margin-bottom:22px">'+
+'<div class="stat"><div class="v">7,8</div><div class="k">Природний показник pH негазованої води — лужна, близька до pH організму</div></div>'+
+'<div class="stat g"><div class="v">0,2–0,9<small> г/дм³</small></div><div class="k">Загальна мінералізація — низька, можна щодня без обмежень</div></div>'+
+'<div class="stat"><div class="v">1827</div><div class="k">Рік, коли Трускавець офіційно отримав статус курорту</div></div>'+
+'<div class="stat g"><div class="v">3</div><div class="k">Заводи бренду: два працюють, третій будується</div></div>'+
+'<div class="stat"><div class="v">12 / 9<small> міс.</small></div><div class="k">Терміни придатності: 9 місяців тільки газований ПЕТ, решта — 12</div></div>'+
+'<div class="stat g"><div class="v">878-93</div><div class="k">ДСТУ, за яким випускається мінеральна лінійка</div></div>'+
+'</div>'+
+'<div class="card"><h3>Як користуватись</h3>'+
+'<ul class="clean"><li><b>Меню вгорі</b> — 11 навчальних розділів, довідник і підсумковий тест. Позначайте розділ як пройдений унизу сторінки — лічильник угорі рахує 12 позначок разом із довідником.</li>'+
+'<li><b>Пошук</b> шукає і по текстах розділів, і по товарах. Введіть штрих-код або об\'єм — одразу відкриється картка товару.</li>'+
+'<li><b>Калькулятори</b> в розділах «Логістика» і «Ціни» рахують палети й націнку по реальних даних.</li>'+
+'<li><b>Прогрес</b> зберігається у цьому браузері. На іншому пристрої почнеться заново.</li></ul></div>'+
+'<div class="note info"><b>Один принцип понад усе</b>Ми продаємо мінеральну природну столову воду, а не ліки. У розділі «Що можна говорити» — точні формулювання, за межі яких виходити не можна ні усно, ні в переписці з клієнтом.</div>'
+});
+
+S.push({id:"brand",g:1,nav:"Бренд",short:"Бренд",track:true,html:
+'<div class="eyebrow">Розділ 1</div><h2>Бренд і компанія</h2><div class="rule"></div>'+
+'<p class="lede">Хто виробляє «Трускавецьку», де це відбувається і що змінюється просто зараз.</p>'+
+'<div class="card"><h3>Слогани</h3>'+
+'<p style="font-family:var(--disp);font-size:38px;font-weight:900;text-transform:uppercase;color:var(--blue);line-height:1;margin-bottom:8px">З самого серця Карпат!</p>'+
+'<p style="font-size:13.5px;color:var(--ink-soft)">Основний слоган бренду. Використовується за замовчуванням — у розмові, презентаціях, POS-матеріалах.</p>'+
+'<p style="font-family:var(--disp);font-size:25px;font-weight:800;text-transform:uppercase;color:var(--ink-soft);line-height:1;margin:22px 0 8px">Енергія природи завжди з тобою</p>'+
+'<p style="font-size:13.5px;color:var(--ink-soft);margin-bottom:0">Додатковий слоган. Застосовується в окремих випадках — там, де комунікація про активність, спорт і щоденну енергію.</p></div>'+
+'<div class="card"><h3>Консолідація бренду</h3>'+
+'<p>Раніше воду «Трускавецька» розливали кілька різних виробників. З 2023 року бренд консолідований однією компанією — <b>ТОВ «Трускавецька»</b>.</p>'+
+'<p>Розлив відбувається на двох виробничих потужностях:</p>'+
+'<ul class="clean"><li><b>ПІІ ТзОВ «Аква-Еко»</b> — вул. Івана Мазепи, 29, м. Трускавець, Львівська обл., 82200</li>'+
+'<li><b>ТОВ «ТСБ»</b> — вул. Помірецька, 74, м. Трускавець, Львівська обл.</li></ul>'+
+'<div class="note info" style="margin-bottom:0"><b>Чому це важливо для продажу</b>Клієнт може пам\'ятати, що «раніше було кілька Трускавецьких». Правильна відповідь: бренд консолідований, єдиний стандарт якості, єдиний власник торгової марки. Це аргумент за нас, а не проти.</div></div>'+
+'<div class="card" style="border-left:3px solid var(--green)"><h3>Третій завод</h3>'+
+'<p>Зараз будується <b>третій завод бренду</b>. За обсягами виробництва він перевищить перші два, разом узяті.</p>'+
+'<p style="margin-bottom:0">Для розмови з клієнтом це найсильніший аргумент про стабільність постачань: питання «а ви впораєтесь з обсягом?» закривається планами розширення, а не обіцянками.</p></div>'+
+'<div class="card"><h3>Реквізити, які треба знати напам\'ять</h3>'+
+'<dl class="kv">'+
+'<dt>Торгова марка</dt><dd>«Трускавецька»</dd>'+
+'<dt>Основний слоган</dt><dd>З самого серця Карпат!</dd>'+
+'<dt>Виробник (основні потужності)</dt><dd>ПІІ ТзОВ «Аква-Еко»</dd>'+
+'<dt>Місто</dt><dd>Трускавець, Львівська обл.</dd>'+
+'<dt>Гаряча лінія</dt><dd class="mono">0 800 30 18 27</dd>'+
+'<dt>Сайт бренду</dt><dd class="mono">truskavetska.ua</dd>'+
+'</dl></div>'
+});
+
+S.push({id:"origin",g:1,nav:"Походження",short:"Джерело",track:true,html:
+'<div class="eyebrow">Розділ 2</div><h2>Походження</h2><div class="rule"></div>'+
+'<p class="lede">Звідки береться вода і чому місце видобутку — це половина цінності продукту.</p>'+
+'<div class="card"><h3>Шлях води</h3>'+
+'<p>«Трускавецька» видобувається з геологічної формації Карпатських гір. Вода проходить крізь пласти древніх гірських порід — саме там вона набуває свого мінерального складу і природних лужних властивостей. Це не додається на заводі, це формує геологія.</p>'+
+'<p>Свердловини розташовані в <b>охоронній зоні</b> і з усіх боків захищені гірським масивом та первозданними лісами. Доступ сторонніх виключений.</p>'+
+'<div class="note ok" style="margin-bottom:0"><b>Формулювання для клієнта</b>«З самого серця Карпат — вода з екологічно чистої заповідної зони. Свердловини в охоронній зоні, склад сформований природою, а не технологією.»</div></div>'+
+'<div class="card"><h3>Родовища й свердловини</h3>'+
+'<p>Видобуток ведеться з кількох свердловин у м. Трускавець Дрогобицького району Львівської області:</p>'+
+'<p class="mono" style="background:#F7FAFC;border:1px solid var(--line);border-radius:8px;padding:12px 14px;font-size:12.5px;line-height:1.9">9912/38 · 0112/50 · 9810/28 · 0406/63 · 0111/46 · 24-Р(1) · 24-РР(2) · 24-РЕ(3) · 2-с · 4-с · 9807/25 · 42 · 42-к · 0411/61 · 0412/62</p>'+
+'<p>Родовища: <b>Яружно-Помірецьке-1</b>, <b>Помірецьке</b> (у т.ч. західна ділянка), <b>Мражницьке</b>, <b>Янчурківське</b> (урочище Янчурки Доброгостівського лісництва).</p>'+
+'<div class="note amber" style="margin-bottom:0"><b>Обережно з деталями</b>Номери свердловин потрібні для розуміння масштабу ресурсної бази, а не для переказування клієнту. У розмові достатньо: «видобуток із кількох офіційно зареєстрованих свердловин у Трускавці».</div></div>'
+});
+
+S.push({id:"history",g:1,nav:"Історія",short:"Історія",track:true,html:
+'<div class="eyebrow">Розділ 3</div><h2>Трускавець: історія</h2><div class="rule"></div>'+
+'<p class="lede">Курорт старший за більшість європейських брендів води. Це найсильніша емоційна частина розповіді.</p>'+
+'<div class="card"><h3>Ключові факти</h3>'+
+'<ul class="clean">'+
+'<li>Цілющі джерела Трускавця відомі як <b>одні з найдавніших у Європі</b>.</li>'+
+'<li><b>1827 рік</b> — місто офіційно отримало статус курорту. Саме з цього моменту починається його популярність.</li>'+
+'<li>Європейські стандарти прижилися швидко: у місцевості <b>Помірки</b> створили купальне озеро з берегами, вкритими золотистим морським піском.</li>'+
+'<li>Тут же побудували тенісні корти й спортивні майданчики — курорт розвивався як повноцінний європейський.</li>'+
+'<li>Сьогодні Трускавець — місце, де минуле переплітається із сучасністю, а мінеральна вода стала символом здоров\'я та відновлення.</li>'+
+'</ul></div>'+
+'<div class="note info"><b>Як це використовувати</b>Аргумент «майже 200 років курортної історії» працює там, де хімія не працює — у HoReCa, преміальному сегменті й у розмові з власником точки. Скло 0,3 і 0,75 л продається саме цією історією.</div>'
+});
+
+S.push({id:"science",g:1,nav:"Склад води",short:"Склад",track:true,html:
+'<div class="eyebrow">Розділ 4</div><h2>Склад і властивості</h2><div class="rule"></div>'+
+'<p class="lede">Два числа, які має знати кожен: pH 7,8 і мінералізація 0,2–0,9 г/дм³. Усе інше — пояснення до них.</p>'+
+'<div class="grid2">'+
+'<div class="card"><h3>pH 7,8</h3>'+
+'<p>Це <b>природний показник негазованої води</b>. Він максимально наближений до pH організму людини, завдяки чому вода зволожує глибше й ефективніше, ніж звичайна нейтральна.</p>'+
+'<p>Такий самий показник рН мають лише кілька найвідоміших європейських мінеральних вод.</p>'+
+'<div class="note amber" style="margin-bottom:0;font-size:13px"><b>Точність формулювання</b>Кажіть «природний pH 7,8 негазованої води». У газованих версіях розчинений CO₂ природно знижує показник — це фізика, а не зміна складу.</div></div>'+
+'<div class="card"><h3>Мінералізація 0,2–0,9 г/дм³</h3>'+
+'<p>Це <b>низький</b> рівень мінералізації. Саме він дозволяє вживати «Трускавецьку» щодня і без обмежень — дорослим і дітям.</p>'+
+'<p>Порогом між прісними й мінеральними водами вважають 1 г/дм³. Ми нижче порогу — тому це <b>природна столова</b> вода, а не лікувальна.</p>'+
+'<div class="note ok" style="margin-bottom:0;font-size:13px">Менша мінералізація ≠ гірша вода. Це інше призначення: щоденне пиття замість курсового прийому.</div></div>'+
+'</div>'+
+'<div class="card"><h3>Склад мінеральної води</h3>'+
+'<p style="font-size:13.5px;color:var(--ink-soft)">Мінеральна природна столова, різного аніонного та різного катіонного складу. Стандарт — <b>ДСТУ 878-93</b> «Води мінеральні фасовані».</p>'+
+'<div class="tablewrap"><table><thead><tr><th>Показник</th><th class="num">Значення</th><th>Що це означає</th></tr></thead><tbody>'+
+'<tr><td><b>Загальна мінералізація</b></td><td class="num">0,2–0,9 г/дм³</td><td class="why">Сумарна кількість розчинених солей і мікроелементів. До 1 г/дм³ — столова вода: організм не накопичує надлишок солей, тому її п\'ють щодня, у будь-якій кількості й без призначення лікаря.</td></tr>'+
+'<tr><td><b>pH</b></td><td class="num">7,8</td><td class="why">Кислотно-лужний баланс. Значення понад 7,2 — лужна зона. Чим ближче до pH тканин організму, тим менше зусиль потрібно на засвоєння.</td></tr>'+
+'<tr><td><b>Гідрокарбонати</b><br><span class="mono" style="font-size:11.5px">HCO₃</span></td><td class="num">100–650 мг/л</td><td class="why">Головний природний буфер води — саме гідрокарбонати тримають лужну реакцію. Дають м\'який, «округлий» смак без металевого чи різкого присмаку.</td></tr>'+
+'<tr><td><b>Сульфати</b><br><span class="mono" style="font-size:11.5px">SO₄</span></td><td class="num">&lt; 150 мг/л</td><td class="why">У великій кількості дають гіркуватий присмак. У нас їх мало — тому смак нейтральний і вода підходить для щоденного вживання всією родиною.</td></tr>'+
+'<tr><td><b>Хлориди</b><br><span class="mono" style="font-size:11.5px">Cl</span></td><td class="num">&lt; 120 мг/л</td><td class="why">Відповідають за солонуватість. Низький вміст означає, що вода не сприймається як солона і не викликає спраги після випитого.</td></tr>'+
+'<tr><td><b>Кальцій</b><br><span class="mono" style="font-size:11.5px">Ca</span></td><td class="num">10–180 мг/л</td><td class="why">Мінерал кісткової тканини; бере участь у роботі кровоносної системи. У воді перебуває в іонній формі, тобто вже готовій до засвоєння.</td></tr>'+
+'<tr><td><b>Магній</b><br><span class="mono" style="font-size:11.5px">Mg</span></td><td class="num">&lt; 100 мг/л</td><td class="why">Задіяний у роботі м\'язів, нервової системи, серця та нирок. Один із мінералів, які організм витрачає щодня і поповнює з їжею та водою.</td></tr>'+
+'<tr><td><b>Натрій + Калій</b><br><span class="mono" style="font-size:11.5px">Na⁺ + K⁺</span></td><td class="num">&lt; 200 мг/л</td><td class="why">Основні електроліти. Натрій бере участь у регуляції кількості рідини, тиску та роботи м\'язів; калій — у роботі серцевого м\'яза, його скороченні й розслабленні. Сумарно менш ніж 200 мг/л — вода не перевантажує організм натрієм.</td></tr>'+
+'</tbody></table></div>'+
+'<div class="note amber" style="margin-bottom:0"><b>Як користуватися колонкою «що це означає»</b>Це опис ролі показника у воді загалом — щоб ви розуміли, про що говорите. Це <b>не</b> твердження про лікувальну дію продукту. Клієнту переказувати своїми словами, без обіцянок результату.</div></div>'+
+'<div class="card"><h3>Склад питної води «Особлива» 7 л</h3>'+
+'<p style="font-size:13.5px;color:var(--ink-soft)">Вода питна негазована оброблена. Інша категорія продукту — не мінеральна, тому й склад описується окремо.</p>'+
+'<div class="tablewrap"><table><thead><tr><th>Показник</th><th class="num">мг/дм³</th><th>Що це означає</th></tr></thead><tbody>'+
+'<tr><td><b>Кальцій</b> <span class="mono" style="font-size:11.5px">Ca</span></td><td class="num">30–40</td><td class="why">Стабільний, вирівняний рівень — вода передбачувана на смак і не дає накипу так, як жорстка водопровідна.</td></tr>'+
+'<tr><td><b>Магній</b> <span class="mono" style="font-size:11.5px">Mg</span></td><td class="num">10–20</td><td class="why">Помірний вміст, який зберігається після обробки води.</td></tr>'+
+'<tr><td><b>Натрій</b> <span class="mono" style="font-size:11.5px">Na</span></td><td class="num">5–7</td><td class="why">Дуже низький. Саме тому «Особлива» добре підходить для щоденного готування їжі та напоїв — вона не «досолює» страву.</td></tr>'+
+'<tr><td><b>Калій</b> <span class="mono" style="font-size:11.5px">K</span></td><td class="num">1–2</td><td class="why">Присутній у слідових кількостях.</td></tr>'+
+'<tr><td><b>Гідрокарбонати</b> <span class="mono" style="font-size:11.5px">HCO₃</span></td><td class="num">110–130</td><td class="why">Забезпечують м\'який смак без різкості. Вузький діапазон означає стабільність партії до партії.</td></tr>'+
+'<tr><td><b>Сульфати</b> <span class="mono" style="font-size:11.5px">SO₄</span></td><td class="num">5–6</td><td class="why">Практично відсутні — жодного гіркуватого відтінку в смаку.</td></tr>'+
+'<tr><td><b>Хлор</b> <span class="mono" style="font-size:11.5px">Cl</span></td><td class="num">10–20</td><td class="why">Низький вміст хлоридів; вода нейтральна на смак, без солонуватості.</td></tr>'+
+'<tr><td><b>Фтор</b> <span class="mono" style="font-size:11.5px">F</span></td><td class="num">0,5–0,7</td><td class="why">Природний мікроелемент, присутній у кількості, безпечній для щоденного вживання.</td></tr>'+
+'</tbody></table></div>'+
+'<div class="note warn" style="margin-bottom:0"><b>Не переносьте аргументи</b>pH 7,8 і мінералізація 0,2–0,9 г/дм³ стосуються <b>мінеральної</b> лінійки. Для «Особливої» ці цифри не використовуються.</div></div>'+
+'<div class="card"><h3>Що доведено клінічно</h3>'+
+'<p>Клінічними дослідженнями ДУ «Український НДІ медичної реабілітації та курортології МОЗ України» при курсовому внутрішньому прийомі підтверджено, що вода:</p>'+
+'<ul class="clean v">'+
+'<li>надає детоксикаційного ефекту</li>'+
+'<li>активізує антиоксидантну систему</li>'+
+'<li>посилює адаптаційні можливості організму</li>'+
+'<li>сприяє сталості кислотно-лужного балансу</li>'+
+'<li>сприяє підвищенню кількості лейкоцитів периферійної крові</li>'+
+'<li>підвищує до рівня «високої оцінки» загальне самопочуття, активність і настрій (за анкетуванням САН)</li>'+
+'</ul>'+
+'<div class="note warn" style="margin-bottom:0"><b>Стоп-лінія</b>Цей список — вичерпний. Усе, чого в ньому немає, говорити клієнту не можна. Деталі — у розділі «Що можна говорити».</div></div>'
+});
+
+S.push({id:"catalog",g:2,nav:"Каталог",short:"Каталог",track:true,html:
+'<div class="eyebrow">Розділ 5</div><h2>Каталог продукції</h2><div class="rule"></div>'+
+'<p class="lede">Формати в реальному масштабі: одна пляшка на кожен об\'єм, намальована за фактичними габаритами з логістичних карток. Кружечки під нею показують, які газації є в цьому форматі. Спершу скло, далі ПЕТ.</p>'+
+'<div class="shelf"><div class="shelfhdr" id="shelfhdr"></div><div class="shelfrow" id="shelf"></div><div class="shelfbase"></div>'+
+'<div class="legend">'+'<span><i style="background:#E3EEF8;border:1.5px dashed #7FA3C4"></i> скло</span>'+'<span><i style="background:#FFFFFF;border:1.5px solid #9DB1C4"></i> ПЕТ</span>'+'<span><b>н</b>&nbsp;— негазована · <b>сл</b>&nbsp;— слабогазована · <b>сил</b>&nbsp;— сильногазована</span>'+'<span><b style="color:var(--red)">S</b>&nbsp;— лінійка SPORT</span>'+'</div>'+
+'<div class="shelfnote">Один силует на кожен формат — усі газації одного об\'єму розливаються в однакову пляшку. Під об\'ємом позначено, які газації бувають у цьому форматі. Наведіть курсор на пляшку, щоб побачити розміри й палетні дані.</div>'+
+'<h3 style="margin-top:30px;margin-bottom:6px">Позиції асортименту</h3>'+'<p style="font-size:13.5px;color:var(--ink-soft);margin-bottom:14px">Кожна газація — окрема позиція зі своїм штрих-кодом і ціною. '+'Колір мітки: <b style="color:#4A5F73">білий</b> — негазована, <b style="color:#00966C">зелений</b> — слабогазована, <b style="color:#005EB8">синій</b> — сильногазована.</p>'+'<div class="filters" id="filters"></div>'+
+'<div class="skugrid" id="skugrid"></div>'+
+'<p style="margin-top:16px;font-size:13px;color:var(--ink-soft)">Натисніть на картку, щоб відкрити повні дані: штрих-коди, палетизацію, ціни, вагу, УКТЗЕД.</p>'
+});
+
+S.push({id:"lines",g:2,nav:"Три лінійки",short:"Лінійки",track:true,html:
+'<div class="eyebrow">Розділ 6</div><h2>Три лінійки</h2><div class="rule"></div>'+
+'<p class="lede">Асортимент ділиться на три лінійки. Найчастіша помилка персоналу — плутати «Особливу» з мінеральною. Це різні категорії продукту.</p>'+
+'<div class="card"><h3>Класична «Трускавецька»</h3>'+
+'<p><span class="tag b">Вода мінеральна природна столова</span> <span class="tag n">ДСТУ 878-93</span></p>'+
+'<p>Основа асортименту. ПЕТ 0,5 / 0,75 / 1,5 / 2,0 л у трьох газаціях та скло 0,3 / 0,75 л у двох газаціях.</p>'+
+'<ul class="clean"><li><b>ПЕТ 0,5 л</b> — імпульсний формат: АЗС, кіоски, прикасова зона</li>'+
+'<li><b>ПЕТ 0,75 л</b> — «з собою», офіс, спортзал</li>'+
+'<li><b>ПЕТ 1,5 і 2,0 л</b> — домашнє споживання, основний обсяг продажів</li>'+
+'<li><b>Скло 0,3 і 0,75 л</b> — HoReCa, ресторани, готелі, преміальна полиця</li></ul></div>'+
+'<div class="card"><h3>«Трускавецька SPORT»</h3>'+
+'<p><span class="tag b">Вода мінеральна природна столова</span> <span class="tag a">Окремий логотип</span></p>'+
+'<p>ПЕТ 0,75 л негазована. <b>Ширина пляшки така сама, як у класичної 0,75 л</b> — на полиці вона займає стільки ж місця, палетизація ідентична. Вища вона на 3 см (28 см проти 25) через <b>корок типу спорт «фліп-топ»</b>. Вода всередині та сама.</p>'+
+'<p>Канали: спортзали, фітнес-клуби, АЗС, вендинг, спортивні заходи. Продається зручністю відкривання однією рукою, а не складом.</p>'+
+'<p style="margin-bottom:0">У бренд-гайді має власні логотипи — червоний і білий. Не змішувати з класичним логотипом.</p></div>'+
+'<div class="card" style="border-left:3px solid var(--warn)"><h3>«Трускавецька Особлива»</h3>'+
+'<p><span class="tag r">Вода питна негазована оброблена</span> <span class="tag n">УКТЗЕД 2201900000</span></p>'+
+'<p>ПЕТ 7,0 л. Формат для дому й офісу, під помпу або для готування.</p>'+
+'<div class="note warn" style="margin-bottom:0"><b>Це не мінеральна вода</b>«Особлива» — <b>питна оброблена</b> вода. Інша категорія, інший код УКТЗЕД, інший склад (див. розділ «Склад і властивості»). Називати її мінеральною — помилка, яка може коштувати претензії від перевіряючих і від мережі.</div></div>'
+});
+
+S.push({id:"logistics",g:2,nav:"Логістика",short:"Логістика",track:true,html:
+'<div class="eyebrow">Розділ 7</div><h2>Логістика і зберігання</h2><div class="rule"></div>'+
+'<p class="lede">Терміни придатності, умови зберігання й палетна математика. Помилка тут коштує списання партії.</p>'+
+'<div class="card" style="border-left:3px solid var(--green)"><h3>Термін придатності — правило</h3>'+
+'<div class="tablewrap" style="margin-bottom:14px"><table><thead><tr><th>Тара</th><th>Газованість</th><th class="num">Термін</th></tr></thead><tbody>'+
+'<tr><td>ПЕТ</td><td>негазована</td><td class="num"><b>12 місяців</b></td></tr>'+
+'<tr><td>ПЕТ</td><td>слабогазована та сильногазована</td><td class="num"><b>9 місяців</b></td></tr>'+
+'<tr><td>Скло</td><td>усі</td><td class="num"><b>12 місяців</b></td></tr>'+
+'<tr><td>ПЕТ 7 л «Особлива»</td><td>негазована (питна)</td><td class="num"><b>12 місяців</b></td></tr>'+
+'</tbody></table></div>'+
+'<div class="note amber" style="margin-bottom:0"><b>Запам\'ятати одним рядком</b>Дев\'ять місяців — тільки газований ПЕТ. Усе інше — дванадцять.</div></div>'+
+'<div class="card"><h3>Умови зберігання (однакові для всієї продукції)</h3>'+
+'<ul class="clean">'+
+'<li><b>Температура: від +2 °C до +25 °C.</b> Особливого температурного режиму не потребує.</li>'+
+'<li>Зберігати в темних приміщеннях, що добре вентилюються</li>'+
+'<li>Захищати від попадання вологи</li>'+
+'<li>Берегти від прямих сонячних променів</li>'+
+'<li>Тип укладання в транспортній упаковці — <b>вертикальний</b></li>'+
+'</ul>'+
+'<div class="note info" style="margin-bottom:0"><b>На точці</b>Найчастіше порушення — палета на сонці біля вітрини або на розвантажувальному майданчику влітку. Прямі промені + ПЕТ = скарги на смак і претензії до якості.</div></div>'+
+'<div class="card"><h3>Ротація: FIFO</h3>'+
+'<p>Перший прийшов — перший пішов. Нова партія завжди йде <b>вглиб</b> полиці й <b>під низ</b> стосу, стара — вперед. Перевіряти дати на кожному візиті, а не раз на місяць.</p>'+
+'<p style="margin-bottom:0">Особлива увага до газованого ПЕТ: у нього запас на три місяці менший, ніж у сусідньої негазованої пляшки того самого об\'єму.</p></div>'+
+'<div class="card"><h3>Калькулятор палети</h3>'+
+'<p style="font-size:13.5px;color:var(--ink-soft)">Рахує в обидва боки: введіть пляшки, упаковки або палети — отримаєте решту.</p>'+
+'<div class="calcrow">'+
+'<div style="flex:2 1 230px"><label class="fld" for="calcSku">Формат</label><select id="calcSku" style="width:100%"></select></div>'+
+'<div style="flex:0 1 130px"><label class="fld" for="calcQty">Кількість</label><input type="number" id="calcQty" value="1200" min="1" step="1" style="width:100%"></div>'+
+'<div style="flex:0 1 150px"><label class="fld" for="calcUnit">Одиниця</label><select id="calcUnit" style="width:100%"><option value="btl">пляшок</option><option value="pack">упаковок</option><option value="pal">палет</option></select></div>'+
+'</div>'+
+'<div class="out" id="calcOut"></div><div class="gap" id="calcGap"></div>'+
+'<p style="font-size:12.5px;color:var(--ink-soft);margin:12px 0 0">Вага рахується від ваги брутто повної палети з піддоном; неповна палета — пропорційно до кількості упаковок.</p></div>'+
+'<div class="card"><h3>Палетизація</h3>'+
+'<p style="font-size:13.5px;color:var(--ink-soft)">Всередині одного формату палетизація однакова для всіх газацій.</p>'+
+'<div class="tablewrap"><table><thead><tr><th>Формат</th><th class="num">шт/упак</th><th class="num">упак/шар</th><th class="num">шарів</th><th class="num">шт/палета</th><th class="num">Палета, кг</th></tr></thead><tbody id="palletTable"></tbody></table></div></div>'
+});
+
+S.push({id:"prices",g:3,nav:"Ціни",short:"Ціни",track:true,html:
+'<div class="eyebrow">Розділ 8</div><h2>Ціни і канали</h2><div class="rule"></div>'+
+'<p class="lede">Прайс для дистриб\'юторів, липень 2026. Дві цінові зони. Рекомендована ціна — це наш орієнтир для точки, а не обов\'язок.</p>'+
+'<div class="note info"><b>Дві зони</b><b>Захід + Київ</b> — базова зона. <b>Центр, Схід, Південь</b> — ціна вища через логістичне плече. Плутати зони не можна: клієнт із Дніпра за західним прайсом — це збиток на кожній палеті.</div>'+
+'<div class="card"><h3>Калькулятор націнки точки</h3>'+
+'<p style="font-size:13.5px;color:var(--ink-soft)">Показує, скільки заробляє точка, якщо тримає рекомендовану ціну. Ціна всередині формату однакова для всіх газацій.</p>'+
+'<div class="calcrow">'+
+'<div><label class="fld" for="prSku">Формат</label><select id="prSku" style="width:100%"></select></div>'+
+'<div style="flex:0 1 230px"><label class="fld" for="prZone">Зона</label><select id="prZone" style="width:100%"><option value="w">Захід, Київ</option><option value="c">Центр, Схід, Південь</option></select></div>'+
+'</div>'+
+'<div class="out" id="prOut"></div>'+
+'<p style="font-size:12.5px;color:var(--ink-soft);margin:12px 0 0">Націнка — скільки додає точка до своєї закупівельної ціни з ПДВ. Маржа — частка заробітку в рекомендованій ціні продажу.</p></div>'+
+'<div class="card"><h3>Прайс, грн</h3>'+
+'<div class="tablewrap"><table><thead><tr><th rowspan="2">Формат</th><th colspan="3" style="text-align:center">Захід, Київ</th><th colspan="3" style="text-align:center">Центр, Схід, Південь</th></tr>'+
+'<tr><th class="num">без ПДВ</th><th class="num">з ПДВ</th><th class="num">РРЦ</th><th class="num">без ПДВ</th><th class="num">з ПДВ</th><th class="num">РРЦ</th></tr></thead><tbody id="priceTable"></tbody></table></div></div>'+
+'<div class="card"><h3>Який формат у який канал</h3>'+
+'<div class="tablewrap"><table><thead><tr><th>Канал</th><th>Пріоритетні формати</th><th>Логіка</th></tr></thead><tbody>'+
+'<tr><td><b>АЗС, кіоски, прикаса</b></td><td>0,5 л ПЕТ · 0,75 SPORT</td><td>Імпульсна покупка, холодильник, одна рука</td></tr>'+
+'<tr><td><b>Продуктовий магазин</b></td><td>1,5 і 2,0 л ПЕТ, усі газації</td><td>Основний обсяг, покупка додому</td></tr>'+
+'<tr><td><b>Супермаркет</b></td><td>Уся ПЕТ-лінійка + скло 0,75</td><td>Повна представленість, широка полиця</td></tr>'+
+'<tr><td><b>HoReCa</b></td><td>Скло 0,3 і 0,75 л</td><td>Подача на стіл, преміальне сприйняття</td></tr>'+
+'<tr><td><b>Спортзали, фітнес</b></td><td>0,75 SPORT · 0,5 л</td><td>Формат «з собою», фліп-топ</td></tr>'+
+'<tr><td><b>Офіс, дім</b></td><td>«Особлива» 7 л</td><td>Об\'єм, помпа, готування</td></tr>'+
+'</tbody></table></div></div>'
+});
+
+S.push({id:"selling",g:3,nav:"Аргументація",short:"Аргументи",track:true,html:
+'<div class="eyebrow">Розділ 9</div><h2>Аргументація</h2><div class="rule"></div>'+
+'<p class="lede">П\'ять аргументів у порядку сили, скрипт першої розмови й вісім заперечень, які чутно найчастіше.</p>'+
+'<div class="card"><h3>П\'ять аргументів</h3>'+
+'<div class="tablewrap"><table><thead><tr><th style="width:34px" class="num">#</th><th>Аргумент</th><th>Кому працює найкраще</th></tr></thead><tbody>'+
+'<tr><td class="num">1</td><td><b>Природний pH 7,8 негазованої води.</b> Лужна, близька до pH організму, засвоюється швидше за нейтральну. Такий показник мають лише кілька відомих європейських вод.</td><td>Кінцевий споживач, аптеки, HoReCa</td></tr>'+
+'<tr><td class="num">2</td><td><b>Мінералізація 0,2–0,9 г/дм³.</b> Низька — тому щодня і без обмежень, для всієї родини.</td><td>Родинні покупки, супермаркет</td></tr>'+
+'<tr><td class="num">3</td><td><b>Доказова база.</b> Клінічні дослідження ДУ «Український НДІ медичної реабілітації та курортології МОЗ України», ДСТУ 878-93, сертифікат відповідності, протоколи випробувань на кожну партію.</td><td>Категорійні менеджери мереж</td></tr>'+
+'<tr><td class="num">4</td><td><b>Походження.</b> З самого серця Карпат: заповідна зона, свердловини в охоронній зоні, курорт із 1827 року.</td><td>HoReCa, преміум, скло</td></tr>'+
+'<tr><td class="num">5</td><td><b>Виробнича база й асортимент.</b> Два заводи, третій будується — він більший за перші два разом. Один постачальник закриває полицю від імпульсного формату до 7 л для дому.</td><td>Власник точки, дистрибуція, мережі</td></tr>'+
+'</tbody></table></div></div>'+
+'<div class="card"><h3>Скрипт першої розмови з точкою</h3>'+
+'<ol style="padding-left:20px;margin:0">'+
+'<li style="margin-bottom:11px"><b>Відкриття.</b> «Добрий день. Я від «Трускавецької». Бачу, у вас на полиці вода в основному літрова — хочу показати, що можна поставити поруч, щоб не з\'їдати місце, а додати виручки.»</li>'+
+'<li style="margin-bottom:11px"><b>Питання, а не презентація.</b> Що зараз найкраще продається з води? Який об\'єм вимітає швидше? Є запит на скло?</li>'+
+'<li style="margin-bottom:11px"><b>Один аргумент під відповідь.</b> Не вивалювати всі п\'ять. Питають про споживача — pH і мінералізація. Питають про документи — дослідження й ДСТУ. Питають про гроші — калькулятор націнки.</li>'+
+'<li style="margin-bottom:11px"><b>Конкретна пропозиція.</b> Стартовий набір: 1,5 л негазована + 0,5 л негазована + одна газована позиція. Не «весь асортимент», а три позиції, які точно обертаються.</li>'+
+'<li style="margin-bottom:0"><b>Домовленість про наступний крок</b> із датою. Без дати розмови не було.</li>'+
+'</ol></div>'+
+'<div class="card"><h3>Вісім заперечень</h3><div id="objections"></div></div>'
+});
+
+S.push({id:"merch",g:3,nav:"Мерчандайзинг",short:"Викладка",track:true,html:
+'<div class="eyebrow">Розділ 10</div><h2>Мерчандайзинг і бренд</h2><div class="rule"></div>'+
+'<p class="lede">Як стоїть товар на полиці і як можна користуватися логотипом.</p>'+
+'<div class="card"><h3>Правила викладки</h3>'+
+'<ul class="clean">'+
+'<li><b>Блок, а не розсип.</b> Уся «Трускавецька» стоїть одним блоком. Розкидані по полиці пляшки не читаються як бренд.</li>'+
+'<li><b>Порядок усередині блоку — за об\'ємом,</b> зліва направо від меншого до більшого. Усередині одного об\'єму — негазована першою, вона продається найкраще. Скло й ПЕТ у блоки не змішувати.</li>'+
+'<li><b>Етикетка фронтально.</b> Логотип має читатися з відстані двох метрів.</li>'+
+'<li><b>Рівень очей — ходові позиції:</b> 1,5 л та 0,5 л негазовані. Нижні полиці — 2,0 л і 7 л, їх беруть цілеспрямовано й нахиляються.</li>'+
+'<li><b>Скло — окремо від ПЕТ,</b> у преміальній зоні або в барі. Поруч із дволітровими воно втрачає цінове виправдання.</li>'+
+'<li><b>Фейсинги в шоу-боксі:</b> 3–4 залежно від формату (за паспортами товару).</li>'+
+'<li><b>Цінника без дати не буває.</b> Перевіряти відповідність цінника рекомендованій ціні на кожному візиті.</li>'+
+'</ul></div>'+
+'<div class="card"><h3>Логотип: що дозволено</h3>'+
+'<p>У бренд-гайді 2025 року шість офіційних варіантів:</p>'+
+'<div class="tablewrap" style="margin-bottom:14px"><table><thead><tr><th>Варіант</th><th>Коли використовувати</th></tr></thead><tbody>'+
+'<tr><td><b>З горами, кольоровий</b></td><td>Основна версія: зовнішні комунікації, етикетки, POS-матеріали</td></tr>'+
+'<tr><td><b>З горами, біло-срібний</b></td><td>Те саме, але на кольорових фонах, де основна версія недоречна</td></tr>'+
+'<tr><td><b>Текстовий червоний</b></td><td>Монохромні макети, документи, партнерський брендинг</td></tr>'+
+'<tr><td><b>Текстовий білий</b></td><td>Кольоровий або фотофон</td></tr>'+
+'<tr><td><b>SPORT червоний / білий</b></td><td>Тільки для лінійки SPORT</td></tr>'+
+'</tbody></table></div>'+
+'<div class="note warn"><b>Дві заборони з бренд-гайду</b>Не змінювати кольори, пропорції та розміри логотипу. Використовувати лише офіційні файли — не перемальовувати, не витягувати з фото, не брати з інтернету.</div>'+
+'<p style="margin-bottom:0">Питання щодо застосування — на <span class="mono">khrystyna.brodych@truskavetska.com</span></p></div>'+
+'<div class="card"><h3>Кольори бренду</h3>'+
+'<div class="sw">'+
+'<div><div class="chipc" style="background:#005EB8"></div><div class="lb"><b>Pantone 300 C</b><br>#005EB8</div></div>'+
+'<div><div class="chipc" style="background:#00966C"></div><div class="lb"><b>Pantone 7724 C</b><br>#00966C</div></div>'+
+'<div><div class="chipc" style="background:#C5003E"></div><div class="lb"><b>Pantone 1935 C</b><br>#C5003E</div></div>'+
+'<div><div class="chipc" style="background:linear-gradient(135deg,#B8BCBE,#8A8D8F 55%,#A5A9AB)"></div><div class="lb"><b>Pantone 877 C</b><br>#8A8D8F</div></div>'+
+'</div>'+
+'<div class="note info" style="margin-bottom:0;margin-top:16px"><b>Про два останні</b><b>1935 C</b> — червоний, використовується у текстовому логотипі та в лінійці SPORT. <b>877 C</b> — металізоване срібло, це фарба для друку; на екрані вона передається приблизним сірим #8A8D8F, металевого ефекту цифрова версія не дає.</div></div>'+
+'<div class="card"><h3>Шрифти</h3>'+
+'<ul class="clean">'+
+'<li><b>Gilroy Bold</b> — основний шрифт бренду</li>'+
+'<li><b>Core Sans</b> — додатковий</li>'+
+'<li><b>Heading Now Medium</b> — накреслення логотипа</li>'+
+'<li><b>Sofia Sans Extra Condensed</b> + <b>Montserrat</b> — сайт і цифрові матеріали</li>'+
+'</ul></div>'
+});
+
+S.push({id:"compliance",g:3,nav:"Що можна говорити",short:"Що казати",track:true,html:
+'<div class="eyebrow">Розділ 11</div><h2>Що можна говорити</h2><div class="rule"></div>'+
+'<p class="lede">Найважливіший розділ порталу. Вода — не ліки. Одна зайва фраза перетворює продаж на порушення.</p>'+
+'<div class="grid2">'+
+'<div class="card" style="border-left:3px solid var(--green)"><h3 style="color:#00694C">Можна</h3>'+
+'<ul class="clean v">'+
+'<li>«Вода мінеральна природна столова»</li>'+
+'<li>«Для щоденного вживання»</li>'+
+'<li>«Низька мінералізація — можна щодня без обмежень»</li>'+
+'<li>«Природний pH 7,8 негазованої води, лужна»</li>'+
+'<li>«Надає детоксикаційного ефекту»</li>'+
+'<li>«Активізує антиоксидантну систему»</li>'+
+'<li>«Посилює адаптаційні можливості організму»</li>'+
+'<li>«Сприяє сталості кислотно-лужного балансу»</li>'+
+'<li>«Оздоровчий ефект підтверджено клінічними дослідженнями Українського НДІ медичної реабілітації та курортології МОЗ»</li>'+
+'<li>«Видобувається в охоронній зоні Карпат»</li>'+
+'</ul></div>'+
+'<div class="card" style="border-left:3px solid var(--warn)"><h3 style="color:var(--warn)">Не можна</h3>'+
+'<ul class="clean x">'+
+'<li>«Лікує» будь-що</li>'+
+'<li>«Показана при захворюванні…»</li>'+
+'<li>«Лікувальна» або «лікувально-столова»</li>'+
+'<li>«Замінює ліки», «можна замість лікування»</li>'+
+'<li>«Виводить токсини після алкоголю»</li>'+
+'<li>«Допомагає схуднути»</li>'+
+'<li>«Омолоджує», «сповільнює старіння» як обіцянка результату</li>'+
+'<li>«Підвищує імунітет» як медичне твердження</li>'+
+'<li>Будь-які показання й дозування</li>'+
+'<li>Називати «Особливу» мінеральною водою</li>'+
+'</ul></div></div>'+
+'<div class="note warn"><b>Правило перевірки</b>Якщо формулювання немає в переліку доведених ефектів або на етикетці — його не існує. Не переказуйте своїми словами те, що «десь читали». Сумніваєтесь — не кажіть.</div>'+
+'<div class="card"><h3>Три типові пастки</h3>'+
+'<ul class="clean">'+
+'<li><b>Клієнт сам каже «це ж лікувальна».</b> Виправляйте одразу: «Ні, це природна столова, мінералізація нижче 1 г/дм³. Лікувальні п\'ють курсом за призначенням лікаря, нашу — щодня без обмежень.» Промовчати — означає погодитись.</li>'+
+'<li><b>Питання «а від чого допомагає?»</b> Відповідь про призначення, не про хвороби: «Це вода для щоденної гідратації. Оздоровчий ефект підтверджений дослідженнями — детоксикація, антиоксидантна дія, адаптація. Конкретні призначення — це до лікаря.»</li>'+
+'<li><b>«Особлива» на 7 літрів.</b> Питна оброблена вода. Якщо клієнт хоче мінеральну у великому об\'ємі — такої в асортименті немає, найбільший мінеральний формат 2,0 л.</li>'+
+'</ul></div>'
+});
+
+S.push({id:"test",g:4,nav:"Тест",short:"Тест",track:false,html:
+'<div class="eyebrow">Перевірка знань</div><h2>Підсумковий тест</h2><div class="rule"></div>'+
+'<p class="lede">20 питань за матеріалами порталу. Прохідний бал — 16 із 20 (80%). Після кожної відповіді видно правильний варіант і пояснення.</p>'+
+'<div id="quizWrap"></div>'+
+'<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">'+
+'<button class="btn" id="quizCheck">Показати результат</button>'+
+'<button class="btn ghost" id="quizReset">Пройти заново</button></div>'+
+'<div id="quizResult"></div>'
+});
+
+S.push({id:"ref",g:4,nav:"Довідник",short:"Довідник",track:true,html:
+'<div class="eyebrow">Довідкові матеріали</div><h2>Довідник</h2><div class="rule"></div>'+
+'<p class="lede">Штрих-коди, документи, глосарій. Сюди зазираєте, коли забули цифру.</p>'+
+'<div class="card"><h3>Усі штрих-коди</h3>'+
+'<div class="tablewrap"><table><thead><tr><th>Товар</th><th class="num">Штрих-код одиниці</th><th class="num">Штрих-код упаковки</th><th class="num">УКТЗЕД</th></tr></thead><tbody id="eanTable"></tbody></table></div></div>'+
+'<div class="card"><h3>Документи бренду</h3>'+
+'<div class="tablewrap"><table><thead><tr><th>Документ</th><th>Що підтверджує</th></tr></thead><tbody>'+
+'<tr><td><b>ДСТУ 878-93</b></td><td>«Води мінеральні фасовані. Технічні умови» — стандарт, за яким випускається мінеральна лінійка</td></tr>'+
+'<tr><td><b>Сертифікат відповідності 2025 р.</b></td><td>Відповідність продукції вимогам стандарту</td></tr>'+
+'<tr><td><b>Протоколи випробувань</b><br><span style="font-size:12px;color:var(--ink-soft)">«Трускавецька негазована», «Трускавецька Особлива», 2025 р.</span></td><td>Фактичні результати лабораторних досліджень партій</td></tr>'+
+'<tr><td><b>Клінічні дослідження</b><br><span style="font-size:12px;color:var(--ink-soft)">ДУ «Український НДІ медичної реабілітації та курортології МОЗ України»</span></td><td>Доведені оздоровчі ефекти при курсовому внутрішньому прийомі</td></tr>'+
+'<tr><td><b>Бренд-гайд 2025</b></td><td>Офіційні логотипи, кольори, шрифти й правила використання</td></tr>'+
+'</tbody></table></div></div>'+
+'<div class="card"><h3>Глосарій</h3>'+
+'<dl class="kv" style="grid-template-columns:190px 1fr">'+
+'<dt style="text-align:left"><b>Мінералізація</b></dt><dd style="text-align:left;font-weight:400">Сумарний вміст розчинених мінеральних речовин. До 1 г/дм³ — низька, вода вважається столовою.</dd>'+
+'<dt style="text-align:left"><b>pH</b></dt><dd style="text-align:left;font-weight:400">Кислотність. До 6,8 — кисла, 6,8–7,2 нейтральна, від 7,2 — лужна. Природний показник негазованої «Трускавецької» — 7,8.</dd>'+
+'<dt style="text-align:left"><b>Природна столова</b></dt><dd style="text-align:left;font-weight:400">Мінеральна вода з мінералізацією до 1 г/дм³. Для щоденного вживання без обмежень.</dd>'+
+'<dt style="text-align:left"><b>Питна оброблена</b></dt><dd style="text-align:left;font-weight:400">Категорія «Особливої» 7 л. Не мінеральна.</dd>'+
+'<dt style="text-align:left"><b>Каптаж</b></dt><dd style="text-align:left;font-weight:400">Споруда, що виводить воду зі свердловини й захищає джерело від зовнішнього впливу.</dd>'+
+'<dt style="text-align:left"><b>УКТЗЕД</b></dt><dd style="text-align:left;font-weight:400">Митний код товару. Негазована 2201101100, газована 2201101900, «Особлива» 2201900000.</dd>'+
+'<dt style="text-align:left"><b>Упаковка</b></dt><dd style="text-align:left;font-weight:400">Транспортна групова упаковка (термопакет) із фіксованою кількістю пляшок. Раніше могли називати «ящик».</dd>'+
+'<dt style="text-align:left"><b>Шар</b></dt><dd style="text-align:left;font-weight:400">Один ряд упаковок на палеті. Палета складається з кількох шарів.</dd>'+
+'<dt style="text-align:left"><b>Фейсинг</b></dt><dd style="text-align:left;font-weight:400">Кількість одиниць товару, повернутих етикеткою до покупця в першому ряду.</dd>'+
+'<dt style="text-align:left"><b>РРЦ</b></dt><dd style="text-align:left;font-weight:400">Рекомендована роздрібна ціна для каналу збуту з ПДВ.</dd>'+
+'<dt style="text-align:left"><b>FIFO</b></dt><dd style="text-align:left;font-weight:400">Ротація «перший прийшов — перший пішов».</dd>'+
+'</dl></div>'+
+'<div class="card"><h3>Скинути прогрес</h3>'+
+'<p style="font-size:13.5px;color:var(--ink-soft)">Очистить позначки пройдених розділів у цьому браузері. Матеріали залишаться на місці.</p>'+
+'<button class="btn ghost" id="resetProg">Скинути прогрес</button></div>'
+});
+
+/* ============ ЗАПЕРЕЧЕННЯ ============ */
+var OBJ=[
+ ["«У мене вже є вода, полиця забита»","Не пропонуємо замінити — пропонуємо перевірити. Запитайте, який об'єм у них обертається найшвидше, і зайдіть однією ходовою позицією замість повного асортименту. Три позиції, які обертаються, кращі за десять, які стоять."],
+ ["«Дорого»","Уточніть, дорого для нього чи для покупця. Для нього — покажіть калькулятор націнки: скільки гривень із пляшки залишається точці при рекомендованій ціні. Для покупця — це щоденна вода, а не разова покупка, і рахується вона на місяць, а не на пляшку."],
+ ["«Ваш бренд не знають»","Трускавець як курорт відомий із 1827 року — назва впізнається навіть тими, хто не бачив пляшку. Плюс бренд консолідований з 2023 року, працює два заводи й будується третій. Це не новий гравець, це впорядкований старий."],
+ ["«Довго обертається»","Питання не в бренді, а в місці на полиці й форматі. Перевірте: чи стоїть блоком, чи на рівні очей, чи правильний формат для цього каналу. У кіоску не продаватимуться двійки, у супермаркеті — не проживе сама 0,5."],
+ ["«Мінімальна партія завелика»","Порахуйте разом на калькуляторі палети: скільки реально треба, щоб закрити місяць. Часто виявляється, що мова про частину палети, а не про палету."],
+ ["«Скло б'ється, морока»","Скло не для загальної полиці, а для HoReCa й преміальної зони. Якщо в точки немає такої зони — не нав'язуйте, беріть ПЕТ. Скло продають ресторанам, а не мінімаркетам."],
+ ["«Сімка не продається»","«Особлива» 7 л — це не полицевий товар. Вона працює там, де є запит на воду для дому й офісу: спальні райони, доставка, продаж під помпу. Якщо каналу немає — не ставте."],
+ ["«А чим вона краща за інші?»","Три речі: природний pH 7,8 негазованої води, мінералізація 0,2–0,9 г/дм³ і підтверджені клінічними дослідженнями ефекти. Не переходьте на порівняння з конкретними марками — говоріть про свої показники. Порівняльні твердження про чужі бренди — юридичний ризик."]
+];
+
+/* ============ ТЕСТ ============ */
+var QUIZ=[
+ ["Який природний показник pH має негазована «Трускавецька»?",["6,5","7,2","7,8","8,4"],2,"pH 7,8 — природний показник негазованої води. Лужна, близька до pH організму."],
+ ["Яка загальна мінералізація мінеральної «Трускавецької»?",["0,2–0,9 г/дм³","1,5–2,0 г/дм³","3,0–4,0 г/дм³","до 0,1 г/дм³"],0,"0,2–0,9 г/дм³ — низька мінералізація, тому воду можна пити щодня без обмежень."],
+ ["Який основний слоган бренду?",["Енергія природи завжди з тобою","З самого серця Карпат!","Вода твого здоров'я","Джерело Карпат"],1,"Основний — «З самого серця Карпат!». «Енергія природи завжди з тобою» — додатковий, для окремих випадків."],
+ ["Який термін придатності має ПЕТ негазована?",["6 місяців","9 місяців","12 місяців","18 місяців"],2,"Негазований ПЕТ — 12 місяців. Дев'ять місяців тільки в газованого ПЕТ."],
+ ["Який термін придатності має ПЕТ сильногазована?",["6 місяців","9 місяців","12 місяців","24 місяці"],1,"Газований ПЕТ — 9 місяців, і слабо-, і сильногазований."],
+ ["Який термін придатності у скла?",["9 місяців для всіх","12 місяців для всіх","9 для газованого, 12 для негазованого","6 місяців"],1,"Скло — 12 місяців незалежно від газованості."],
+ ["До якої категорії належить «Трускавецька Особлива» 7 л?",["Вода мінеральна природна столова","Вода питна негазована оброблена","Вода лікувально-столова","Вода мінеральна лікувальна"],1,"«Особлива» — питна оброблена вода, УКТЗЕД 2201900000. Називати її мінеральною не можна."],
+ ["Умови зберігання продукції?",["Від 0 до +10 °C","Від +2 до +25 °C","Тільки в холодильнику","Від -5 до +30 °C"],1,"Від +2 до +25 °C, у темних вентильованих приміщеннях, без прямих сонячних променів."],
+ ["Скільки пляшок 0,5 л ПЕТ на палеті?",["504","800","1200","1296"],2,"8 шт. в упаковці × 30 упаковок у шарі × 5 шарів = 1200 шт."],
+ ["Скільки пляшок 1,5 л ПЕТ на палеті?",["384","504","800","1200"],1,"6 × 21 × 4 = 504 шт."],
+ ["Скільки пляшок в одній упаковці 2,0 л ПЕТ?",["4","6","8","12"],1,"6 пляшок в упаковці, 16 упаковок у шарі, 4 шари — 384 шт. на палеті."],
+ ["Скільки заводів матиме бренд після завершення будівництва?",["Один","Два","Три","Чотири"],2,"Зараз працюють два заводи, будується третій — за обсягами більший за перші два разом узяті."],
+ ["Які ефекти доведені клінічними дослідженнями?",["Лікування захворювань шлунка","Детоксикація, антиоксидантна дія, адаптація","Зниження ваги","Підвищення тиску"],1,"Детоксикаційний ефект, активізація антиоксидантної системи, посилення адаптаційних можливостей."],
+ ["З якого року Трускавець має статус курорту?",["1795","1827","1901","1954"],1,"З 1827 року, коли місто офіційно отримало статус курорту."],
+ ["З якого року бренд консолідований однією компанією?",["2019","2021","2023","2025"],2,"З 2023 року бренд консолідований ТОВ «Трускавецька»."],
+ ["Які два основні кольори бренду?",["#005EB8 і #00966C","#C5003E і #8A8D8F","#1A1A1A і #FFD700","#00966C і #FF6B00"],0,"Pantone 300 C (#005EB8) і Pantone 7724 C (#00966C). Pantone 1935 C і 877 C — додаткові."],
+ ["Чим SPORT відрізняється від класичної 0,75 л негазованої?",["Іншим складом води","Меншою мінералізацією","Корком «фліп-топ», дизайном і ціною","Терміном придатності"],2,"Вода та сама, ширина пляшки та сама, палетизація та сама. Відрізняється корок фліп-топ (через нього висота 28 см замість 25), дизайн етикетки й ціна."],
+ ["Яку фразу можна говорити клієнту?",["«Лікує захворювання нирок»","«Показана при гастриті»","«Активізує антиоксидантну систему»","«Замінює ліки»"],2,"Дозволені лише формулювання з переліку доведених ефектів. Усе про лікування — заборонено."],
+ ["Скільки цінових зон у прайсі?",["Одна","Дві","Три","Чотири"],1,"Дві: «Захід, Київ» і «Центр, Схід, Південь»."],
+ ["Який УКТЗЕД у негазованої мінеральної води?",["2201101100","2201101900","2201900000","2202100000"],0,"Негазована — 2201101100, газована — 2201101900, «Особлива» — 2201900000."]
+];
+
+/* ============ СТАН ============ */
+var mem={};
+var store={
+  get:function(k){ try{ return localStorage.getItem(k); }catch(e){ return mem[k]||null; } },
+  set:function(k,v){ try{ localStorage.setItem(k,v); }catch(e){ mem[k]=v; } },
+  del:function(k){ try{ localStorage.removeItem(k); }catch(e){ delete mem[k]; } }
+};
+function loadDone(){ try{ return JSON.parse(store.get("tr_done")||"[]"); }catch(e){ return []; } }
+var done=loadDone();
+var trackable=S.filter(function(s){return s.track;}).map(function(s){return s.id;});
+var GNAME={1:"Бренд",2:"Продукт",3:"Продаж",4:"Перевірка"};
+
+/* ============ РЕНДЕР ============ */
+var wrap=document.getElementById("wrap");
+S.forEach(function(s){
+  var el=document.createElement("section");
+  el.className="pane"; el.id="pane-"+s.id;
+  var extra=s.track?('<div class="donebar"><p>Прочитали розділ? Позначте — це рухає прогрес угорі.</p>'+
+    '<button class="btn gr" data-done="'+s.id+'">Позначити пройденим</button></div>'):"";
+  el.innerHTML=s.html+extra+
+    '<div class="footer">Навчальний портал ТМ «Трускавецька» · для внутрішнього використання · дані станом на липень 2026 р.<br>Джерела: паспорти товару, логістичні картки, прайс для дистриб\'юторів, результати клінічних досліджень, бренд-гайд 2025.</div>';
+  wrap.appendChild(el);
+});
+
+var tabs=document.getElementById("tabs"), lastG=null, curGroup=null;
+S.forEach(function(s){
+  if(s.g!==lastG){
+    curGroup=document.createElement("div"); curGroup.className="tabgroup";
+    var gl=document.createElement("span"); gl.className="glab"; gl.textContent=GNAME[s.g];
+    curGroup.appendChild(gl); tabs.appendChild(curGroup);
+    lastG=s.g;
+  }
+  var a=document.createElement("a");
+  a.href="#"+s.id; a.dataset.go=s.id;
+  a.dataset.full=s.nav; a.dataset.short=s.short||s.nav;
+  a.innerHTML='<span class="lb">'+s.nav+'</span><span class="ck">✓</span>';
+  curGroup.appendChild(a);
+});
+
+/* На вузьких екранах вкладки показують скорочені підписи, на широких — повні */
+function syncTabLabels(){
+  var narrow=(window.innerWidth||1024)<=640;
+  document.querySelectorAll(".tabs a").forEach(function(a){
+    var txt=narrow?a.dataset.short:a.dataset.full;
+    var lb=a.querySelector(".lb");
+    if(lb.textContent!==txt) lb.textContent=txt;
+    a.title=a.dataset.full;
+  });
+}
+function refreshTabs(){ syncTabLabels(); }
+refreshTabs();
+
+function go(id,skipHash){
+  var pane=document.getElementById("pane-"+id);
+  if(!pane){ id="start"; pane=document.getElementById("pane-start"); }
+  document.querySelectorAll("section.pane").forEach(function(p){p.classList.remove("on");});
+  pane.classList.add("on");
+  document.querySelectorAll(".tabs a").forEach(function(a){
+    var on=a.dataset.go===id;
+    a.classList.toggle("on",on);
+    if(on) a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current");
+    if(on && a.scrollIntoView) a.scrollIntoView({block:"nearest",inline:"nearest"});
+  });
+  window.scrollTo({top:0,behavior:"auto"});
+  store.set("tr_last",id);
+  if(window.setMenuBtn) window.setMenuBtn(id);
+  if(!skipHash && location.hash!=="#"+id){ try{ history.replaceState(null,"","#"+id); }catch(e){ location.hash=id; } }
+}
+document.addEventListener("click",function(e){
+  var a=e.target.closest("[data-go]");
+  if(a){ e.preventDefault(); go(a.dataset.go); return; }
+  var d=e.target.closest("[data-done]");
+  if(d){
+    var id=d.dataset.done;
+    if(done.indexOf(id)<0){ done.push(id); store.set("tr_done",JSON.stringify(done)); }
+    updProgress();
+    return;
+  }
+});
+window.addEventListener("hashchange",function(){
+  var id=location.hash.replace("#","");
+  if(id && document.getElementById("pane-"+id)) go(id,true);
+});
+
+function updProgress(){
+  var n=trackable.filter(function(id){return done.indexOf(id)>=0;}).length;
+  document.getElementById("progtxt").textContent=n+" / "+trackable.length;
+  document.getElementById("progbar").style.width=(n/trackable.length*100)+"%";
+  document.querySelectorAll(".tabs a").forEach(function(a){
+    a.classList.toggle("done",done.indexOf(a.dataset.go)>=0);
+  });
+  document.querySelectorAll("[data-done]").forEach(function(b){
+    var d=done.indexOf(b.dataset.done)>=0;
+    b.textContent=d?"Пройдено ✓":"Позначити пройденим";
+    b.disabled=d;
+  });
+}
+
+/* ---- Полиця в масштабі ---- */
+var GASHORT={"негазована":"н","слабогазована":"сл","сильногазована":"сил"};
+/* Один силует на формат: усі газації одного об'єму мають однакову пляшку.
+   Порядок: спершу скло, далі ПЕТ; усередині — за зростанням об'єму, SPORT одразу після своєї 0,75 л. */
+var SHELF=GROUPS.map(function(g){
+  var s=SKUS.filter(function(x){return x.id===g.src;})[0];
+  var members=(g.key==="g075s")
+    ? SKUS.filter(function(x){return x.line==="SPORT";})
+    : SKUS.filter(function(x){return x.vol===s.vol&&x.pack===s.pack&&x.line===s.line;});
+  return {g:g,s:s,members:members,
+    gases:members.map(function(m){return GASHORT[m.gas];}),
+    isGlass:s.pack==="Скло",
+    sortA:s.pack==="Скло"?0:1, sortB:g.litres, sortC:(g.key==="g075s")?1:0};
+}).sort(function(a,b){ return a.sortA-b.sortA || a.sortB-b.sortB || a.sortC-b.sortC; });
+
+var SC=5.4;
+/* Полиця перемальовується під ширину екрана: масштаб підбирається так,
+   щоб уся лінійка вміщалась без горизонтальної прокрутки. */
+function drawShelf(){
+  var narrow=(window.innerWidth||1024)<=640;
+  var GAP=narrow?10:14, SEP=narrow?13:21, PAD=narrow?28:40;
+  var vw=document.documentElement.clientWidth||window.innerWidth||1024;
+  var avail=Math.min(vw,1060)-(narrow?28:52)-PAD;          /* поля .wrap і .shelf */
+  var cm=SHELF.reduce(function(t,i){return t+i.s.dw;},0);   /* сумарна ширина пляшок, см */
+  var fixed=GAP*(SHELF.length-1)+SEP;
+  SC=Math.max(2.6,Math.min(5.4,(avail-fixed)/cm));
+
+  var shelf=document.getElementById("shelf");
+  shelf.innerHTML="";
+  SHELF.forEach(function(it,i){
+    var s=it.s, prev=SHELF[i-1];
+    if(prev && prev.isGlass!==it.isGlass){
+      var sp=document.createElement("span"); sp.className="shelfsep"; shelf.appendChild(sp);
+    }
+    var b=document.createElement("button");
+    b.className="bt"; b.dataset.grp=it.g.key; b.style.width=(s.dw*SC)+"px";
+    b.title=it.g.label;
+    var f=it.isGlass?"#E3EEF8":"#FFFFFF", st=it.isGlass?"#7FA3C4":"#9DB1C4";
+    var bd="1.5px "+(it.isGlass?"dashed":"solid")+" "+st;
+    b.innerHTML='<span class="cap" style="background:'+f+';border:'+bd+';border-bottom:0"></span>'+
+      '<span class="neck" style="background:'+f+';border-left:'+bd+';border-right:'+bd+'"></span>'+
+      '<span class="body" style="height:'+((s.dh-2.5)*SC)+'px;background:'+f+';border:'+bd+'"></span>'+
+      '<span class="lbl">'+s.vol.replace(" л","")+(it.g.key==="g075s"?' <em>S</em>':'')+
+      '<br><u>'+it.gases.join("·")+'</u></span>';
+    shelf.appendChild(b);
+  });
+  drawShelfHdr(GAP,SEP);
+}
+/* Заголовки Скло / ПЕТ рівно над своїми групами */
+function drawShelfHdr(GAP,SEP){
+  var hd=document.getElementById("shelfhdr");
+  var gl=SHELF.filter(function(i){return i.isGlass;}), pe=SHELF.filter(function(i){return !i.isGlass;});
+  function span(a){ return a.reduce(function(t,i){return t+i.s.dw*SC;},0)+GAP*(a.length-1); }
+  hd.innerHTML='<span style="width:'+span(gl)+'px">Скло</span>'+
+    '<i style="width:'+(GAP+SEP+GAP)+'px"></i>'+
+    '<span style="width:'+span(pe)+'px">ПЕТ</span>';
+}
+drawShelf();
+(function(){
+  var t,lastW=window.innerWidth;
+  window.addEventListener("resize",function(){
+    if(Math.abs(window.innerWidth-lastW)<24) return;      /* ігноруємо появу адресного рядка на телефоні */
+    lastW=window.innerWidth;
+    clearTimeout(t); t=setTimeout(drawShelf,140);
+  });
+})();
+
+/* ---- Підказка з габаритами при наведенні на пляшку ---- */
+var tip=document.getElementById("tip");
+function tipRow(k,v){ return '<div class="r"><span>'+k+'</span><i>'+v+'</i></div>'; }
+function showTip(el){
+  var s,sub;
+  if(el.dataset.grp){
+    var it=SHELF.filter(function(x){return x.g.key===el.dataset.grp;})[0]; if(!it) return;
+    s=it.s;
+    sub=it.members.map(function(m){return m.gas;}).join(", ")+
+        (it.g.key==="g075s"?" · корок фліп-топ":"")+
+        (s.line==="Особлива"?" · питна оброблена":"");
+  }else{
+    s=SKUS.filter(function(x){return x.id===parseInt(el.dataset.sku,10);})[0]; if(!s) return;
+    sub=s.gas+(s.line==="SPORT"?" · SPORT, корок фліп-топ":"");
+  }
+  tip.innerHTML='<b class="t">'+(s.line==="Особлива"?"Особлива ":"")+s.vol+' '+s.pack+(s.line==="SPORT"?" SPORT":"")+'</b>'+
+    '<div class="sub">'+sub+'</div>'+
+    tipRow("Ширина",String(s.dw).replace(".",",")+" см")+
+    tipRow("Висота",String(s.dh).replace(".",",")+" см")+
+    tipRow("Вага брутто",String(s.wu).replace(".",",")+" кг")+
+    tipRow("Пляшок в упаковці",s.box)+
+    tipRow("Пляшок на палеті",s.pallet)+
+    tipRow("Упаковок на палеті",s.pallet/s.box)+
+    (el.dataset.grp?"":tipRow("Штрих-код",s.ean));
+  tip.classList.add("show"); tip.setAttribute("aria-hidden","false");
+  var r=el.getBoundingClientRect(), tr=tip.getBoundingClientRect();
+  var left=r.left+r.width/2-tr.width/2;
+  left=Math.max(10,Math.min(left,window.innerWidth-tr.width-10));
+  var top=r.top-tr.height-10;
+  if(top<10) top=r.bottom+10;
+  tip.style.left=left+"px"; tip.style.top=top+"px";
+}
+function hideTip(){ tip.classList.remove("show"); tip.setAttribute("aria-hidden","true"); }
+["mouseenter","focus"].forEach(function(ev){
+  document.getElementById("shelf").addEventListener(ev,function(e){
+    var b=e.target.closest?e.target.closest(".bt"):null; if(b) showTip(b);
+  },true);
+});
+["mouseleave","blur"].forEach(function(ev){
+  document.getElementById("shelf").addEventListener(ev,function(e){
+    var b=e.target.closest?e.target.closest(".bt"):null; if(b) hideTip();
+  },true);
+});
+window.addEventListener("scroll",hideTip,true);
+
+/* На сенсорних екранах наведення не існує: дотик по пляшці показує підказку
+   й одночасно фільтрує каталог на цей формат. */
+document.getElementById("shelf").addEventListener("click",function(e){
+  var b=e.target.closest(".bt"); if(!b) return;
+  var it=SHELF.filter(function(x){return x.g.key===b.dataset.grp;})[0]; if(!it) return;
+  showTip(b);
+  F.vol=it.s.vol; F.pack=it.s.pack; F.gas="всі";
+  buildFilters(); renderSku();
+  var grid=document.getElementById("skugrid");
+  if(grid.scrollIntoView) grid.scrollIntoView({behavior:"smooth",block:"start"});
+  setTimeout(hideTip,2600);
+});
+
+/* ---- Каталог ---- */
+var F={vol:"всі",gas:"всі",pack:"всі"};
+function buildFilters(){
+  var f=document.getElementById("filters"); f.innerHTML="";
+  [["Об'єм","vol",["всі","0,3 л","0,5 л","0,75 л","1,5 л","2,0 л","7,0 л"]],
+   ["Газованість","gas",["всі","негазована","слабогазована","сильногазована"]],
+   ["Тара","pack",["всі","ПЕТ","Скло"]]].forEach(function(g){
+    g[2].forEach(function(v){
+      var b=document.createElement("button");
+      b.className="chip"+(F[g[1]]===v?" on":"");
+      b.textContent=v==="всі"?g[0]+": всі":v;
+      b.onclick=function(){ F[g[1]]=v; buildFilters(); renderSku(); };
+      f.appendChild(b);
+    });
+  });
+}
+function renderSku(){
+  var g=document.getElementById("skugrid"); g.innerHTML="";
+  var list=SKUS_ORD.filter(function(s){
+    return (F.vol==="всі"||s.vol===F.vol)&&(F.gas==="всі"||s.gas===F.gas)&&(F.pack==="всі"||s.pack===F.pack);
+  });
+  if(!list.length){ g.innerHTML='<div class="note info" style="grid-column:1/-1">Під ці фільтри немає позицій. Скиньте один із фільтрів на «всі».</div>'; return; }
+  list.forEach(function(s){
+    var d=document.createElement("div");
+    d.className="sku"; d.dataset.sku=s.id;
+    var f=fillOf(s), st=strokeOf(s), op=s.pack==="Скло"?".62":"1";
+    d.innerHTML='<div class="top">'+
+      '<div class="mini"><span style="display:block;width:9px;height:5px;background:'+f+';opacity:'+op+';border:1px solid '+st+';border-bottom:0;margin:0 auto"></span>'+
+      '<span style="display:block;width:19px;height:'+Math.round(s.dh*1.3)+'px;background:'+f+';opacity:'+op+';border:1px solid '+st+';border-radius:3px"></span></div>'+
+      '<div><div class="nm">'+(s.line==="Особлива"?"Особлива ":"")+s.vol+'</div>'+
+      '<div class="gs">'+s.gas+' · '+s.pack+(s.line==="SPORT"?' · SPORT':'')+'</div></div></div>'+
+      '<div class="tags"><span class="tag '+(s.shelf===12?"g":"a")+'">'+s.shelf+' міс.</span>'+
+      '<span class="tag b">'+s.box+' шт/упак</span>'+
+      '<span class="tag n">'+s.pallet+' шт/палета</span>'+
+      (s.line==="Особлива"?'<span class="tag r">питна</span>':'')+
+      (s.line==="SPORT"?'<span class="tag a">фліп-топ</span>':'')+'</div>'+
+      '<div class="ean">'+s.ean+'</div>';
+    g.appendChild(d);
+  });
+}
+function plural(n,f){ n=Math.abs(Math.round(n))%100; var d=n%10;
+  if(n>10&&n<20) return f[2]; if(d>1&&d<5) return f[1]; if(d===1) return f[0]; return f[2]; }
+var PACKN=["упаковка","упаковки","упаковок"];
+/* округлення до десятих, яке ніколи не показує ціле число для неповної величини:
+   0,98 палети -> «0,9», а не «1,0» */
+function dec1(v){ var r=Math.round(v*10)/10;
+  if(r>v && Math.abs(r-Math.round(r))<1e-9) r=Math.floor(v*10)/10;
+  return dec(r,1); }
+function money(n){ return n.toFixed(2).replace(".",","); }
+function dec(n,d){ return n.toFixed(d===undefined?2:d).replace(".",","); }
+function openSku(id){
+  var s=SKUS.filter(function(x){return x.id===id;})[0]; if(!s) return;
+  document.getElementById("modal").innerHTML='<button class="x" id="mx" aria-label="Закрити">×</button>'+
+   '<div class="eyebrow">'+s.cat+'</div>'+
+   '<h3 style="font-size:30px;margin-bottom:4px">'+(s.line==="Особлива"?"Особлива ":"")+s.vol+' '+s.pack+'</h3>'+
+   '<p style="color:var(--ink-soft);font-size:14px">'+s.gas+(s.line==="SPORT"?' · лінійка SPORT':'')+'</p>'+
+   (s.note?'<div class="note info">'+s.note+'</div>':'')+
+   '<dl class="kv">'+
+   '<dt>Штрих-код одиниці</dt><dd class="mono">'+s.ean+'</dd>'+
+   '<dt>Штрих-код упаковки</dt><dd class="mono">'+s.eanBox+'</dd>'+
+   '<dt>Код УКТЗЕД</dt><dd class="mono">'+s.uktzed+'</dd>'+
+   '<dt>Термін придатності</dt><dd>'+s.shelf+' місяців</dd>'+
+   '<dt>Зберігання</dt><dd>+2…+25 °C</dd>'+
+   '<dt>Габарити пляшки (Ш×В)</dt><dd class="mono">'+String(s.dw).replace(".",",")+' × '+String(s.dh).replace(".",",")+' см</dd>'+
+   '<dt>Вага брутто одиниці</dt><dd class="mono">'+String(s.wu).replace(".",",")+' кг</dd>'+
+   '<dt>Пляшок в упаковці</dt><dd><b>'+s.box+'</b></dd>'+
+   '<dt>Вага упаковки</dt><dd class="mono">'+String(s.wb).replace(".",",")+' кг</dd>'+
+   '<dt>Упаковок у шарі</dt><dd>'+s.layer+'</dd>'+
+   '<dt>Шарів на палеті</dt><dd>'+s.layers+'</dd>'+
+   '<dt>Пляшок на палеті</dt><dd><b>'+s.pallet+'</b></dd>'+
+   '<dt>Упаковок на палеті</dt><dd>'+(s.pallet/s.box)+'</dd>'+
+   '<dt>Вага палети брутто</dt><dd class="mono">'+String(s.wp).replace(".",",")+' кг</dd>'+
+   '</dl>'+
+   '<h4 style="margin-top:20px;margin-bottom:8px">Ціни, грн</h4>'+
+   '<div class="tablewrap"><table><thead><tr><th>Зона</th><th class="num">без ПДВ</th><th class="num">з ПДВ</th><th class="num">РРЦ</th></tr></thead><tbody>'+
+   '<tr><td>Захід, Київ</td><td class="num">'+money(s.pw)+'</td><td class="num">'+money(s.pwv)+'</td><td class="num"><b>'+money(s.rw)+'</b></td></tr>'+
+   '<tr><td>Центр, Схід, Південь</td><td class="num">'+money(s.pc)+'</td><td class="num">'+money(s.pcv)+'</td><td class="num"><b>'+money(s.rc)+'</b></td></tr>'+
+   '</tbody></table></div>'+
+   (s.line==="Особлива"?'<div class="note warn" style="margin-bottom:0"><b>Увага</b>Це питна оброблена вода, а не мінеральна. Не використовуйте для неї аргументи про мінералізацію та pH мінеральної лінійки.</div>':'');
+  document.getElementById("modalbg").classList.add("show");
+  document.getElementById("mx").onclick=closeModal;
+}
+function closeModal(){ document.getElementById("modalbg").classList.remove("show"); }
+document.getElementById("modalbg").addEventListener("click",function(e){ if(e.target===this) closeModal(); });
+document.addEventListener("keydown",function(e){ if(e.key==="Escape") closeModal(); });
+document.addEventListener("click",function(e){
+  var el=e.target.closest("[data-sku]");
+  if(el) openSku(parseInt(el.dataset.sku,10));
+});
+
+/* ---- Таблиці ---- */
+function fillTables(){
+  var pt=document.getElementById("palletTable"), et=document.getElementById("eanTable"), prt=document.getElementById("priceTable");
+  GROUPS.forEach(function(g){
+    pt.innerHTML+='<tr><td>'+g.label+'</td><td class="num">'+g.box+'</td><td class="num">'+g.layer+'</td><td class="num">'+g.layers+'</td><td class="num"><b>'+g.pallet+'</b></td><td class="num">'+dec(g.wp,1)+'</td></tr>';
+    prt.innerHTML+='<tr><td>'+g.label+'</td><td class="num">'+money(g.pw)+'</td><td class="num">'+money(g.pwv)+'</td><td class="num"><b>'+money(g.rw)+'</b></td><td class="num">'+money(g.pc)+'</td><td class="num">'+money(g.pcv)+'</td><td class="num"><b>'+money(g.rc)+'</b></td></tr>';
+  });
+  SKUS_ORD.forEach(function(s){
+    et.innerHTML+='<tr><td>'+s.name+'</td><td class="num">'+s.ean+'</td><td class="num">'+s.eanBox+'</td><td class="num">'+s.uktzed+'</td></tr>';
+  });
+}
+
+/* ---- Заперечення ---- */
+function fillObjections(){
+  var o=document.getElementById("objections");
+  OBJ.forEach(function(p,i){
+    var d=document.createElement("div");
+    d.style.cssText="border-bottom:1px solid var(--line);padding:14px 0";
+    if(i===OBJ.length-1) d.style.borderBottom="0";
+    d.innerHTML='<h4 style="color:var(--warn);margin-bottom:6px">'+p[0]+'</h4><p style="margin:0;font-size:14px">'+p[1]+'</p>';
+    o.appendChild(d);
+  });
+}
+
+/* ---- Калькулятори ---- */
+function fillSelects(){
+  ["calcSku","prSku"].forEach(function(id){
+    var sel=document.getElementById(id);
+    GROUPS.forEach(function(g,i){
+      var o=document.createElement("option");
+      o.value=i; o.textContent=g.label;
+      sel.appendChild(o);
+    });
+  });
+  var defIdx=0;
+  GROUPS.forEach(function(g,i){ if(g.key==="g05") defIdx=i; });   /* 0,5 л ПЕТ — найходовіший формат */
+  document.getElementById("calcSku").value=defIdx;
+  document.getElementById("prSku").value=defIdx;
+}
+function calcPallet(){
+  var g=GROUPS[parseInt(document.getElementById("calcSku").value,10)];
+  var q=Math.max(1,parseFloat(document.getElementById("calcQty").value)||1);
+  var unit=document.getElementById("calcUnit").value;
+  var packsPerPallet=g.pallet/g.box;
+  var bottles,packs;
+  if(unit==="btl"){ bottles=q; packs=q/g.box; }
+  else if(unit==="pack"){ packs=q; bottles=q*g.box; }
+  else { packs=q*packsPerPallet; bottles=packs*g.box; }
+  var pallets=packs/packsPerPallet;
+  var layersTot=packs/g.layer;
+  var kg=(g.wp/packsPerPallet)*packs;
+  document.getElementById("calcOut").innerHTML=
+    '<div><span>Пляшок</span><b>'+Math.round(bottles).toLocaleString("uk-UA")+'</b></div>'+
+    '<div><span>Упаковок</span><b>'+dec1(packs)+'</b></div>'+
+    '<div><span>Шарів</span><b>'+Math.round(layersTot).toLocaleString("uk-UA")+'</b></div>'+
+    '<div><span>Палет</span><b>'+dec1(pallets)+'</b></div>'+
+    '<div><span>Вага брутто</span><b>'+Math.round(kg).toLocaleString("uk-UA")+'<small> кг</small></b></div>'+
+    '<div><span>Об\'єм води</span><b>'+Math.round(bottles*g.litres).toLocaleString("uk-UA")+'<small> л</small></b></div>';
+  var packsWhole=Math.ceil(packs-1e-9);
+  var rest=packsWhole%packsPerPallet;
+  var gapEl=document.getElementById("calcGap");
+  var full=Math.floor(packsWhole/packsPerPallet);
+  if(rest===0){
+    gapEl.innerHTML='Рівно <b>'+full+'</b> '+plural(full,["повна палета","повні палети","повних палет"])+' — залишків немає.';
+  }else{
+    var needPacks=packsPerPallet-rest;
+    gapEl.innerHTML=(full>0?'<b>'+full+'</b> '+plural(full,["повна палета","повні палети","повних палет"])+' + ':'')+
+      'неповна палета: <b>'+rest+'</b> '+plural(rest,PACKN)+' з '+packsPerPallet+
+      '. Щоб закрити палету, не вистачає <b>'+needPacks+'</b> '+plural(needPacks,PACKN)+
+      ' ('+(needPacks*g.box).toLocaleString("uk-UA")+' '+plural(needPacks*g.box,["пляшка","пляшки","пляшок"])+').';
+  }
+}
+function calcPrice(){
+  var g=GROUPS[parseInt(document.getElementById("prSku").value,10)];
+  var z=document.getElementById("prZone").value;
+  var buy=z==="w"?g.pwv:g.pcv, rrp=z==="w"?g.rw:g.rc;
+  var profit=rrp-buy, markup=profit/buy*100, margin=profit/rrp*100;
+  document.getElementById("prOut").innerHTML=
+    '<div><span>Закупівля з ПДВ</span><b>'+money(buy)+'<small> грн</small></b></div>'+
+    '<div><span>Рекомендована ціна</span><b>'+money(rrp)+'<small> грн</small></b></div>'+
+    '<div><span>Заробіток з пляшки</span><b>'+money(profit)+'<small> грн</small></b></div>'+
+    '<div><span>Націнка</span><b>'+markup.toFixed(0)+'<small>%</small></b></div>'+
+    '<div><span>Маржа</span><b>'+margin.toFixed(0)+'<small>%</small></b></div>'+
+    '<div><span>З палети</span><b>'+Math.round(profit*g.pallet).toLocaleString("uk-UA")+'<small> грн</small></b></div>';
+}
+
+/* ---- Тест ---- */
+var answers={};
+function buildQuiz(){
+  var w=document.getElementById("quizWrap"); w.innerHTML=""; answers={};
+  QUIZ.forEach(function(q,i){
+    var d=document.createElement("div"); d.className="q";
+    var opts="";
+    q[1].forEach(function(o,j){ opts+='<button class="opt" data-q="'+i+'" data-o="'+j+'">'+o+'</button>'; });
+    d.innerHTML='<div class="qt"><i>'+String(i+1).padStart(2,"0")+'</i>'+q[0]+'</div>'+opts+'<div class="expl" id="ex'+i+'">'+q[3]+'</div>';
+    w.appendChild(d);
+  });
+  document.getElementById("quizResult").innerHTML="";
+}
+document.addEventListener("click",function(e){
+  var b=e.target.closest(".opt"); if(!b||b.disabled) return;
+  var qi=parseInt(b.dataset.q,10), oi=parseInt(b.dataset.o,10);
+  if(answers[qi]!==undefined) return;
+  answers[qi]=oi;
+  var correct=QUIZ[qi][2];
+  b.parentNode.querySelectorAll(".opt").forEach(function(o){
+    o.disabled=true;
+    var j=parseInt(o.dataset.o,10);
+    if(j===correct) o.classList.add("right");
+    else if(j===oi) o.classList.add("wrong");
+  });
+  document.getElementById("ex"+qi).classList.add("show");
+});
+function checkQuiz(){
+  var n=0;
+  QUIZ.forEach(function(q,i){ if(answers[i]===q[2]) n++; });
+  var answered=Object.keys(answers).length;
+  var r=document.getElementById("quizResult");
+  if(answered<QUIZ.length){
+    r.innerHTML='<div class="note amber"><b>Ще не все</b>Відповіли на '+answered+' із '+QUIZ.length+' питань. Дайте відповідь на всі, щоб отримати результат.</div>';
+    return;
+  }
+  var pass=n>=16;
+  var html='<div class="note '+(pass?"ok":"warn")+'"><b>'+(pass?"Тест складено":"Тест не складено")+'</b>'+
+    'Правильних відповідей: <b>'+n+' із '+QUIZ.length+'</b> ('+Math.round(n/QUIZ.length*100)+'%). Прохідний бал — 16.'+
+    (pass?'':' Перегляньте розділи, у яких помилилися, і пройдіть тест заново.')+'</div>';
+  if(pass){
+    html+='<div class="card"><h3>Сертифікат</h3>'+
+      '<div class="calcrow"><div><label class="fld" for="certName">Прізвище та ім\'я</label>'+
+      '<input type="text" id="certName" placeholder="Введіть ПІБ" style="width:100%"></div>'+
+      '<div style="flex:0 0 auto"><button class="btn" id="certBtn">Сформувати</button></div></div>'+
+      '<div id="certOut"></div></div>';
+  }
+  r.innerHTML=html;
+  if(pass){
+    document.getElementById("certBtn").onclick=function(){
+      var nm=(document.getElementById("certName").value||"").trim();
+      if(!nm){ document.getElementById("certName").focus(); return; }
+      var d=new Date();
+      var ds=String(d.getDate()).padStart(2,"0")+"."+String(d.getMonth()+1).padStart(2,"0")+"."+d.getFullYear();
+      document.getElementById("certOut").innerHTML=
+        '<div class="cert"><div class="eyebrow" style="margin-bottom:6px">ТМ «Трускавецька» · З самого серця Карпат!</div>'+
+        '<div class="ttl">Сертифікат<br>про проходження навчання</div>'+
+        '<div style="font-size:13px;color:var(--ink-soft);margin-top:14px">Підтверджує, що</div>'+
+        '<div class="who">'+nm.replace(/[<>]/g,"")+'</div>'+
+        '<div style="font-size:13.5px">успішно склав(ла) підсумковий тест внутрішнього навчального курсу<br>про продукцію ТМ «Трускавецька»</div>'+
+        '<div class="meta">Результат: '+n+' із '+QUIZ.length+' ('+Math.round(n/QUIZ.length*100)+'%)<br>Дата: '+ds+'<br>Для внутрішнього використання</div></div>'+
+        '<button class="btn ghost" style="margin-top:14px" onclick="window.print()">Роздрукувати</button>';
+    };
+  }
+}
+
+/* ---- Пошук ---- */
+var SEARCH=[];
+S.forEach(function(s){
+  var txt=s.html.replace(/<[^>]+>/g," ").replace(/\s+/g," ");
+  SEARCH.push({t:s.nav,h:"Розділ",go:s.id,q:(s.nav+" "+txt).toLowerCase()});
+});
+SKUS_ORD.forEach(function(s){
+  SEARCH.push({t:s.name,h:"Товар · "+s.ean,sku:s.id,
+    q:(s.name+" "+s.ean+" "+s.eanBox+" "+s.uktzed+" "+s.vol+" "+s.gas+" "+s.pack+" "+s.line).toLowerCase()});
+});
+var si=document.getElementById("search"), sr=document.getElementById("searchres"), sbox=si.parentNode;
+var srItems=[], srIdx=-1;
+
+/* Результати впорядковуються: спершу збіг у назві, потім товари, потім згадки в тексті розділу */
+function rank(x,v){
+  var t=x.t.toLowerCase();
+  if(t.indexOf(v)===0) return 0;
+  if(t.indexOf(v)>=0) return 1;
+  if(x.sku && (x.q.indexOf(v)>=0)) return 2;
+  return 3;
+}
+function closeRes(){
+  sr.classList.remove("show"); si.setAttribute("aria-expanded","false");
+  srItems=[]; srIdx=-1;
+}
+function markAct(){
+  sr.querySelectorAll("button").forEach(function(b,i){ b.classList.toggle("act",i===srIdx); });
+  if(srIdx>=0){
+    var el=sr.querySelectorAll("button")[srIdx];
+    if(el && el.scrollIntoView) el.scrollIntoView({block:"nearest"});
+  }
+}
+function openRes(x){
+  closeRes(); si.value=""; sbox.classList.remove("filled"); si.blur();
+  if(x.sku){ go("catalog"); openSku(x.sku); } else { go(x.go); }
+}
+function runSearch(){
+  var v=si.value.trim().toLowerCase();
+  sbox.classList.toggle("filled",v.length>0);
+  if(v.length<2){ closeRes(); return; }
+  var all=SEARCH.filter(function(x){return x.q.indexOf(v)>=0;})
+    .sort(function(a,b){ return rank(a,v)-rank(b,v); });
+  srItems=all.slice(0,10); srIdx=-1;
+  if(!all.length){
+    sr.innerHTML='<div class="empty">Нічого не знайшли. Спробуйте штрих-код, об\'єм або назву розділу.</div>';
+    sr.classList.add("show"); si.setAttribute("aria-expanded","true"); return;
+  }
+  sr.innerHTML="";
+  srItems.forEach(function(x,i){
+    var b=document.createElement("button");
+    b.type="button"; b.setAttribute("role","option");
+    b.innerHTML=x.t+'<span class="hint">'+x.h+'</span>';
+    b.onclick=function(){ openRes(x); };
+    b.onmouseenter=function(){ srIdx=i; markAct(); };
+    sr.appendChild(b);
+  });
+  if(all.length>srItems.length){
+    var m=document.createElement("div"); m.className="more";
+    m.textContent="Показано 10 із "+all.length+". Уточніть запит.";
+    sr.appendChild(m);
+  }
+  sr.classList.add("show"); si.setAttribute("aria-expanded","true");
+}
+si.addEventListener("input",runSearch);
+si.addEventListener("focus",function(){ if(si.value.trim().length>=2) runSearch(); });
+si.addEventListener("keydown",function(e){
+  if(e.key==="Escape"){ si.value=""; sbox.classList.remove("filled"); closeRes(); si.blur(); return; }
+  if(!srItems.length) return;
+  if(e.key==="ArrowDown"){ e.preventDefault(); srIdx=(srIdx+1)%srItems.length; markAct(); }
+  else if(e.key==="ArrowUp"){ e.preventDefault(); srIdx=(srIdx-1+srItems.length)%srItems.length; markAct(); }
+  else if(e.key==="Enter"){ e.preventDefault(); openRes(srItems[srIdx<0?0:srIdx]); }
+});
+document.getElementById("searchclr").onclick=function(){
+  si.value=""; sbox.classList.remove("filled"); closeRes(); si.focus();
+};
+document.addEventListener("click",function(e){ if(!e.target.closest(".searchbox")) closeRes(); });
+
+/* ---- Меню-шторка на телефоні: розкривається поверх контенту, нічого не зсуває ---- */
+(function(){
+  var btn=document.getElementById("menubtn"), tabs=document.getElementById("tabs"),
+      scrim=document.getElementById("scrim");
+  function isMobile(){ return (window.innerWidth||1024)<=640; }
+  function openSheet(){ tabs.classList.add("open"); scrim.classList.add("show"); btn.setAttribute("aria-expanded","true"); }
+  function closeSheet(){ tabs.classList.remove("open"); scrim.classList.remove("show"); btn.setAttribute("aria-expanded","false"); }
+  btn.addEventListener("click",function(e){
+    e.stopPropagation(); e.preventDefault();
+    if(tabs.classList.contains("open")) closeSheet(); else openSheet();
+  });
+  scrim.addEventListener("click",closeSheet);
+  tabs.addEventListener("click",function(e){ if(e.target.closest("a")) closeSheet(); });
+  document.addEventListener("click",function(e){
+    if(!isMobile() || !tabs.classList.contains("open")) return;
+    if(!e.target.closest("#tabs") && !e.target.closest("#menubtn")) closeSheet();
+  });
+  document.addEventListener("keydown",function(e){ if(e.key==="Escape") closeSheet(); });
+  window.addEventListener("resize",function(){
+    if(!isMobile()) closeSheet();
+    clearTimeout(btn._t); btn._t=setTimeout(refreshTabs,120);
+  });
+  if(window.matchMedia){
+    try{ window.matchMedia("(max-width:640px)").addEventListener("change",refreshTabs); }catch(err){}
+  }
+  window.setMenuBtn=function(id){
+    var s=S.filter(function(x){return x.id===id;})[0];
+    btn.querySelector(".cur").textContent=s?(s.short||s.nav):"Розділи";
+  };
+})();
+
+/* ---- Таблиці: позначка про горизонтальну прокрутку на вузьких екранах ---- */
+(function(){
+  function mark(){
+    document.querySelectorAll(".tablewrap").forEach(function(w){
+      w.classList.toggle("scrollable", w.scrollWidth>w.clientWidth+4);
+    });
+  }
+  window.addEventListener("resize",mark);
+  document.addEventListener("click",function(){ setTimeout(mark,60); });
+  setTimeout(mark,80);
+})();
+
+/* ---- Старт ---- */
+buildFilters(); renderSku(); fillTables(); fillObjections(); fillSelects();
+document.getElementById("calcSku").onchange=calcPallet;
+document.getElementById("calcQty").oninput=calcPallet;
+document.getElementById("calcUnit").onchange=calcPallet;
+document.getElementById("prSku").onchange=calcPrice;
+document.getElementById("prZone").onchange=calcPrice;
+calcPallet(); calcPrice();
+buildQuiz();
+document.getElementById("quizCheck").onclick=checkQuiz;
+document.getElementById("quizReset").onclick=buildQuiz;
+document.getElementById("resetProg").onclick=function(){
+  done=[]; store.del("tr_done"); updProgress();
+  this.textContent="Прогрес скинуто"; var b=this;
+  setTimeout(function(){ b.textContent="Скинути прогрес"; },1800);
+};
+updProgress();
+go(location.hash.replace("#","")||store.get("tr_last")||"start");
+</script>
+</body>
+</html>
