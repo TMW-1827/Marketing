@@ -2,20 +2,26 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
+import { viteSingleFile } from 'vite-plugin-singlefile'
 
 /**
- * База збірки.
- * Веб публікується в підкаталозі /portal/ (GitHub Pages поруч зі звітами),
- * тому шляхи відносні. Для нативної обгортки Capacitor база має бути './' —
- * WebView віддає файли з локальної файлової системи.
+ * Три цілі збірки:
+ *   (за замовчуванням) — веб у підкаталозі /portal/;
+ *   native — нативна обгортка Capacitor, файли віддаються з файлової системи;
+ *   demo   — один самодостатній HTML для показу за посиланням.
  */
-const base = process.env.BUILD_TARGET === 'native' ? './' : '/portal/'
+const target = process.env.BUILD_TARGET
+const isNative = target === 'native'
+const isDemo = target === 'demo'
+const base = isNative || isDemo ? './' : '/portal/'
 
 export default defineConfig({
   base,
   plugins: [
     react(),
-    VitePWA({
+    // Демо — один файл: усе інлайниться, service worker не реєструється.
+    ...(isDemo ? [viteSingleFile()] : []),
+    ...(isDemo ? [] : [VitePWA({
       registerType: 'prompt',
       includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
       manifest: {
@@ -62,25 +68,37 @@ export default defineConfig({
         ],
       },
       devOptions: { enabled: false },
-    }),
+    })]),
   ],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
+      // Без плагіна PWA віртуального модуля не існує — підставляємо заглушку
+      ...(isDemo
+        ? {
+            'virtual:pwa-register/react': fileURLToPath(
+              new URL('./src/lib/pwa-register-stub.ts', import.meta.url),
+            ),
+          }
+        : {}),
     },
   },
   build: {
     target: 'es2022',
-    sourcemap: true,
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          // Контент курсу окремим чанком — оновлення тексту не інвалідує вендор.
-          vendor: ['react', 'react-dom', 'react-router-dom'],
-          supabase: ['@supabase/supabase-js'],
+    sourcemap: !isDemo,
+    // У демо шрифти й іконки мають стати data:-URI, інакше файл не самодостатній
+    assetsInlineLimit: isDemo ? 4 * 1024 * 1024 : 4096,
+    rollupOptions: isDemo
+      ? {}
+      : {
+          output: {
+            manualChunks: {
+              // Контент курсу окремим чанком — оновлення тексту не інвалідує вендор.
+              vendor: ['react', 'react-dom', 'react-router-dom'],
+              supabase: ['@supabase/supabase-js'],
+            },
+          },
         },
-      },
-    },
   },
   server: {
     port: 5173,

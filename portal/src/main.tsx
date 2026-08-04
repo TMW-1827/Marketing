@@ -4,13 +4,26 @@ import { HashRouter } from 'react-router-dom'
 
 // Шрифти пакуються в бандл: жодних запитів до Google Fonts.
 // Це умова офлайн-роботи й майбутньої нативної збірки, де CDN недоступний.
-import '@fontsource/montserrat/400.css'
-import '@fontsource/montserrat/500.css'
-import '@fontsource/montserrat/600.css'
-import '@fontsource/montserrat/700.css'
-import '@fontsource/sofia-sans-extra-condensed/700.css'
-import '@fontsource/sofia-sans-extra-condensed/800.css'
-import '@fontsource/sofia-sans-extra-condensed/900.css'
+//
+// Підключаємо тільки потрібні підмножини — кирилицю й латиницю. Повні пакети
+// тягнуть ще грецьку та в'єтнамську, які нам ніколи не знадобляться, але
+// потрапляють в офлайн-кеш і у вагу нативного додатка.
+import '@fontsource/montserrat/cyrillic-400.css'
+import '@fontsource/montserrat/cyrillic-500.css'
+import '@fontsource/montserrat/cyrillic-600.css'
+import '@fontsource/montserrat/cyrillic-700.css'
+import '@fontsource/montserrat/cyrillic-ext-400.css'
+import '@fontsource/montserrat/cyrillic-ext-700.css'
+import '@fontsource/montserrat/latin-400.css'
+import '@fontsource/montserrat/latin-500.css'
+import '@fontsource/montserrat/latin-600.css'
+import '@fontsource/montserrat/latin-700.css'
+import '@fontsource/sofia-sans-extra-condensed/cyrillic-700.css'
+import '@fontsource/sofia-sans-extra-condensed/cyrillic-800.css'
+import '@fontsource/sofia-sans-extra-condensed/cyrillic-900.css'
+import '@fontsource/sofia-sans-extra-condensed/latin-700.css'
+import '@fontsource/sofia-sans-extra-condensed/latin-800.css'
+import '@fontsource/sofia-sans-extra-condensed/latin-900.css'
 
 import '@/styles/tokens.css'
 import '@/styles/base.css'

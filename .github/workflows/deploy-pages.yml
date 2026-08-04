@@ -1,0 +1,72 @@
+name: Публікація сайту
+
+# Збирає навчальний портал і публікує його разом зі звітами на GitHub Pages.
+#
+# Щоб увімкнути: Settings → Pages → Source: GitHub Actions.
+#
+# ВАЖЛИВО: цей workflow публікує ВЕСЬ сайт — і HTML-звіти з кореня
+# репозиторію, і зібраний портал у підкаталозі /portal/. Тобто перехід
+# із «Deploy from a branch» на «GitHub Actions» нічого не ламає: звіти
+# лишаються за тими самими адресами.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Одночасно виконується лише одна публікація; зайві черги скасовуються.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: portal/package-lock.json
+
+      - name: Встановити залежності порталу
+        working-directory: portal
+        run: npm ci
+
+      - name: Зібрати портал
+        working-directory: portal
+        run: npm run build
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+
+      - name: Зібрати сайт докупи
+        run: |
+          mkdir -p _site
+          # Звіти та решта статики з кореня — без вихідних файлів порталу
+          rsync -a --exclude '_site' --exclude 'portal' --exclude '.git' \
+                   --exclude '.github' ./ _site/
+          # Зібраний портал — у підкаталог /portal/
+          mkdir -p _site/portal
+          cp -r portal/dist/. _site/portal/
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
