@@ -1,0 +1,328 @@
+/* Оболонка застосунку.
+   Телефон: шапка + нижня панель вкладок (як у нативному додатку).
+   Десктоп: шапка з горизонтальним меню, нижня панель прихована. */
+
+.app {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- Шапка ---------- */
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+  padding-top: var(--sa-top);
+}
+
+.app-header__top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px max(14px, var(--sa-right)) 8px max(14px, var(--sa-left));
+  max-width: var(--shell-max);
+  margin: 0 auto;
+  min-height: var(--header-h);
+}
+
+.logo {
+  font-family: var(--disp);
+  font-weight: 900;
+  font-size: 22px;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  color: var(--red);
+  text-decoration: none;
+  flex: 0 0 auto;
+}
+
+.logo span {
+  display: block;
+  font-family: var(--body);
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  color: var(--ink-soft);
+  font-weight: 600;
+  margin-top: 3px;
+}
+
+.header-spacer {
+  flex: 1;
+}
+
+/* ---------- Прогрес ---------- */
+
+.progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+
+.progress__bar {
+  width: 64px;
+  height: 6px;
+  background: var(--line);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress__bar i {
+  display: block;
+  height: 100%;
+  background: var(--green);
+  transition: width 0.35s;
+}
+
+/* ---------- Горизонтальне меню (десктоп) ---------- */
+
+.tabs {
+  display: none;
+}
+
+.tabs__group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch;
+  border-left: 1px solid var(--line);
+  padding-left: 10px;
+  margin-right: 10px;
+}
+
+.tabs__group:first-of-type {
+  border-left: 0;
+  padding-left: 0;
+}
+
+.tabs a {
+  padding: 9px 11px 8px;
+  font-size: 12.5px;
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--ink-soft);
+  text-decoration: none;
+  border-bottom: 3px solid transparent;
+  transition: 0.14s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: 6px 6px 0 0;
+}
+
+.tabs a:hover {
+  color: var(--ink);
+  background: var(--paper);
+}
+
+.tabs a.is-active {
+  color: var(--blue);
+  border-bottom-color: var(--blue);
+  font-weight: 700;
+  background: var(--paper);
+}
+
+.tabs__check {
+  color: var(--green);
+  font-size: 10.5px;
+}
+
+.tabs__label {
+  display: flex;
+  align-items: center;
+  font-size: 9px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: #9db1c4;
+  font-weight: 700;
+  padding-right: 8px;
+  white-space: nowrap;
+}
+
+/* ---------- Шторка розділів (телефон) ---------- */
+
+.drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.drawer__scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(11, 33, 55, 0.4);
+  border: 0;
+  padding: 0;
+  animation: fade-in 0.18s ease;
+}
+
+.drawer__panel {
+  position: relative;
+  background: #fff;
+  border-radius: var(--r-lg) var(--r-lg) 0 0;
+  max-height: 82dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 8px 12px calc(16px + var(--sa-bottom));
+  box-shadow: var(--shadow-sheet);
+  animation: slide-up 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.drawer__grip {
+  width: 38px;
+  height: 4px;
+  border-radius: 3px;
+  background: var(--line);
+  margin: 6px auto 10px;
+}
+
+.drawer__label {
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #9db1c4;
+  font-weight: 700;
+  padding: 12px 8px 6px;
+}
+
+.drawer a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: var(--tap);
+  padding: 10px 12px;
+  border-radius: var(--r-sm);
+  text-decoration: none;
+  color: var(--ink);
+  font-size: 15px;
+}
+
+.drawer a.is-active {
+  background: var(--info-bg);
+  color: var(--blue);
+  font-weight: 700;
+}
+
+/* ---------- Нижня панель вкладок (телефон) ---------- */
+
+.tabbar {
+  position: sticky;
+  bottom: 0;
+  z-index: 45;
+  display: flex;
+  background: #fff;
+  border-top: 1px solid var(--line);
+  padding-bottom: var(--sa-bottom);
+}
+
+.tabbar a,
+.tabbar button {
+  flex: 1 1 0;
+  min-height: var(--tabbar-h);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  border: 0;
+  background: none;
+  padding: 6px 2px;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.tabbar .is-active {
+  color: var(--blue);
+}
+
+.tabbar svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* ---------- Контент ---------- */
+
+.content {
+  flex: 1;
+  width: 100%;
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 20px max(14px, var(--sa-left)) 32px max(14px, var(--sa-right));
+}
+
+.section-enter {
+  animation: fade-in 0.22s ease;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(14px);
+    opacity: 0.6;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+/* ---------- Планшет і десктоп ---------- */
+
+@media (min-width: 901px) {
+  .tabbar {
+    display: none;
+  }
+
+  .logo {
+    font-size: 27px;
+  }
+
+  .logo span {
+    font-size: 9px;
+    letter-spacing: 0.15em;
+  }
+
+  .progress__bar {
+    width: 96px;
+  }
+
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
+    row-gap: 2px;
+    padding: 2px 16px 0;
+    max-width: var(--shell-max);
+    margin: 0 auto;
+  }
+
+  .content {
+    padding: 34px 26px 90px;
+  }
+}
