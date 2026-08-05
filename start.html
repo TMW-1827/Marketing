@@ -19,6 +19,7 @@
       --card: #fbf9f3;
       --accent-alex: #b03a4a;
       --accent-trusk: #2d6e6a;
+      --accent-portal: #2f4a7a;
       --shadow: 0 1px 2px rgba(26,24,20,.06), 0 8px 24px rgba(26,24,20,.05);
     }
 
@@ -86,6 +87,7 @@
 
     .alex .dot { background: var(--accent-alex); }
     .trusk .dot { background: var(--accent-trusk); }
+    .portal .dot { background: var(--accent-portal); }
 
     .section-label {
       font-family: 'Courier New', monospace;
@@ -124,8 +126,18 @@
 
     .alex .reports a:hover { border-color: var(--accent-alex); }
     .trusk .reports a:hover { border-color: var(--accent-trusk); }
+    .portal .reports a:hover { border-color: var(--accent-portal); }
 
     .reports .label { font-size: 16px; }
+
+    .reports .note {
+      display: block;
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      letter-spacing: .04em;
+      color: var(--muted);
+      margin-top: 4px;
+    }
 
     .reports .arrow {
       font-family: 'Courier New', monospace;
@@ -190,6 +202,25 @@
       <div class="section-label">Квартальні звіти</div>
       <ul class="reports">
         <li><a href="truskavetska_Q1_25_26_report.html"><span class="label">Q1 2025–2026</span><span class="arrow">→</span></a></li>
+      </ul>
+
+      <div class="section-label">Інші матеріали</div>
+      <ul class="reports">
+        <li><a href="truskavetska-brand-story%20v3.html"><span class="label">Бренд-історія</span><span class="arrow">→</span></a></li>
+      </ul>
+    </section>
+
+    <!-- ПОРТАЛИ -->
+    <section class="brand portal">
+      <div class="brand-head">
+        <span class="dot"></span>
+        <h2>Портали</h2>
+      </div>
+
+      <div class="section-label">Робочі системи</div>
+      <ul class="reports">
+        <li><a href="equipment-portal/"><span class="label">Облік торговельного обладнання<span class="note">Заявки · ремонт · інвентаризація</span></span><span class="arrow">→</span></a></li>
+        <li><a href="truskavetska-portal%20v5.html"><span class="label">Навчальний портал<span class="note">ТМ «Трускавецька»</span></span><span class="arrow">→</span></a></li>
       </ul>
     </section>
 
