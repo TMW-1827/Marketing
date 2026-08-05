@@ -54,11 +54,15 @@ export async function openScanner({ title = 'Сканування інвента
       done = true;
       clearInterval(timer);
       if (stream) stream.getTracks().forEach((t) => t.stop());
+      window.removeEventListener('hashchange', onNav);
       shell.remove();
       document.body.style.overflow = '';
       if (code && navigator.vibrate) navigator.vibrate(60);
       resolve(code || null);
     };
+    /* перехід в інший розділ закриває сканер і вимикає камеру */
+    const onNav = () => finish(null);
+    window.addEventListener('hashchange', onNav);
 
     closeBtn.addEventListener('click', () => finish(null));
     manualBtn.addEventListener('click', () => {
