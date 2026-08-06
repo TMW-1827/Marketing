@@ -1,0 +1,18 @@
+node_modules/
+dist/
+dist-ssr/
+*.local
+.env
+.env.*
+!.env.example
+
+# Нативні платформи Capacitor — генеруються командою npx cap add
+android/
+ios/
+
+.DS_Store
+*.log
+.vite/
+
+# Демо-збірка для публікації за посиланням
+dist-demo/

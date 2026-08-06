@@ -1,0 +1,35 @@
+{
+  "name": "truskavetska-portal",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Навчальний портал для працівників ТМ «Трускавецька»",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "build:demo": "BUILD_TARGET=demo vite build --outDir dist-demo && node scripts/make-demo-page.mjs",
+    "preview": "vite preview",
+    "typecheck": "tsc -b",
+    "smoke": "node scripts/smoke.mjs",
+    "smoke:auth": "node scripts/smoke-auth.mjs"
+  },
+  "dependencies": {
+    "@fontsource/montserrat": "5.2.5",
+    "@fontsource/sofia-sans-extra-condensed": "5.2.5",
+    "@supabase/supabase-js": "2.58.0",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "react-router-dom": "7.9.3"
+  },
+  "devDependencies": {
+    "@types/node": "22.18.6",
+    "@types/react": "19.2.0",
+    "@types/react-dom": "19.2.0",
+    "@vitejs/plugin-react": "5.0.4",
+    "playwright": "1.56.0",
+    "typescript": "5.9.3",
+    "vite": "7.1.7",
+    "vite-plugin-pwa": "1.0.3",
+    "vite-plugin-singlefile": "2.3.0"
+  }
+}
