@@ -50,7 +50,18 @@ const page = [
 ].join('\n')
 
 writeFileSync(root + 'dist-demo/page.html', page)
+
+// Той самий фрагмент в обгортці документа — щоб відкрити локально
+// й перевірити рівно те, що побачить читач опублікованої сторінки.
+writeFileSync(
+  root + 'dist-demo/wrapped.html',
+  '<!doctype html><html lang="uk"><head><meta charset="utf-8">' +
+    '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">' +
+    `</head><body>${page}</body></html>`,
+)
+
 console.log(
   `page.html — ${(page.length / 1024 / 1024).toFixed(2)} МБ ` +
     `(стилів: ${styles.length}, скриптів: ${scripts.length})`,
 )
+console.log('wrapped.html — та сама сторінка для локальної перевірки')

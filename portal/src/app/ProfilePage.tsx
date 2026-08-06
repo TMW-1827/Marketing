@@ -5,7 +5,7 @@ import { course } from '@/content/course'
 import { QUIZ } from '@/data/quiz'
 
 export function ProfilePage() {
-  const { profile, session, backend, isAdmin, signOut } = useAuth()
+  const { profile, email, mode, isAdmin, signOut } = useAuth()
   const { doneCount, totalCount, bestScore, passedAt, pendingSync } = useProgress()
 
   return (
@@ -31,10 +31,10 @@ export function ProfilePage() {
               <dd>{profile.region}</dd>
             </>
           )}
-          {session?.user.email && (
+          {email && (
             <>
               <dt>Пошта</dt>
-              <dd className="mono">{session.user.email}</dd>
+              <dd className="mono">{email}</dd>
             </>
           )}
         </dl>
@@ -94,12 +94,13 @@ export function ProfilePage() {
         </section>
       )}
 
-      {backend && (
+      {mode !== 'open' && (
         <section className="card">
           <h3>Сеанс</h3>
           <p>
-            Прогрес зберігається у вашому акаунті — можна продовжити навчання на
-            іншому пристрої.
+            {mode === 'backend'
+              ? 'Прогрес зберігається у вашому акаунті — можна продовжити навчання на іншому пристрої.'
+              : 'Демонстраційний режим: прогрес зберігається окремо для кожного тестового акаунта, але лише в цьому браузері.'}
           </p>
           <button
             type="button"
@@ -111,11 +112,20 @@ export function ProfilePage() {
         </section>
       )}
 
-      {!backend && (
+      {mode === 'open' && (
         <div className="note note--info">
           <b>Автономний режим</b>
           Бекенд не підключений, тому прогрес зберігається лише в цьому браузері.
           Після налаштування акаунтів він синхронізуватиметься між пристроями.
+        </div>
+      )}
+
+      {mode === 'demo' && (
+        <div className="note note--amber">
+          <b>Демонстраційний режим</b>
+          Акаунти вбудовані у збірку для перевірки порталу. Щойно з’являться
+          ключі Supabase, вони вимкнуться самі, а прогрес почне синхронізуватись
+          між пристроями.
         </div>
       )}
     </article>

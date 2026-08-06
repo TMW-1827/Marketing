@@ -17,6 +17,13 @@ const base = isNative || isDemo ? './' : '/portal/'
 
 export default defineConfig({
   base,
+  define: {
+    // У демо-збірці вмикаємо тестовий вхід, щоб екран логіна можна було
+    // перевірити без бази. Для звичайної збірки значення береться з .env.
+    ...(isDemo
+      ? { 'import.meta.env.VITE_DEMO_AUTH': JSON.stringify('true') }
+      : {}),
+  },
   plugins: [
     react(),
     // Демо — один файл: усе інлайниться, service worker не реєструється.

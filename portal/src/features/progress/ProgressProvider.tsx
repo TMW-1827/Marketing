@@ -60,12 +60,16 @@ function merge(a: ProgressState, b: ProgressState): ProgressState {
 }
 
 export function ProgressProvider({ children }: { children: ReactNode }) {
-  const { session, ready: authReady } = useAuth()
+  const { userId, canSync, ready: authReady } = useAuth()
   const [state, setState] = useState<ProgressState>(EMPTY)
   const [ready, setReady] = useState(false)
   const [pendingSync, setPendingSync] = useState(false)
 
-  const userId = session?.user.id ?? null
+  // Прогрес зберігається окремо для кожного акаунта: на спільному
+  // комп'ютері працівники не мають бачити чужі позначки, а в демо-режимі
+  // перемикання між тестовими акаунтами має показувати різні дані.
+  const storageKey = `${STORAGE_KEYS.progress}:${userId ?? 'local'}`
+
   // Актуальний стан для функцій синхронізації без зайвих перерендерів.
   const stateRef = useRef(state)
   stateRef.current = state
@@ -73,7 +77,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
   /** Записує стан на сервер. Позначає pendingSync, якщо не вдалось. */
   const push = useCallback(
     async (next: ProgressState) => {
-      if (!supabase || !userId) return
+      if (!canSync || !supabase || !userId) return
       const { error } = await supabase.from('progress').upsert(
         {
           user_id: userId,
@@ -88,7 +92,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
       setPendingSync(Boolean(error))
       if (error) console.warn('Прогрес не синхронізовано:', error.message)
     },
-    [userId],
+    [userId, canSync],
   )
 
   /* Перше завантаження: локальні дані показуємо одразу, серверні доливаємо. */
@@ -97,12 +101,12 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
     let cancelled = false
 
     const load = async () => {
-      const local = await getJson(localStore, STORAGE_KEYS.progress, EMPTY)
+      const local = await getJson(localStore, storageKey, EMPTY)
       if (cancelled) return
       setState(local)
       setReady(true)
 
-      if (!supabase || !userId) return
+      if (!canSync || !supabase || !userId) return
 
       const { data, error } = await supabase
         .from('progress')
@@ -128,7 +132,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
 
       const merged = merge(local, remote)
       setState(merged)
-      await setJson(localStore, STORAGE_KEYS.progress, merged)
+      await setJson(localStore, storageKey, merged)
       // Локально могло бути більше, ніж на сервері — вирівнюємо сервер.
       if (
         merged.completedSections.length !== remote.completedSections.length ||
@@ -142,16 +146,16 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
     return () => {
       cancelled = true
     }
-  }, [authReady, userId, push])
+  }, [authReady, userId, canSync, storageKey, push])
 
   /** Локальний запис — миттєвий, серверний — услід. */
   const commit = useCallback(
     (next: ProgressState) => {
       setState(next)
-      void setJson(localStore, STORAGE_KEYS.progress, next)
+      void setJson(localStore, storageKey, next)
       void push(next)
     },
-    [push],
+    [push, storageKey],
   )
 
   const toggleSection = useCallback(
@@ -183,7 +187,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
         updatedAt: new Date().toISOString(),
       })
 
-      if (supabase && userId) {
+      if (canSync && supabase && userId) {
         const { error } = await supabase.from('quiz_attempts').insert({
           user_id: userId,
           course_id: course.id,
@@ -197,15 +201,15 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
         }
       }
     },
-    [commit, userId],
+    [commit, userId, canSync],
   )
 
   const reset = useCallback(async () => {
     const cleared: ProgressState = { ...EMPTY, updatedAt: new Date().toISOString() }
     setState(cleared)
-    await setJson(localStore, STORAGE_KEYS.progress, cleared)
+    await setJson(localStore, storageKey, cleared)
     await push(cleared)
-  }, [push])
+  }, [push, storageKey])
 
   /* Повторна спроба синхронізації, коли зв'язок повернувся. */
   useEffect(() => {

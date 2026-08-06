@@ -10,7 +10,8 @@
     "build:demo": "BUILD_TARGET=demo vite build --outDir dist-demo && node scripts/make-demo-page.mjs",
     "preview": "vite preview",
     "typecheck": "tsc -b",
-    "smoke": "node scripts/smoke.mjs"
+    "smoke": "node scripts/smoke.mjs",
+    "smoke:auth": "node scripts/smoke-auth.mjs"
   },
   "dependencies": {
     "@fontsource/montserrat": "5.2.5",

@@ -9,9 +9,13 @@ import { useAuth } from '@/features/auth/AuthProvider'
  * й зберігається локально.
  */
 export function Certificate({ score, total }: { score: number; total: number }) {
-  const { profile, backend, setLocalName } = useAuth()
+  const { profile, mode, setLocalName } = useAuth()
   const [name, setName] = useState(profile?.full_name ?? '')
-  const [issued, setIssued] = useState(Boolean(profile?.full_name) && backend)
+  // Коли є акаунт, ім'я береться з профілю й не редагується — інакше
+  // сертифікат можна було б виписати на будь-кого.
+  const [issued, setIssued] = useState(
+    mode !== 'open' && Boolean(profile?.full_name),
+  )
 
   const date = new Intl.DateTimeFormat('uk-UA', {
     day: '2-digit',
@@ -22,7 +26,7 @@ export function Certificate({ score, total }: { score: number; total: number }) 
   const issue = () => {
     const trimmed = name.trim()
     if (!trimmed) return
-    if (!backend) void setLocalName(trimmed)
+    if (mode === 'open') void setLocalName(trimmed)
     setIssued(true)
   }
 

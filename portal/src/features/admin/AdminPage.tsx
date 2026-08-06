@@ -1,29 +1,18 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Navigate } from 'react-router-dom'
-import { supabase } from '@/lib/supabase'
+import { supabase, type EmployeeReportRow } from '@/lib/supabase'
 import { useAuth } from '@/features/auth/AuthProvider'
 import { course, trackableSectionIds } from '@/content/course'
 import { QUIZ } from '@/data/quiz'
+import { DEMO_REPORT } from './demoReport'
 
-interface ReportRow {
-  user_id: string
-  full_name: string
-  position: string | null
-  region: string | null
-  role: 'employee' | 'admin'
-  course_id: string | null
-  sections_done: number
-  best_score: number | null
-  passed_at: string | null
-  last_activity: string | null
-  attempts: number
-}
+type ReportRow = EmployeeReportRow
 
 type SortKey = 'name' | 'progress' | 'score' | 'activity'
 
 /** Зведений звіт для керівника: хто пройшов навчання і з яким результатом. */
 export function AdminPage() {
-  const { isAdmin, ready } = useAuth()
+  const { isAdmin, ready, mode } = useAuth()
   const [rows, setRows] = useState<ReportRow[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -31,9 +20,17 @@ export function AdminPage() {
   const [query, setQuery] = useState('')
 
   useEffect(() => {
-    if (!isAdmin || !supabase) return
-    let cancelled = false
+    if (!isAdmin) return
 
+    // Демонстраційний режим: бази немає, показуємо зразок даних,
+    // щоб екран можна було перевірити.
+    if (mode === 'demo' || !supabase) {
+      setRows(DEMO_REPORT)
+      setLoading(false)
+      return
+    }
+
+    let cancelled = false
     void supabase
       .from('employee_report')
       .select('*')
@@ -47,7 +44,7 @@ export function AdminPage() {
     return () => {
       cancelled = true
     }
-  }, [isAdmin])
+  }, [isAdmin, mode])
 
   const total = trackableSectionIds.length
 
@@ -94,6 +91,15 @@ export function AdminPage() {
         Курс «{course.title}». Прохідний бал — {course.passScore} із{' '}
         {QUIZ.length}.
       </p>
+
+      {mode !== 'backend' && (
+        <div className="note note--amber">
+          <b>Зразок даних</b>
+          Бази даних ще немає, тому таблиця заповнена вигаданими записами —
+          щоб було видно, як виглядатиме звіт. Реальні цифри з’являться після
+          підключення Supabase.
+        </div>
+      )}
 
       <div className="stats">
         <div className="stat">

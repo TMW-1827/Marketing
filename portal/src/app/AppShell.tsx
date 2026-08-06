@@ -16,7 +16,7 @@ import { SectionPage } from './SectionPage'
 import { ProfilePage } from './ProfilePage'
 
 export function AppShell() {
-  const { ready, backend, session } = useAuth()
+  const { ready, requiresLogin } = useAuth()
   const [drawerOpen, setDrawerOpen] = useState(false)
 
   if (!ready) {
@@ -30,8 +30,8 @@ export function AppShell() {
     )
   }
 
-  // З бекендом матеріали доступні лише працівникам компанії.
-  if (backend && !session) return <LoginPage />
+  // Коли вхід передбачений, матеріали доступні лише після авторизації.
+  if (requiresLogin) return <LoginPage />
 
   return (
     <div className="app">

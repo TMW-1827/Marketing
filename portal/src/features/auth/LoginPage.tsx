@@ -1,11 +1,13 @@
 import { useState, type FormEvent } from 'react'
 import { useAuth } from './AuthProvider'
+import { DEMO_ACCOUNTS } from './demoAccounts'
 
 type Mode = 'signin' | 'signup'
 
 /** Екран входу. Показується, поки працівник не авторизований. */
 export function LoginPage() {
-  const { signIn, signUp } = useAuth()
+  const { signIn, signUp, mode: authMode } = useAuth()
+  const isDemo = authMode === 'demo'
   const [mode, setMode] = useState<Mode>('signin')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -55,9 +57,11 @@ export function LoginPage() {
 
         <h3>{mode === 'signin' ? 'Вхід для працівників' : 'Реєстрація'}</h3>
         <p className="hint" style={{ marginBottom: 18 }}>
-          {mode === 'signin'
-            ? 'Прогрес навчання прив’язаний до вашого акаунта — його видно на будь-якому пристрої.'
-            : 'Створіть акаунт робочою поштою. Ім’я з’явиться в сертифікаті.'}
+          {isDemo
+            ? 'Демонстраційний режим: бази даних ще немає, вхід працює на тестових акаунтах, прогрес зберігається в цьому браузері.'
+            : mode === 'signin'
+              ? 'Прогрес навчання прив’язаний до вашого акаунта — його видно на будь-якому пристрої.'
+              : 'Створіть акаунт робочою поштою. Ім’я з’явиться в сертифікаті.'}
         </p>
 
         <form onSubmit={onSubmit}>
@@ -145,19 +149,53 @@ export function LoginPage() {
           </button>
         </form>
 
-        <button
-          type="button"
-          className="auth__switch"
-          onClick={() => {
-            setMode(mode === 'signin' ? 'signup' : 'signin')
-            setError(null)
-            setInfo(null)
-          }}
-        >
-          {mode === 'signin'
-            ? 'Ще немає акаунта? Зареєструватись'
-            : 'Уже є акаунт? Увійти'}
-        </button>
+        {isDemo ? (
+          <div className="demo-accounts">
+            <div className="demo-accounts__title">Тестові акаунти</div>
+            {DEMO_ACCOUNTS.map((account) => (
+              <button
+                type="button"
+                key={account.email}
+                className="demo-accounts__item"
+                onClick={() => {
+                  setEmail(account.email)
+                  setPassword(account.password)
+                  setError(null)
+                }}
+              >
+                <span>
+                  <b>{account.profile.full_name}</b>
+                  <br />
+                  {account.profile.role === 'admin'
+                    ? 'Керівник — бачить звіт про навчання'
+                    : 'Працівник — проходить курс'}
+                </span>
+                <span className="demo-accounts__creds mono">
+                  {account.email}
+                  <br />
+                  {account.password}
+                </span>
+              </button>
+            ))}
+            <p className="hint">
+              Натисніть на акаунт, щоб підставити дані у форму.
+            </p>
+          </div>
+        ) : (
+          <button
+            type="button"
+            className="auth__switch"
+            onClick={() => {
+              setMode(mode === 'signin' ? 'signup' : 'signin')
+              setError(null)
+              setInfo(null)
+            }}
+          >
+            {mode === 'signin'
+              ? 'Ще немає акаунта? Зареєструватись'
+              : 'Уже є акаунт? Увійти'}
+          </button>
+        )}
       </div>
     </div>
   )
