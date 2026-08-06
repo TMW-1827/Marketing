@@ -55,7 +55,7 @@ npm run dev                  # http://localhost:5173
 
 Для `npm run smoke` один раз поставте браузер: `npx playwright install chromium`.
 Той самий набір можна прогнати проти вже опублікованої збірки — вкажіть адресу:
-`SMOKE_URL=https://tmw-1827.github.io/marketing/training-portal/ npm run smoke`.
+`SMOKE_URL=https://tmw-1827.github.io/Marketing/training-portal/ npm run smoke`.
 `build:demo` задає змінну оточення через синтаксис Unix — на Windows
 скористайтеся `cross-env` або задайте `BUILD_TARGET=demo` вручну.
 
@@ -159,7 +159,7 @@ scripts/            Генератор іконок, наскрізні пере
 Портал опублікований за адресою:
 
 ```
-https://tmw-1827.github.io/marketing/training-portal/
+https://tmw-1827.github.io/Marketing/training-portal/
 ```
 
 **Зараз він оновлюється вручну.** Зібрані файли лежать у репозиторії в
