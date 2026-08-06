@@ -114,9 +114,10 @@ export function formatByKey(key: string): Format | undefined {
 export interface PalletBreakdown {
   bottles: number
   cases: number
-  layers: number
   pallets: number
   litres: number
+  /** Шарів на палеті, заокруглено вгору: неповний шар займає цілий */
+  layers: number
   /** Вага брутто, кг — пропорційно кількості упаковок на палеті */
   weightKg: number
   /** Повних палет */
@@ -129,12 +130,15 @@ export interface PalletBreakdown {
   casesPerPallet: number
 }
 
-export type PalletUnit = 'bottle' | 'case' | 'pallet'
+export type PalletUnit = 'bottle' | 'case' | 'pallet' | 'litre'
+
+/** Похибка обчислень із плаваючою комою: 500 / 0,5 може дати 1000.0000000000001 */
+const EPS = 1e-9
 
 /**
- * Рахує в обидва боки: скільки б не ввели — пляшки, упаковки чи палети —
- * повертає повний розклад. Вага неповної палети рахується пропорційно
- * кількості упаковок, від ваги брутто повної палети з піддоном.
+ * Рахує в обидва боки: скільки б не ввели — пляшки, упаковки, палети чи
+ * літри — повертає повний розклад. Вага неповної палети рахується
+ * пропорційно кількості упаковок, від ваги брутто повної палети з піддоном.
  */
 export function calcPallet(
   format: Format,
@@ -145,25 +149,37 @@ export function calcPallet(
   const casesPerPallet = bottlesPerPallet / bottlesPerCase
 
   const qty = Math.max(0, quantity || 0)
-  const bottles =
-    unit === 'bottle'
-      ? qty
-      : unit === 'case'
-        ? qty * bottlesPerCase
-        : qty * bottlesPerPallet
+  let bottles: number
+  switch (unit) {
+    case 'bottle':
+      bottles = qty
+      break
+    case 'case':
+      bottles = qty * bottlesPerCase
+      break
+    case 'pallet':
+      bottles = qty * bottlesPerPallet
+      break
+    case 'litre':
+      // Пів пляшки не відвантажують: округлюємо вгору до цілої пляшки,
+      // тому фактичний об'єм може трохи перевищити заданий.
+      bottles = Math.ceil(qty / format.litres - EPS)
+      break
+  }
 
   const cases = bottles / bottlesPerCase
   const pallets = bottles / bottlesPerPallet
   const weightKg = (cases / casesPerPallet) * weightPalletKg
 
   // Залишок рахуємо в цілих упаковках: неповну упаковку не відвантажують.
-  const wholeCases = Math.ceil(cases - 1e-9)
+  const wholeCases = Math.ceil(cases - EPS)
   const remainderCases = wholeCases % casesPerPallet
 
   return {
     bottles,
     cases,
-    layers: cases / format.source.casesPerLayer,
+    // Неповний шар усе одно займає цілий шар на палеті: 5,2 → 6, 4,8 → 5
+    layers: Math.ceil(cases / format.source.casesPerLayer - EPS),
     pallets,
     litres: bottles * format.litres,
     weightKg,

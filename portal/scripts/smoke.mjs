@@ -41,6 +41,73 @@ await page.waitForTimeout(250)
 out = await page.locator('.out').first().innerText()
 check('1 палета 1,5 л = 504 пляшки, 756 л', /504/.test(out) && /756/.test(out), out.replace(/\n/g, ' | '))
 
+// Шари заокруглюються вгору: 100 упаковок 0,3 скло / 18 у шарі = 5,55 → 6
+await page.locator('#pallet-format').selectOption('g03s')
+await page.locator('#pallet-unit').selectOption('bottle')
+await page.locator('#pallet-qty').fill('1200')
+await page.waitForTimeout(250)
+let layers = await page.locator('.out div').nth(2).innerText()
+check('5,55 шара показані як 6', /\b6\b/.test(layers), layers.replace(/\n/g, ' '))
+
+// 4,2 шара теж мають дати 5, а не 4
+await page.locator('#pallet-unit').selectOption('case')
+await page.locator('#pallet-qty').fill('76') // 76 / 18 = 4,22
+await page.waitForTimeout(250)
+layers = await page.locator('.out div').nth(2).innerText()
+check('4,22 шара показані як 5', /\b5\b/.test(layers), layers.replace(/\n/g, ' '))
+
+// Рівно ціла кількість шарів не має підстрибувати вгору
+await page.locator('#pallet-qty').fill('54') // 54 / 18 = рівно 3
+await page.waitForTimeout(250)
+layers = await page.locator('.out div').nth(2).innerText()
+check('рівно 3 шари лишаються 3', /\b3\b/.test(layers), layers.replace(/\n/g, ' '))
+
+// --- Розрахунок за літрами ---
+await page.locator('#pallet-format').selectOption('g15')
+await page.locator('#pallet-unit').selectOption('litre')
+await page.locator('#pallet-qty').fill('756')
+await page.waitForTimeout(250)
+out = await page.locator('.out').first().innerText()
+check(
+  '756 л формату 1,5 л = 504 пляшки, рівно палета',
+  /504/.test(out) && /756/.test(out),
+  out.replace(/\n/g, ' | '),
+)
+gap = await page.locator('.out-gap').innerText()
+check('756 л — рівно повна палета', /Рівно/.test(gap), gap)
+
+// Літри, що не діляться націло, округлюються вгору до цілої пляшки
+await page.locator('#pallet-qty').fill('100')
+await page.waitForTimeout(250)
+out = await page.locator('.out').first().innerText()
+check(
+  '100 л формату 1,5 л = 67 пляшок (100,5 л)',
+  /\b67\b/.test(out) && /100,5/.test(out),
+  out.replace(/\n/g, ' | '),
+)
+
+// --- Десяткова кома у вазі й об'ємі ---
+await page.locator('#pallet-unit').selectOption('case')
+await page.locator('#pallet-qty').fill('5')
+await page.waitForTimeout(250)
+out = await page.locator('.out').first().innerText()
+// 5 упаковок 1,5 л: 30 пляшок = 45 л, вага (5/84) × 804,41 = 47,9 кг
+check(
+  'вага показана з десятковою комою (47,9 кг)',
+  /47,9/.test(out),
+  out.replace(/\n/g, ' | '),
+)
+await page.locator('#pallet-format').selectOption('g05')
+await page.locator('#pallet-qty').fill('7')
+await page.waitForTimeout(250)
+out = await page.locator('.out').first().innerText()
+// 7 упаковок 0,5 л = 56 пляшок = 28 л, вага (7/150) × 676 = 31,5 кг
+check(
+  'об’єм і вага з комою (28 л, 31,5 кг)',
+  /\b28\b/.test(out) && /31,5/.test(out),
+  out.replace(/\n/g, ' | '),
+)
+
 // --- Калькулятор націнки ---
 await page.goto(base + '#/prices', { waitUntil: 'networkidle' })
 await page.waitForTimeout(400)

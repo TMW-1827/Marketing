@@ -46,9 +46,22 @@ export function money(value: number): string {
   return dec(value, 2)
 }
 
-/** Ціле число з нерозривними пробілами між розрядами: 1 200 */
+const GROUP = /\B(?=(\d{3})+(?!\d))/g
+/** Нерозривний вузький пробіл — типографський роздільник розрядів */
+const THIN = '\u202f'
+
+/** Ціле число з роздільниками розрядів: 1 200 */
 export function int(value: number): string {
-  return Math.round(value)
-    .toString()
-    .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+  return Math.round(value).toString().replace(GROUP, THIN)
+}
+
+/**
+ * Дробове число з роздільниками розрядів і комою: 1 204,5.
+ * Нульову дробову частину не показуємо — «360», а не «360,0»:
+ * інакше точні значення виглядають як результат вимірювання.
+ */
+export function grouped(value: number, digits = 1): string {
+  const [whole, frac = ''] = value.toFixed(digits).split('.')
+  const groupedWhole = whole.replace(GROUP, THIN)
+  return Number(frac) === 0 ? groupedWhole : `${groupedWhole},${frac}`
 }

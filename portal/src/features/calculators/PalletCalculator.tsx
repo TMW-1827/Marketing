@@ -1,17 +1,12 @@
 import { useMemo, useState } from 'react'
 import { calcPallet, formats, type PalletUnit } from '@/lib/catalog'
-import {
-  BOTTLE_FORMS,
-  CASE_FORMS,
-  dec1,
-  int,
-  plural,
-} from '@/lib/format'
+import { BOTTLE_FORMS, CASE_FORMS, grouped, int, plural } from '@/lib/format'
 
 const UNITS: Array<{ value: PalletUnit; label: string }> = [
   { value: 'bottle', label: 'пляшок' },
   { value: 'case', label: 'упаковок' },
   { value: 'pallet', label: 'палет' },
+  { value: 'litre', label: 'літрів' },
 ]
 
 const PALLET_FULL_FORMS: [string, string, string] = [
@@ -85,11 +80,13 @@ export function PalletCalculator() {
 
       <div className="out">
         <Out label="Пляшок" value={int(result.bottles)} />
-        <Out label="Упаковок" value={dec1(result.cases)} />
+        <Out label="Упаковок" value={grouped(result.cases)} />
         <Out label="Шарів" value={int(result.layers)} />
-        <Out label="Палет" value={dec1(result.pallets)} />
-        <Out label="Вага брутто" value={int(result.weightKg)} unit="кг" />
-        <Out label="Об’єм води" value={int(result.litres)} unit="л" />
+        {/* Палети — з двома знаками: частка палети є ключовою цифрою
+            в замовленні, і при одному знаку дрібні партії давали «0» */}
+        <Out label="Палет" value={grouped(result.pallets, 2)} />
+        <Out label="Вага брутто" value={grouped(result.weightKg)} unit="кг" />
+        <Out label="Об’єм води" value={grouped(result.litres)} unit="л" />
       </div>
 
       <div className="out-gap">
@@ -98,7 +95,10 @@ export function PalletCalculator() {
 
       <p className="hint">
         Вага рахується від ваги брутто повної палети з піддоном; неповна палета —
-        пропорційно до кількості упаковок.
+        пропорційно до кількості упаковок. Шари заокруглені вгору: неповний шар
+        усе одно займає на палеті цілий.
+        {unit === 'litre' &&
+          ' Пляшки рахуються цілими, тому фактичний об’єм може трохи перевищити заданий.'}
       </p>
     </>
   )
