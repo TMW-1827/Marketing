@@ -5,11 +5,12 @@
  * переналаштування вебу. Платформи ще не додані — коли дійде черга:
  *
  *   npm i @capacitor/core @capacitor/cli @capacitor/preferences
- *   BUILD_TARGET=native npm run build
+ *   npm run build
  *   npx cap add android && npx cap add ios
  *   npx cap sync
  *
- * BUILD_TARGET=native змінює base на './' — у WebView немає підкаталогу /portal/.
+ * Окремої цілі збірки не потрібно: шляхи всередині бандла відносні, тому
+ * той самий dist працює і на Pages, і у WebView з файлової системи.
  *
  * Тип CapacitorConfig підключається разом із @capacitor/cli; поки пакета
  * немає, описуємо форму об'єкта локально, щоб файл не ламав tsc.

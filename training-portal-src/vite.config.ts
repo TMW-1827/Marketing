@@ -5,15 +5,18 @@ import { VitePWA } from 'vite-plugin-pwa'
 import { viteSingleFile } from 'vite-plugin-singlefile'
 
 /**
- * Три цілі збірки:
- *   (за замовчуванням) — веб у підкаталозі /portal/;
- *   native — нативна обгортка Capacitor, файли віддаються з файлової системи;
- *   demo   — один самодостатній HTML для показу за посиланням.
+ * Дві цілі збірки:
+ *   (за замовчуванням) — веб;
+ *   demo — один самодостатній HTML для показу за посиланням.
+ *
+ * Base завжди відносний. Сайт живе в підкаталозі GitHub Pages
+ * (/marketing/training-portal/), і той самий білд має працювати в нативній
+ * обгортці Capacitor, де файли віддаються з файлової системи. Абсолютний
+ * base зламав би обидва випадки, а маршрутизація на хешах робить відносні
+ * шляхи безпечними: сторінка завжди одна.
  */
-const target = process.env.BUILD_TARGET
-const isNative = target === 'native'
-const isDemo = target === 'demo'
-const base = isNative || isDemo ? './' : '/portal/'
+const isDemo = process.env.BUILD_TARGET === 'demo'
+const base = './'
 
 export default defineConfig({
   base,
@@ -92,7 +95,9 @@ export default defineConfig({
   },
   build: {
     target: 'es2022',
-    sourcemap: !isDemo,
+    // Зібраний портал лежить у репозиторії, а карти коду важать більше за
+    // сам бандл. Для розбору помилок їх вмикають на час: SOURCEMAP=true
+    sourcemap: process.env.SOURCEMAP === 'true',
     // У демо шрифти й іконки мають стати data:-URI, інакше файл не самодостатній
     assetsInlineLimit: isDemo ? 4 * 1024 * 1024 : 4096,
     rollupOptions: isDemo

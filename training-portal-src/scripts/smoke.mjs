@@ -5,7 +5,9 @@
  */
 import { chromium } from 'playwright'
 
-const base = 'http://localhost:4173/portal/'
+// За замовчуванням — локальний preview. SMOKE_URL дозволяє перевірити
+// опубліковану збірку там, де вона реально лежить (у підкаталозі).
+const base = process.env.SMOKE_URL ?? 'http://localhost:4173/'
 const browser = await chromium.launch()
 const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } })
 const page = await ctx.newPage()

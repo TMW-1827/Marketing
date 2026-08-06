@@ -4,10 +4,13 @@ name: Публікація сайту
 #
 # Щоб увімкнути: Settings → Pages → Source: GitHub Actions.
 #
-# ВАЖЛИВО: цей workflow публікує ВЕСЬ сайт — і HTML-звіти з кореня
-# репозиторію, і зібраний портал у підкаталозі /portal/. Тобто перехід
-# із «Deploy from a branch» на «GitHub Actions» нічого не ламає: звіти
-# лишаються за тими самими адресами.
+# ВАЖЛИВО: цей workflow публікує ВЕСЬ сайт — звіти й портали з кореня
+# репозиторію та свіжозібраний навчальний портал у /training-portal/.
+# Перехід із «Deploy from a branch» на «GitHub Actions» нічого не ламає:
+# усе лишається за тими самими адресами.
+#
+# Поки Pages роздає гілку, у репозиторії лежить уже зібраний портал —
+# workflow просто перекриває його свіжою збіркою.
 
 on:
   push:
@@ -34,14 +37,14 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: portal/package-lock.json
+          cache-dependency-path: training-portal-src/package-lock.json
 
       - name: Встановити залежності порталу
-        working-directory: portal
+        working-directory: training-portal-src
         run: npm ci
 
       - name: Зібрати портал
-        working-directory: portal
+        working-directory: training-portal-src
         run: npm run build
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
@@ -51,11 +54,12 @@ jobs:
         run: |
           mkdir -p _site
           # Звіти та решта статики з кореня — без вихідних файлів порталу
-          rsync -a --exclude '_site' --exclude 'portal' --exclude '.git' \
+          rsync -a --exclude '_site' --exclude 'training-portal-src' \
+                   --exclude 'training-portal' --exclude '.git' \
                    --exclude '.github' ./ _site/
-          # Зібраний портал — у підкаталог /portal/
-          mkdir -p _site/portal
-          cp -r portal/dist/. _site/portal/
+          # Свіжозібраний портал кладемо поверх того, що лежить у репозиторії
+          mkdir -p _site/training-portal
+          cp -r training-portal-src/dist/. _site/training-portal/
 
       - uses: actions/upload-pages-artifact@v3
         with:

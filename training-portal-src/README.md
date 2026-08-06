@@ -54,6 +54,8 @@ npm run dev                  # http://localhost:5173
 | `npm run smoke:auth` | Перевірки входу й ролей (потрібен `build:demo`)    |
 
 Для `npm run smoke` один раз поставте браузер: `npx playwright install chromium`.
+Той самий набір можна прогнати проти вже опублікованої збірки — вкажіть адресу:
+`SMOKE_URL=https://tmw-1827.github.io/marketing/training-portal/ npm run smoke`.
 `build:demo` задає змінну оточення через синтаксис Unix — на Windows
 скористайтеся `cross-env` або задайте `BUILD_TARGET=demo` вручну.
 
@@ -150,32 +152,49 @@ scripts/            Генератор іконок, наскрізні пере
 
 ## Публікація вебу
 
-`npm run build` кладе статичні файли в `dist/`. Base шляхів — `/portal/`,
-тобто портал живе в підкаталозі поруч зі звітами:
+`npm run build` кладе статичні файли в `dist/`. Шляхи всередині відносні,
+тому збірка працює з будь-якого підкаталогу — і на GitHub Pages, і в нативній
+обгортці Capacitor.
+
+Портал опублікований за адресою:
 
 ```
-https://<домен>/portal/
+https://tmw-1827.github.io/marketing/training-portal/
 ```
 
-Щоб змінити адресу, поправте `base` у `vite.config.ts`.
+**Зараз він оновлюється вручну.** Зібрані файли лежать у репозиторії в
+каталозі `training-portal/`, поруч із `equipment-portal/` — так само, як
+влаштований сусідній портал. Після зміни коду:
 
-У репозиторії лежить `.github/workflows/deploy-pages.yml`: він збирає портал
-і публікує на GitHub Pages **разом зі звітами з кореня** — тобто перехід
-у Settings → Pages на «Source: GitHub Actions» нічого не ламає, звіти
-лишаються за тими самими адресами.
+```bash
+cd training-portal-src
+npm run build
+rm -rf ../training-portal && cp -r dist ../training-portal
+git add ../training-portal && git commit && git push
+```
+
+Щоб позбутися ручного кроку, у репозиторії лежить
+`.github/workflows/deploy-pages.yml`: він збирає портал сам і публікує разом
+зі звітами та сусіднім порталом. Для цього поставте Settings → Pages →
+Source: GitHub Actions. Нічого не зламається — workflow викладає весь сайт,
+усе лишається за тими самими адресами.
 
 Якщо портал має працювати з акаунтами, додайте в Settings → Secrets and
 variables → Actions два секрети: `VITE_SUPABASE_URL` і `VITE_SUPABASE_ANON_KEY`.
 Без них збірка теж пройде — портал працюватиме автономно.
 
-Портал закритий від індексації (`robots`, `noindex`) — це внутрішній матеріал.
+Портал закритий від індексації (`robots`, `noindex`), як і решта матеріалів
+у репозиторії. Але адреса **публічна**: хто знає посилання — той відкриє.
+Поки немає бази, вхід не запитується. Не публікуйте тут нічого, чого не
+можна показувати за межами компанії.
 
 ## Мобільні додатки
 
 Веб уже написаний з розрахунку на нативну обгортку, тож окремого застосунку
 писати не доведеться:
 
-- маршрутизація на хешах — працює з `file://`, де серверного роутингу немає;
+- маршрутизація на хешах і відносні шляхи — працює з `file://`, де серверного
+  роутингу немає;
 - шрифти та іконки в бандлі — жодних запитів до CDN;
 - сховище за асинхронним інтерфейсом (`lib/storage.ts`) — підміна на
   `@capacitor/preferences` торкнеться одного файлу;
@@ -186,7 +205,7 @@ variables → Actions два секрети: `VITE_SUPABASE_URL` і `VITE_SUPABA
 
 ```bash
 npm i @capacitor/core @capacitor/cli @capacitor/android @capacitor/ios @capacitor/preferences
-BUILD_TARGET=native npm run build     # base стає './'
+npm run build
 npx cap add android
 npx cap add ios
 npx cap sync
