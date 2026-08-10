@@ -30,18 +30,14 @@ def col_index(letter: str) -> int:
 
 
 class Grid:
-    """Один аркуш. value() віддає обчислене значення, formula() — текст формули."""
+    """Один аркуш; індексація 1-based, як у самому Excel."""
 
-    def __init__(self, name: str, nrows: int, ncols: int):
-        self.name = name
-        self.nrows = nrows
-        self.ncols = ncols
+    name: str
+    nrows: int
+    ncols: int
 
     def value(self, row: int, col: int) -> Any:  # pragma: no cover - інтерфейс
         raise NotImplementedError
-
-    def formula(self, row: int, col: int) -> str | None:
-        return None
 
     # -- зручні похідні --------------------------------------------------
 
@@ -86,7 +82,9 @@ class Grid:
 
 class _XlsGrid(Grid):
     def __init__(self, sheet):
-        super().__init__(sheet.name, sheet.nrows, sheet.ncols)
+        self.name = sheet.name
+        self.nrows = sheet.nrows
+        self.ncols = sheet.ncols
         self._sh = sheet
 
     def value(self, row: int, col: int):
@@ -97,25 +95,51 @@ class _XlsGrid(Grid):
 
 
 class _XlsxGrid(Grid):
-    """Тримає дві копії аркуша: зі значеннями і з формулами."""
+    """Аркуш xlsx, вичитаний потоково і один раз.
 
-    def __init__(self, ws_values, ws_formulas):
-        super().__init__(ws_values.title, ws_values.max_row or 0,
-                         ws_values.max_column or 0)
-        self._v = ws_values
-        self._f = ws_formulas
+    Звичайний режим openpyxl будує об'єкт на кожну клітинку — на книзі
+    Алекс ком (48 аркушів) це коштує близько пів хвилини, а в браузері
+    втричі більше. Потокове читання дає ті самі значення за частки
+    секунди, тому аркуш матеріалізується цілком при першому зверненні.
+    """
+
+    def __init__(self, ws):
+        self.name = ws.title
+        self._ws = ws
+        self._rows: dict[int, tuple] | None = None
+        self._nrows = 0
+        self._ncols = 0
+
+    def _materialise(self) -> None:
+        if self._rows is not None:
+            return
+        rows: dict[int, tuple] = {}
+        widest = 0
+        for index, values in enumerate(
+                self._ws.iter_rows(values_only=True), start=1):
+            if any(v is not None for v in values):
+                rows[index] = values
+                widest = max(widest, len(values))
+        self._rows = rows
+        self._nrows = max(rows) if rows else 0
+        self._ncols = widest
+
+    @property
+    def nrows(self) -> int:
+        self._materialise()
+        return self._nrows
+
+    @property
+    def ncols(self) -> int:
+        self._materialise()
+        return self._ncols
 
     def value(self, row: int, col: int):
-        if 1 <= row <= self.nrows and 1 <= col <= self.ncols:
-            return self._v.cell(row=row, column=col).value
-        return None
-
-    def formula(self, row: int, col: int):
-        if 1 <= row <= self.nrows and 1 <= col <= self.ncols:
-            v = self._f.cell(row=row, column=col).value
-            if isinstance(v, str) and v.startswith("="):
-                return v
-        return None
+        self._materialise()
+        values = self._rows.get(row)
+        if values is None or col < 1 or col > len(values):
+            return None
+        return values[col - 1]
 
 
 @dataclass
@@ -151,7 +175,5 @@ def load(path: str) -> Workbook:
 
     import openpyxl
 
-    wb_v = openpyxl.load_workbook(path, data_only=True)
-    wb_f = openpyxl.load_workbook(path, data_only=False)
-    grids = [_XlsxGrid(wb_v[n], wb_f[n]) for n in wb_v.sheetnames]
-    return Workbook(path, grids)
+    wb = openpyxl.load_workbook(path, data_only=True, read_only=True)
+    return Workbook(path, [_XlsxGrid(wb[name]) for name in wb.sheetnames])

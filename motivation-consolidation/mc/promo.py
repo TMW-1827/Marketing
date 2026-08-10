@@ -38,7 +38,6 @@ class PromoBlock:
     spent: float | None = None
     closing: float | None = None
     cells: dict[str, str] = field(default_factory=dict)
-    closing_formula: str | None = None
     per_sku: int = 0
 
     @property
@@ -106,8 +105,6 @@ def _from_row(grid: Grid, row: int, labels) -> PromoBlock | None:
             pass
         setattr(block, role, val)
         block.cells[role] = f"{col_letter(vcol)}{row}"
-        if role == "closing":
-            block.closing_formula = grid.formula(row, vcol)
 
     if inline:
         return block
@@ -140,5 +137,5 @@ def _from_table(grid: Grid, header_row: int, labels) -> PromoBlock | None:
     for role, val in totals.items():
         setattr(block, role, val)
         block.cells[role] = f"{col_letter(cols[role])}{header_row + 1}.."
-    block.closing_formula = grid.formula(header_row + 1, cols["closing"])
+
     return block
