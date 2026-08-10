@@ -18,6 +18,7 @@ from .config import Config
 from .discover import SourceFile, SheetInfo
 from .months import Period
 from .promo import extract_promo, PromoBlock
+from .terms import read_terms, read_promo, terms_for, norm_role, Terms
 
 ERROR, WARN, INFO = "ERROR", "WARN", "INFO"
 
@@ -39,6 +40,15 @@ class Finding:
 
 
 @dataclass
+class TermsCheck:
+    """Результат звірки мотивації з умовами під таблицею."""
+    parsed: bool
+    summary: str
+    matched: int = 0
+    rows: list[tuple] = field(default_factory=list)   # (підпис, роль, факт, у файлі, за умовами)
+
+
+@dataclass
 class BlockResult:
     metric: str
     unit: str
@@ -48,6 +58,7 @@ class BlockResult:
     bonus_fact: float | None
     promo_terms: str = ""
     source: str = ""
+    terms: TermsCheck | None = None
 
 
 @dataclass
@@ -129,6 +140,18 @@ def check_source(sf: SourceFile, period: Period, cfg: Config,
         _check_arithmetic(block, fact_sheet, rule.consolidated, period, tol, add)
         _check_performance(block, fact_sheet, rule.consolidated, period,
                            cfg, add)
+        terms_check = check_terms(block, fact_sheet)
+        if not terms_check.parsed:
+            add(Finding(INFO, "M3", rule.consolidated, period,
+                        f"мотивацію не звірено з умовами: {terms_check.summary}",
+                        where=fact_sheet.name))
+        elif terms_check.rows:
+            details = "; ".join(
+                f"{lbl} — у файлі {got:,.0f}, за умовами {want:,.0f}"
+                for lbl, _r, _f, got, want in terms_check.rows[:3])
+            add(Finding(WARN, "M1", rule.consolidated, period,
+                        f"{terms_check.summary}: {details}".replace(",", " "),
+                        where=fact_sheet.name))
 
         twin = _match_block(block, plan_blocks)
         if plan_sheet and twin is None:
@@ -157,6 +180,7 @@ def check_source(sf: SourceFile, period: Period, cfg: Config,
             bonus_plan=bonus_plan,
             bonus_fact=block.bonus_total,
             source=f"{fact_sheet.name}!{block.where('plan')}",
+            terms=terms_check,
         ))
 
     _check_promo(sf, period, rule, tol, add)
@@ -230,6 +254,10 @@ def _plan_only(res: SourceResult, plan_sheet: SheetInfo, rule,
                 plan=block.plan, fact=None,
                 bonus_plan=block.bonus_total or None, bonus_fact=None,
                 source=f"{plan_sheet.name}!{block.where('plan')}",
+                promo_terms=read_promo(plan_sheet.grid,
+                                       block.header_rows[-1]
+                                       if block.header_rows else 0),
+                terms=check_terms(block, plan_sheet),
             ))
 
 
@@ -258,6 +286,52 @@ def _match_block(block: MotivationBlock,
             return c
     motivated = [c for c in same if c.motivated]
     return (motivated or same)[0]
+
+
+def check_terms(block: MotivationBlock, sheet: SheetInfo) -> TermsCheck:
+    """Перераховує мотивацію кожного рядка за умовами під таблицею."""
+    text = read_terms(sheet.grid, block.header_rows[-1] if block.header_rows else 0)
+    terms = terms_for(text, block.metric)
+    if not terms.kind:
+        return TermsCheck(False, terms.note or "умови мотивації не розібрано")
+    if not terms.applies_to(block.unit):
+        return TermsCheck(
+            False,
+            f"ставка задана в грн/пл, а блок веде облік у «{block.unit}» — "
+            f"перерахунок зробити нема з чого")
+
+    # на плановому аркуші факту ще немає, тож плановий бонус звіряємо з
+    # умовами при стовідсотковому виконанні — саме так його і рахують
+    if not any(i.bonus for i in block.items):
+        return TermsCheck(False, "у джерелі не заповнено суми мотивації — "
+                                 "звіряти з умовами нема з чим")
+    # нуль у підсумковому рядку — теж «факту ще немає»
+    at_plan = not any(i.fact for i in block.items)
+    matched, bad = 0, []
+    for item in block.items:
+        if item.bonus is None or item.is_total:
+            continue
+        role = norm_role(item.label) or ("св" if item.is_subtotal else "тп")
+        fact = item.plan if at_plan else item.fact
+        want = terms.expected(role, item.plan, fact)
+        if want is None:
+            continue
+        if abs(want - item.bonus) < 1.0:
+            matched += 1
+        else:
+            bad.append((item.label[:34], role, item.fact, item.bonus, round(want, 2)))
+
+    suffix = " (при 100 % виконання)" if at_plan else ""
+    if not matched and not bad:
+        return TermsCheck(False, "жоден рядок не вдалося зіставити з умовами — "
+                                 "перевір ролі у підписах рядків")
+    if not bad:
+        return TermsCheck(True,
+                          f"усі {matched} рядків відповідають умовам{suffix}",
+                          matched=matched)
+    return TermsCheck(True,
+                      f"{len(bad)} з {matched + len(bad)} рядків не сходяться "
+                      f"з умовами{suffix}", matched=matched, rows=bad)
 
 
 def _check_arithmetic(block: MotivationBlock, sheet: SheetInfo, name: str,

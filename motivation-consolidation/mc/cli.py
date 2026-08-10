@@ -118,6 +118,8 @@ def cmd_apply(args) -> int:
                 "fact": block.fact,
                 "bonus_plan": block.bonus_plan,
                 "bonus_fact": block.bonus_fact,
+                # умови акцій на новий місяць беруться з планового аркуша
+                "promo_terms": block.promo_terms or None,
             }
             try:
                 cells = cons.write(period, block.metric,
