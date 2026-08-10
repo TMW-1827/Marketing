@@ -154,13 +154,18 @@ class Terms:
         return block_unit in (self.rate_unit, "шт") or self.rate_unit == block_unit
 
     def expected(self, role: str, plan: float | None, fact: float | None,
-                 ) -> float | None:
-        """Скільки мотивації має вийти за умовами."""
+                 bump: float = 0.0) -> float | None:
+        """Скільки мотивації має вийти за умовами.
+
+        `bump` піднімає виконання на задану частку — так перевіряють, чи
+        не порахували в таблиці за наступною сходинкою, коли до неї
+        бракує зовсім небагато.
+        """
         if self.kind is None or role not in self.base:
             return None
         if fact is None:
             return None
-        performance = (fact / plan) if plan else 0.0
+        performance = ((fact / plan) if plan else 0.0) + bump
 
         for tier in self.tiers:
             if not tier.covers(performance):

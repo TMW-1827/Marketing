@@ -110,6 +110,17 @@ def test_roles_are_recognised_in_labels():
     assert norm_role("Бубенко Альона") is None
 
 
+def test_bump_reaches_next_tier():
+    """Виконання 98 % при межі 99 % — з допуском у 1 % дотягує до неї."""
+    t = parse("1. ТМ Трускавецька АКБ ( тп - 700, св 1000 при виконанні "
+              "на 99% і більше, при виконані 80-98 % - тп 500, св - 500, "
+              "до 80% бонус не нараховується).")
+    assert t.expected("тп", 100, 98) == 500
+    assert t.expected("тп", 100, 98, bump=0.01) == 700
+    # до межі далеко — допуск нічого не змінює
+    assert t.expected("тп", 100, 90, bump=0.01) == 500
+
+
 def test_unparseable_terms_are_reported():
     t = parse("Мотивація за домовленістю з керівництвом")
     assert t.kind is None and t.note

@@ -39,6 +39,15 @@ class Grid:
     def value(self, row: int, col: int) -> Any:  # pragma: no cover - інтерфейс
         raise NotImplementedError
 
+    def formula(self, row: int, col: int) -> str | None:
+        """Текст формули, якщо його видно у цьому форматі.
+
+        У .xls формул не видно взагалі — xlrd зберігає лише обчислені
+        значення. Тому там, де формула потрібна, код має вміти обійтися
+        без неї.
+        """
+        return None
+
     # -- зручні похідні --------------------------------------------------
 
     def text(self, row: int, col: int) -> str:
@@ -94,6 +103,42 @@ class _XlsGrid(Grid):
         return None
 
 
+class _XlsxFormulas:
+    """Другий прохід по книзі — уже за текстами формул.
+
+    Читається лише на вимогу: формули потрібні тільки для блоку акцій,
+    а зайвий розбір книги коштує помітно дорожче за саму перевірку.
+    """
+
+    def __init__(self, path: str):
+        self.path = path
+        self._sheets: dict[str, dict[int, tuple]] | None = None
+
+    def _load(self) -> None:
+        if self._sheets is not None:
+            return
+        import openpyxl
+
+        self._sheets = {}
+        wb = openpyxl.load_workbook(self.path, data_only=False, read_only=True)
+        for name in wb.sheetnames:
+            rows: dict[int, tuple] = {}
+            for index, values in enumerate(
+                    wb[name].iter_rows(values_only=True), start=1):
+                if any(isinstance(v, str) and v.startswith("=") for v in values):
+                    rows[index] = values
+            self._sheets[name] = rows
+        wb.close()
+
+    def get(self, sheet: str, row: int, col: int) -> str | None:
+        self._load()
+        values = self._sheets.get(sheet, {}).get(row)
+        if not values or col < 1 or col > len(values):
+            return None
+        v = values[col - 1]
+        return v if isinstance(v, str) and v.startswith("=") else None
+
+
 class _XlsxGrid(Grid):
     """Аркуш xlsx, вичитаний потоково і один раз.
 
@@ -103,12 +148,18 @@ class _XlsxGrid(Grid):
     секунди, тому аркуш матеріалізується цілком при першому зверненні.
     """
 
-    def __init__(self, ws):
+    def __init__(self, ws, formulas: "_XlsxFormulas | None" = None):
         self.name = ws.title
         self._ws = ws
+        self._formulas = formulas
         self._rows: dict[int, tuple] | None = None
         self._nrows = 0
         self._ncols = 0
+
+    def formula(self, row: int, col: int) -> str | None:
+        if self._formulas is None:
+            return None
+        return self._formulas.get(self.name, row, col)
 
     def _materialise(self) -> None:
         if self._rows is not None:
@@ -176,4 +227,6 @@ def load(path: str) -> Workbook:
     import openpyxl
 
     wb = openpyxl.load_workbook(path, data_only=True, read_only=True)
-    return Workbook(path, [_XlsxGrid(wb[name]) for name in wb.sheetnames])
+    formulas = _XlsxFormulas(path)
+    return Workbook(path, [_XlsxGrid(wb[name], formulas)
+                           for name in wb.sheetnames])
