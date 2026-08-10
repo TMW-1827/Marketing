@@ -25,6 +25,12 @@ OPENING_RX = re.compile(
 SHIPPED_RX = re.compile(r"відвантажено|прихід", re.I)
 SPENT_RX = re.compile(r"витрачено|розхід|використано", re.I)
 CLOSING_RX = re.compile(r"залишок", re.I)
+# «Відвантажено акційної продукції у червні (+ залишок з травня)» —
+# у такому підписі прихід уже містить перехідний залишок
+CARRYOVER_IN_SHIPPED_RX = re.compile(
+    r"\+\s*[^)]{0,25}залишок|з\s+урахуванн\w*\s+залишк|включно\s+з\s+залишк", re.I)
+# посилання на інший аркуш у формулі: ='Факт Травень 2026'!O49
+CROSS_SHEET_RX = re.compile(r"('[^']+'|\w+)\!\$?[A-Z]+\$?\d+")
 UNIT_RX = re.compile(r"^(пл|тт|шт)\.?$", re.I)
 
 MAX_SCAN = 120
@@ -38,7 +44,24 @@ class PromoBlock:
     spent: float | None = None
     closing: float | None = None
     cells: dict[str, str] = field(default_factory=dict)
+    labels: dict[str, str] = field(default_factory=dict)
+    formulas: dict[str, str] = field(default_factory=dict)
     per_sku: int = 0
+
+    @property
+    def carryover_in_shipped(self) -> bool:
+        """Чи входить перехідний залишок уже в число «відвантажено».
+
+        У частини дистриб'юторів так і підписано, а в інших це видно з
+        формули: прихід рахується з посиланням на аркуш минулого місяця.
+        Якщо не помітити, перехідний залишок додається двічі й звірка
+        показує розбіжність там, де все правильно.
+        """
+        label = self.labels.get("shipped", "")
+        if CARRYOVER_IN_SHIPPED_RX.search(label):
+            return True
+        formula = self.formulas.get("shipped", "")
+        return bool(formula and CROSS_SHEET_RX.search(formula))
 
     @property
     def computed(self) -> float | None:
@@ -76,6 +99,13 @@ def _value_right(grid: Grid, row: int, start: int, stop: int) -> tuple[float | N
     return None, None
 
 
+def _formula_right(grid: Grid, row: int, start: int, stop: int) -> int | None:
+    for c in range(start + 1, stop):
+        if grid.formula(row, c):
+            return c
+    return None
+
+
 def extract_promo(grid: Grid) -> PromoBlock | None:
     limit = min(grid.nrows, MAX_SCAN)
     for r in range(1, limit + 1):
@@ -94,15 +124,21 @@ def _from_row(grid: Grid, row: int, labels) -> PromoBlock | None:
     block = PromoBlock(row=row)
     inline = False
 
-    for i, (col, role, _text) in enumerate(labels):
+    for i, (col, role, text) in enumerate(labels):
         stop = labels[i + 1][0] if i + 1 < len(labels) else grid.ncols + 1
         val, vcol = _value_right(grid, row, col, stop)
+        # підпис і формулу зберігаємо навіть без числа: саме з них видно,
+        # чи входить перехідний залишок уже в число приходу
+        block.labels[role] = text
+        if vcol is None:
+            vcol = _formula_right(grid, row, col, stop)
+        if vcol is not None:
+            formula = grid.formula(row, vcol)
+            if formula:
+                block.formulas[role] = formula
         if val is None:
             continue
         inline = True
-        # перший «залишок» — вхідний, останній — вихідний
-        if role == "closing" and block.closing is not None:
-            pass
         setattr(block, role, val)
         block.cells[role] = f"{col_letter(vcol)}{row}"
 
@@ -137,5 +173,8 @@ def _from_table(grid: Grid, header_row: int, labels) -> PromoBlock | None:
     for role, val in totals.items():
         setattr(block, role, val)
         block.cells[role] = f"{col_letter(cols[role])}{header_row + 1}.."
+        formula = grid.formula(header_row + 1, cols[role])
+        if formula:
+            block.formulas[role] = formula
 
     return block

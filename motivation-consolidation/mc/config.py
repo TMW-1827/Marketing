@@ -24,6 +24,7 @@ class Settings:
     performance_min: float = 0.30
     performance_max: float = 2.00
     cost_deviation: float = 2.0
+    tier_tolerance: float = 0.01
 
 
 @dataclass

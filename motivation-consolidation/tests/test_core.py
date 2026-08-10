@@ -200,6 +200,55 @@ def test_promo_balance_detects_wrong_formula():
     assert block.computed == 200 and block.closing == 1000
 
 
+def test_promo_carryover_already_inside_shipped():
+    """«(+ залишок з січня)» у підписі — перехідний уже в числі приходу."""
+    rows = dict(PROMO)
+    rows.update({
+        "C8": "Відвантажено акційної продукції у лютому (+ залишок з січня)",
+        "F8": 661,
+        "H8": "витрачено акцій", "I8": 408,
+        "K8": "залишок акційної продукції", "N8": 253,
+    })
+    block = extract_promo(sheet_of(write(rows)))
+    assert block.carryover_in_shipped is True
+    assert block.shipped == 661 and block.closing == 253
+
+
+def test_promo_carryover_detected_from_formula():
+    """Перехідний залишок видно з посилання на аркуш минулого місяця."""
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "лютий 2026 факт"
+    ws["B4"] = "Факт акцій і мотивацій на лютий 2026. ТМ Трускавецька."
+    ws["B5"] = "Дистрибютор Тест"
+    ws["C8"] = "Відвантажено акційної продукції у лютому"
+    ws["F8"] = "='січень 2026 факт'!N8+120"
+    ws["H8"] = "витрачено акцій"
+    ws["I8"] = 400
+    ws["K8"] = "залишок акційної продукції"
+    ws["N8"] = 261
+    wb.create_sheet("січень 2026 факт")
+    path = os.path.join(tempfile.mkdtemp(), "формула.xlsx")
+    wb.save(path)
+
+    load.cache_clear()
+    grid = load(path).sheets[0]
+    assert grid.formula(8, 6) == "='січень 2026 факт'!N8+120"
+    block = extract_promo(grid)
+    assert block.carryover_in_shipped is True
+
+
+def test_promo_without_carryover_hint_stays_plain():
+    rows = dict(PROMO)
+    rows.update({
+        "C8": "Відвантажено акційної продукції у лютому", "F8": 500,
+        "H8": "витрачено акцій", "I8": 400,
+        "K8": "залишок акційної продукції", "N8": 200,
+    })
+    block = extract_promo(sheet_of(write(rows)))
+    assert block.carryover_in_shipped is False
+
+
 # -- зведена ----------------------------------------------------------------
 
 def build_consolidated() -> str:

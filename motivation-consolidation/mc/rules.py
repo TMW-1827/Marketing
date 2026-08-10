@@ -46,6 +46,9 @@ class TermsCheck:
     summary: str
     matched: int = 0
     rows: list[tuple] = field(default_factory=list)   # (підпис, роль, факт, у файлі, за умовами)
+    # рядки, де до наступної сходинки виконання забракло менше допуску,
+    # а в таблиці порахували вже за нею — беремо число з таблиці
+    rounded: list[tuple] = field(default_factory=list)
 
 
 @dataclass
@@ -117,7 +120,8 @@ def check_source(sf: SourceFile, period: Period, cfg: Config,
             add(Finding(INFO, "S2", rule.consolidated, period,
                         f"аркуша «факт» за {period.label} ще немає — місяць "
                         f"вноситься лише плановою частиною"))
-            _plan_only(res, plan_sheet, rule, period, tol, add, consolidated)
+            _plan_only(res, plan_sheet, rule, period, tol, add,
+                       consolidated, cfg)
             if consolidated is not None:
                 _check_consolidated(res, consolidated, rule, period, tol, add)
         return res
@@ -140,12 +144,23 @@ def check_source(sf: SourceFile, period: Period, cfg: Config,
         _check_arithmetic(block, fact_sheet, rule.consolidated, period, tol, add)
         _check_performance(block, fact_sheet, rule.consolidated, period,
                            cfg, add)
-        terms_check = check_terms(block, fact_sheet)
+        terms_check = check_terms(block, fact_sheet,
+                                  cfg.settings.tier_tolerance)
         if not terms_check.parsed:
             add(Finding(INFO, "M3", rule.consolidated, period,
                         f"мотивацію не звірено з умовами: {terms_check.summary}",
                         where=fact_sheet.name))
-        elif terms_check.rows:
+        if terms_check.rounded:
+            near = "; ".join(
+                f"{lbl} — виконання {perf:.1%}, у таблиці {got:,.0f} замість "
+                f"{want:,.0f}"
+                for lbl, _r, perf, got, want in terms_check.rounded[:3])
+            add(Finding(WARN, "M2", rule.consolidated, period,
+                        f"{len(terms_check.rounded)} рядків зараховано за "
+                        f"наступною сходинкою виконання — беремо числа з "
+                        f"таблиці: {near}".replace(",", " "),
+                        where=fact_sheet.name))
+        if terms_check.rows:
             details = "; ".join(
                 f"{lbl} — у файлі {got:,.0f}, за умовами {want:,.0f}"
                 for lbl, _r, _f, got, want in terms_check.rows[:3])
@@ -190,7 +205,8 @@ def check_source(sf: SourceFile, period: Period, cfg: Config,
 
 
 def _plan_only(res: SourceResult, plan_sheet: SheetInfo, rule,
-               period: Period, tol: float, add, cons=None) -> None:
+               period: Period, tol: float, add, cons=None,
+               cfg: Config | None = None) -> None:
     """Місяць без факту: беремо з планового аркуша план і плановий бонус.
 
     Який блок брати, вирішує наявність сум мотивації — так само, як для
@@ -198,6 +214,7 @@ def _plan_only(res: SourceResult, plan_sheet: SheetInfo, rule,
     має (буває, коли бонус у джерелі рахується формулою від факту),
     лишаємо верхній і повідомляємо про це.
     """
+    tier_tolerance = cfg.settings.tier_tolerance if cfg else 0.01
     blocks = extract_blocks(plan_sheet.grid)
     if not blocks:
         add(Finding(ERROR, "S4", rule.consolidated, period,
@@ -257,7 +274,7 @@ def _plan_only(res: SourceResult, plan_sheet: SheetInfo, rule,
                 promo_terms=read_promo(plan_sheet.grid,
                                        block.header_rows[-1]
                                        if block.header_rows else 0),
-                terms=check_terms(block, plan_sheet),
+                terms=check_terms(block, plan_sheet, tier_tolerance),
             ))
 
 
@@ -288,7 +305,8 @@ def _match_block(block: MotivationBlock,
     return (motivated or same)[0]
 
 
-def check_terms(block: MotivationBlock, sheet: SheetInfo) -> TermsCheck:
+def check_terms(block: MotivationBlock, sheet: SheetInfo,
+                tier_tolerance: float = 0.01) -> TermsCheck:
     """Перераховує мотивацію кожного рядка за умовами під таблицею."""
     text = read_terms(sheet.grid, block.header_rows[-1] if block.header_rows else 0)
     terms = terms_for(text, block.metric)
@@ -307,7 +325,7 @@ def check_terms(block: MotivationBlock, sheet: SheetInfo) -> TermsCheck:
                                  "звіряти з умовами нема з чим")
     # нуль у підсумковому рядку — теж «факту ще немає»
     at_plan = not any(i.fact for i in block.items)
-    matched, bad = 0, []
+    matched, bad, rounded = 0, [], []
     for item in block.items:
         if item.bonus is None or item.is_total:
             continue
@@ -318,20 +336,34 @@ def check_terms(block: MotivationBlock, sheet: SheetInfo) -> TermsCheck:
             continue
         if abs(want - item.bonus) < 1.0:
             matched += 1
-        else:
-            bad.append((item.label[:34], role, item.fact, item.bonus, round(want, 2)))
+            continue
+        # виконання майже дотягнуло до наступної сходинки, і в таблиці
+        # порахували вже за нею — це рішення дистриб'ютора, число беремо
+        # з таблиці, але показуємо
+        near = terms.expected(role, item.plan, fact, bump=tier_tolerance)
+        if near is not None and abs(near - item.bonus) < 1.0:
+            performance = (fact / item.plan) if item.plan else 0.0
+            rounded.append((item.label[:34], role, performance,
+                            item.bonus, round(want, 2)))
+            continue
+        bad.append((item.label[:34], role, item.fact, item.bonus, round(want, 2)))
 
     suffix = " (при 100 % виконання)" if at_plan else ""
-    if not matched and not bad:
+    total = matched + len(bad) + len(rounded)
+    if not total:
         return TermsCheck(False, "жоден рядок не вдалося зіставити з умовами — "
                                  "перевір ролі у підписах рядків")
+    near_note = (f"; у {len(rounded)} виконання майже дотягнуло до наступної "
+                 f"сходинки і в таблиці зараховано за нею" if rounded else "")
     if not bad:
         return TermsCheck(True,
-                          f"усі {matched} рядків відповідають умовам{suffix}",
-                          matched=matched)
+                          f"усі {total} рядків відповідають умовам{suffix}"
+                          f"{near_note}",
+                          matched=matched, rounded=rounded)
     return TermsCheck(True,
-                      f"{len(bad)} з {matched + len(bad)} рядків не сходяться "
-                      f"з умовами{suffix}", matched=matched, rows=bad)
+                      f"{len(bad)} з {total} рядків не сходяться "
+                      f"з умовами{suffix}{near_note}",
+                      matched=matched, rows=bad, rounded=rounded)
 
 
 def _check_arithmetic(block: MotivationBlock, sheet: SheetInfo, name: str,
@@ -472,24 +504,76 @@ def _check_promo(sf: SourceFile, period: Period, rule, tol: float, add) -> None:
                         where=f"{sheet.name}!{block.cells.get('opening','')}",
                         expected=prev.closing, actual=block.opening))
         elif block.opening is None and block.closing is not None:
-            want = prev.closing + (block.shipped or 0) - (block.spent or 0)
-            if not _close(want, block.closing, tol):
-                add(Finding(ERROR, "Q2", name, period,
-                            f"залишок {block.closing:,.0f} ≠ залишок за "
-                            f"{period.prev.label} ({prev.closing:,.0f}) + прихід "
-                            f"{block.shipped or 0:,.0f} − витрата "
-                            f"{block.spent or 0:,.0f} = {want:,.0f}. Перевір "
-                            f"формулу залишку: або не враховано перехідний "
-                            f"залишок, або переплутано знак витрати"
-                            .replace(",", " "),
-                            where=f"{sheet.name}!{block.cells.get('closing','')}",
-                            expected=want, actual=block.closing))
+            _check_carryover(block, prev, sheet, name, period, tol, add)
 
     if block.closing is not None and block.closing < 0:
         add(Finding(WARN, "Q4", name, period,
                     f"від'ємний залишок акційної продукції: "
                     f"{block.closing:,.0f} пл.".replace(",", " "),
                     where=f"{sheet.name}!{block.cells.get('closing','')}"))
+
+
+def _balances(block: PromoBlock, prev_closing: float) -> dict[str, float]:
+    """Умовності обліку залишку, які трапляються у джерелах."""
+    shipped, spent = block.shipped or 0, block.spent or 0
+    return {
+        # звичайна: до приходу за місяць додається перехідний залишок
+        "carried": prev_closing + shipped - spent,
+        # перехідний залишок уже входить у число «відвантажено»
+        "included": shipped - spent,
+        # витрата додана замість віднімання
+        "added": prev_closing + shipped + spent,
+    }
+
+
+BALANCE_NOTES = {
+    "carried": "перехідний залишок додається до приходу окремо",
+    "included": "перехідний залишок уже входить у «відвантажено»",
+    "added": "витрата додається до залишку, а не віднімається",
+}
+
+
+def _check_carryover(block: PromoBlock, prev: PromoBlock, sheet: SheetInfo,
+                     name: str, period: Period, tol: float, add) -> None:
+    """Звірка залишку акційної продукції з попереднім місяцем.
+
+    Дистриб'ютори ведуть облік по-різному. Здебільшого «відвантажено» —
+    це прихід саме за місяць, і перехідний залишок додається окремо. Але
+    буває, що він уже входить у це число: тоді про це сказано в підписі
+    («+ залишок з травня») або видно з формули, яка посилається на аркуш
+    минулого місяця. Якщо цього не помітити, залишок додається двічі й
+    звірка показує розбіжність там, де насправді все сходиться.
+    """
+    closing = block.closing
+    options = _balances(block, prev.closing)
+    expected = "included" if block.carryover_in_shipped else "carried"
+
+    if _close(options[expected], closing, tol):
+        return
+
+    formula = block.formulas.get("closing")
+    hint = f" Формула залишку: {formula}." if formula else ""
+
+    for other, value in options.items():
+        if other == expected or not _close(value, closing, tol):
+            continue
+        level = INFO if other == "included" else WARN
+        add(Finding(level, "Q6", name, period,
+                    f"залишок сходиться за іншою умовністю: "
+                    f"{BALANCE_NOTES[other]}." +
+                    ("" if level == INFO else " Перевір, чи так і задумано.") +
+                    hint,
+                    where=f"{sheet.name}!{block.cells.get('closing','')}"))
+        return
+
+    add(Finding(ERROR, "Q2", name, period,
+                (f"залишок {closing:,.0f} не сходиться з попереднім місяцем: "
+                 f"{prev.closing:,.0f} + прихід {block.shipped or 0:,.0f} − "
+                 f"витрата {block.spent or 0:,.0f} = "
+                 f"{options['carried']:,.0f}").replace(",", " ") +
+                f" Перевір формулу залишку.{hint}",
+                where=f"{sheet.name}!{block.cells.get('closing','')}",
+                expected=options["carried"], actual=closing))
 
 
 def _check_consolidated(res: SourceResult, cons, rule, period: Period,
