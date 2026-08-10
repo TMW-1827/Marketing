@@ -187,11 +187,15 @@ def preview(cards: list[dict], consolidated: str) -> dict:
                 "promo": bool(block["promo_terms"]),
             })
     last = cons.blocks[-1] if cons.blocks else None
+    closing = (last.period.label
+               if new_months and last and not last.closed else None)
     return {
         "rows": rows,
         "new_months": new_months,
-        "closing": (last.period.label
-                    if new_months and last and not last.closed else None),
+        "closing": closing,
+        # закривати місяць без факту можна, але приріст наступного рахується
+        # саме від нього, тож про порожній факт треба сказати до запису
+        "closing_without_facts": bool(closing and not cons.has_facts(last.period)),
     }
 
 
@@ -243,7 +247,7 @@ def apply_cards(cards: list[dict], consolidated: str,
     fixed = cons.refresh_totals() if fix_totals else []
     cons.save()
     return {"applied": applied, "skipped": skipped, "fixed": fixed,
-            "dropped": cons.dropped,
+            "dropped": cons.dropped, "notes": cons.notes,
             "backup": os.path.basename(backup) if backup else None}
 
 

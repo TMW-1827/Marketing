@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import datetime as dt
 import re
+from copy import copy
 from dataclasses import dataclass, field
 
 from .months import Period
@@ -124,6 +125,12 @@ class Consolidated:
         # значення, які не мають колонки в закритому місяці і тому
         # губляться при закритті — про них треба сказати вголос
         self.dropped: list[str] = []
+        # зауваження до стану зведеної, які варто побачити після запису
+        self.notes: list[str] = []
+        # оформлення колонок, які бувають лише у відкритому місяці
+        # («затратність план», «умови акцій»): при закритті ці ролі
+        # зникають, тож зразок для нового місяця треба зберегти заздалегідь
+        self._open_styles: dict[tuple[int, str], dict] = {}
 
     # -- читання ---------------------------------------------------------
 
@@ -268,6 +275,13 @@ class Consolidated:
                         f"{block.period}: «{LABELS[table.metric][role].format(m=block.period.month)}» "
                         f"({filled} знач.) — у закритому місяці такої колонки немає")
 
+        self._remember_open_styles(block)
+        if not self._has_facts(block):
+            self.notes.append(
+                f"{block.period.label}: місяць закрито без факту. Приріст "
+                f"наступного місяця рахується від факту цього, тож поки він "
+                f"порожній, у тих клітинках буде помилка ділення")
+
         block.width = len(CLOSED_ROLES)
         for table in self.tables:
             roles = {}
@@ -280,7 +294,41 @@ class Consolidated:
                 for r in range(table.first_row, table.total_row + 1):
                     ws.cell(row=r, column=col).value = keep.get(r)
             block.roles[table.header_row] = roles
+        self._restyle(block)
         self._write_month_header(block)
+
+    def _remember_open_styles(self, block: MonthBlock) -> None:
+        """Знімає оформлення ролей, яких у закритому місяці не буде."""
+        ws = self.ws
+        for table in self.tables:
+            roles = block.roles.get(table.header_row, {})
+            for role, col in roles.items():
+                if role in CLOSED_ROLES:
+                    continue
+                rows = [table.header_row] + list(
+                    range(table.first_row, table.total_row + 1))
+                letter = col_letter(col)
+                dims = ws.column_dimensions
+                self._open_styles[(table.header_row, role)] = {
+                    "rows": {r: copy(ws.cell(row=r, column=col)._style)
+                             for r in rows},
+                    "width": dims[letter].width if letter in dims else None,
+                }
+
+    def has_facts(self, period: Period) -> bool:
+        """Чи заповнений факт за місяць — від нього рахується приріст наступного."""
+        block = self.block(period)
+        return bool(block) and self._has_facts(block)
+
+    def _has_facts(self, block: MonthBlock) -> bool:
+        for table in self.tables:
+            col = block.roles.get(table.header_row, {}).get("fact")
+            if not col:
+                continue
+            for r in range(table.first_row, table.last_row + 1):
+                if self.ws.cell(row=r, column=col).value not in (None, ""):
+                    return True
+        return False
 
     def _open_block(self, period: Period, start: int) -> MonthBlock:
         ws = self.ws
@@ -294,10 +342,127 @@ class Consolidated:
                     LABELS[table.metric][role].format(m=f"{period.month:02d}")
             block.roles[table.header_row] = roles
         self.blocks.append(block)
+        self._restyle(block)
         self._write_month_header(block)
         return block
 
+    # -- оформлення ------------------------------------------------------
+
+    def _restyle(self, block: MonthBlock) -> None:
+        """Переносить оформлення з відповідної колонки попереднього місяця.
+
+        При закритті місяця колонки міняють призначення: там, де був
+        плановий бонус, стає факт, а на місці «Умови акцій» — приріст.
+        Формати при цьому лишаються від старої ролі, і бонус показувався б
+        відсотком. Тому оформлення кожної колонки береться не з того, що
+        було на цьому місці, а з колонки тієї самої ролі в попередньому
+        місяці — там воно вже правильне.
+        """
+        ws = self.ws
+        for table in self.tables:
+            for role, col in block.roles.get(table.header_row, {}).items():
+                saved = self._open_styles.get((table.header_row, role))
+                if saved:
+                    for r, style in saved["rows"].items():
+                        ws.cell(row=r, column=col)._style = copy(style)
+                    if saved["width"]:
+                        ws.column_dimensions[col_letter(col)].width = saved["width"]
+                    continue
+                src = self._style_source(block, table, role)
+                if not src:
+                    continue
+                rows = [table.header_row] + list(
+                    range(table.first_row, table.total_row + 1))
+                for r in rows:
+                    ws.cell(row=r, column=col)._style = copy(
+                        ws.cell(row=r, column=src)._style)
+                self._copy_width(src, col)
+                self._fix_text_column(role, col, table)
+
+        first_src = self._style_source(block, self.tables[0], "plan")
+        if first_src:
+            ws.cell(row=2, column=block.start)._style = copy(
+                ws.cell(row=2, column=first_src)._style)
+        self._frame_block(block)
+
+    def _frame_block(self, block: MonthBlock) -> None:
+        """Відбиває місяць від сусіднього товстішою лінією.
+
+        Такий роздільник стоїть у кінці кожного місяця, а не лише
+        останнього, тому сусідні блоки не чіпаються — новому просто
+        ставиться така сама межа.
+        """
+        edge = block.start + block.width - 1
+        for table in self.tables:
+            for r in [table.header_row] + list(
+                    range(table.first_row, table.total_row + 1)):
+                self._set_right_border(r, edge, "medium")
+
+    def _set_right_border(self, row: int, col: int, style: str) -> None:
+        from openpyxl.styles import Border, Side
+
+        cell = self.ws.cell(row=row, column=col)
+        b = cell.border
+        cell.border = Border(left=b.left, top=b.top, bottom=b.bottom,
+                             right=Side(style=style, color=b.right.color),
+                             diagonal=b.diagonal, diagonalUp=b.diagonalUp,
+                             diagonalDown=b.diagonalDown)
+
+    def _fix_text_column(self, role: str, col: int, table: Table) -> None:
+        """«Умови акцій» — вільний текст, а не число.
+
+        Зразок для неї беремо з «Форми компенсації», а там стоїть
+        відсотковий формат; для текстової колонки його треба зняти,
+        інакше набране в ній число покажеться відсотком.
+        """
+        if role != "promo_terms":
+            return
+        from openpyxl.styles import Alignment
+
+        for r in range(table.header_row, table.total_row + 1):
+            cell = self.ws.cell(row=r, column=col)
+            cell.number_format = "General"
+            if r > table.header_row:
+                cell.alignment = Alignment(
+                    horizontal="left", vertical=cell.alignment.vertical,
+                    wrap_text=True)
+
+    # роль -> чим її замінити, якщо такої в попередніх місяцях не знайшлось
+    STYLE_FALLBACK = {"cost_plan": "cost_fact", "promo_terms": "compensation",
+                      "fact": "plan", "bonus_fact": "bonus_plan",
+                      "growth_fact": "growth_plan"}
+
+    def _style_source(self, block: MonthBlock, table: Table,
+                      role: str) -> int | None:
+        """Колонка тієї самої ролі в найближчому попередньому місяці."""
+        earlier = sorted([b for b in self.blocks
+                          if b.start < block.start and b.period < block.period],
+                         key=lambda b: b.start, reverse=True)
+        for wanted in (role, self.STYLE_FALLBACK.get(role)):
+            if not wanted:
+                continue
+            for other in earlier:
+                col = other.roles.get(table.header_row, {}).get(wanted)
+                if col:
+                    return col
+        return None
+
+    def _copy_width(self, src: int, dst: int) -> None:
+        dims = self.ws.column_dimensions
+        src_letter, dst_letter = col_letter(src), col_letter(dst)
+        if src_letter in dims and dims[src_letter].width:
+            dims[dst_letter].width = dims[src_letter].width
+
     def _write_month_header(self, block: MonthBlock) -> None:
+        # шапка місяця обʼєднана на всю ширину блоку; при закритті блок
+        # розширюється, тож старе обʼєднання треба перескласти
+        end = block.start + block.width - 1
+        for rng in list(self.ws.merged_cells.ranges):
+            if rng.min_row == 2 and rng.min_col == block.start:
+                self.ws.unmerge_cells(str(rng))
+        if end > block.start:
+            self.ws.merge_cells(start_row=2, start_column=block.start,
+                                end_row=2, end_column=end)
         cell = self.ws.cell(row=2, column=block.start)
         cell.value = dt.datetime(block.period.year, block.period.month, 1)
         cell.number_format = "mmm-yy"

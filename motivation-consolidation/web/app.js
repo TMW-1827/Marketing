@@ -297,11 +297,16 @@ async function openConfirm() {
       <li>створить заготовку нового місяця</li>
       <li>перенесе умови акцій із планового аркуша</li>
     </ul></div>` : '';
+  const factWarn = p.closing_without_facts ? `<div class="banner warn">
+    <b>Увага:</b> у ${esc(p.closing)} не заповнений факт. Приріст нового
+    місяця рахується саме від нього, тож у тих клітинках буде помилка
+    ділення. Якщо факт за ${esc(p.closing)} уже є у файлах — спершу внеси
+    його, а вже потім план нового місяця.</div>` : '';
 
   $('#modal-body').innerHTML = `
     <h2>Підтвердження запису</h2>
     <p class="muted">Перевір, що саме буде записано у зведену.</p>
-    ${banner}
+    ${banner}${factWarn}
     <table><thead><tr><th>Дистриб'ютор</th><th>Показник</th><th>Місяць</th>
       <th>План</th><th>Факт</th><th>Бонус план</th><th>Бонус факт</th></tr>
       </thead><tbody>${rows}</tbody></table>
@@ -328,6 +333,8 @@ async function doApply(ready) {
          оновлений файл — він живе лише в цій вкладці.</p>
       <table><thead><tr><th>Дистриб'ютор</th><th>Показник</th><th>Місяць</th>
         <th>Клітинки</th></tr></thead><tbody>${rows}</tbody></table>
+      ${(r.notes || []).length ? `<div class="banner warn">${
+        r.notes.map(n => esc(n)).join('<br>')}</div>` : ''}
       ${r.dropped.length ? `<div class="banner">При закритті місяця втрачено:
         <ul style="margin:8px 0 0 18px">${r.dropped.map(d =>
           `<li>${esc(d)}</li>`).join('')}</ul></div>` : ''}

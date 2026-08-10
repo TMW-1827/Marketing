@@ -224,6 +224,96 @@ def build_consolidated() -> str:
     return path
 
 
+def styled_consolidated() -> str:
+    """Зведена з оформленням — щоб перевірити, що нові колонки його успадкують."""
+    import datetime as dt
+    from openpyxl.styles import Border, Side, Alignment
+
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Акції та мотивації ТК"
+    ws["C2"] = dt.datetime(2026, 1, 1)
+    ws.merge_cells(start_row=2, start_column=3, end_row=2, end_column=10)
+    heads = ["План продаж 01", "Факт продаж 01", "Бонус план 01 грн",
+             "Бонус факт 01, грн", "План приріст до минулого місяця, %",
+             "Факт приріст до минулого місяця, %", "Форма компенсації",
+             "Затратність на мотивації з 1 пл, грн, факт"]
+    formats = ["#,##0", "#,##0", "#,##0", "#,##0.00", "0%", "0%",
+               "General", "#,##0.00"]
+    ws["B3"] = "Дистрибютор"
+    ws["B4"] = "Тест Дистриб"
+    ws["B5"] = "Сума"
+    edge = Border(left=Side(style="thin"), right=Side(style="thin"),
+                  top=Side(style="thin"), bottom=Side(style="thin"))
+    for i, (head, fmt) in enumerate(zip(heads, formats)):
+        col = 3 + i
+        ws.cell(row=3, column=col).value = head
+        openpyxl.utils.get_column_letter(col)
+        ws.column_dimensions[openpyxl.utils.get_column_letter(col)].width = 12 + i
+        for row in (3, 4, 5):
+            cell = ws.cell(row=row, column=col)
+            cell.number_format = fmt
+            cell.border = edge
+            cell.alignment = Alignment(horizontal="center")
+    for i, v in enumerate([1000, 1100, 500, 550]):
+        ws.cell(row=4, column=3 + i).value = v
+    path = os.path.join(tempfile.mkdtemp(), "зведена.xlsx")
+    wb.save(path)
+    return path
+
+
+def test_new_month_inherits_formatting():
+    """Нові колонки беруть оформлення з тієї самої ролі минулого місяця."""
+    path = styled_consolidated()
+    cons = Consolidated(path)
+    cons.ensure_month(Period(2026, 2))
+    cons.save()
+
+    ws = openpyxl.load_workbook(path)["Акції та мотивації ТК"]
+    # лютий відкритий: план, бонус план, приріст план, затратність план, умови
+    assert ws.cell(row=4, column=11).number_format == "#,##0"      # план
+    assert ws.cell(row=4, column=12).number_format == "#,##0"      # бонус план
+    assert ws.cell(row=4, column=13).number_format == "0%"         # приріст
+    # затратність плану бере оформлення від затратності факту
+    assert ws.cell(row=4, column=14).number_format == "#,##0.00"
+    for col in range(11, 16):
+        assert ws.cell(row=4, column=col).border.top.style,             f"колонка {col} лишилась без меж"
+        assert ws.column_dimensions[
+            openpyxl.utils.get_column_letter(col)].width
+
+
+def test_closing_month_keeps_roles_and_formats_aligned():
+    """При закритті колонки міняють роль — формат має піти за роллю."""
+    path = styled_consolidated()
+    cons = Consolidated(path)
+    cons.ensure_month(Period(2026, 2))          # лютий відкритий, 5 колонок
+    cons.save()
+    cons = Consolidated(path)
+    cons.ensure_month(Period(2026, 3))          # лютий закривається
+    cons.save()
+
+    ws = openpyxl.load_workbook(path)["Акції та мотивації ТК"]
+    formats = [ws.cell(row=4, column=c).number_format for c in range(11, 19)]
+    assert formats == ["#,##0", "#,##0", "#,##0", "#,##0.00",
+                       "0%", "0%", "General", "#,##0.00"]
+    # шапка місяця розтягнулась на всю ширину закритого блоку
+    merged = {str(r) for r in ws.merged_cells.ranges}
+    assert "K2:R2" in merged
+
+
+def test_closing_without_facts_is_reported():
+    path = styled_consolidated()
+    cons = Consolidated(path)
+    cons.ensure_month(Period(2026, 2))
+    cons.write(Period(2026, 2), "sales", "Тест Дистриб", {"plan": 2000})
+    cons.save()
+    cons = Consolidated(path)
+    cons.ensure_month(Period(2026, 3))
+    assert any("без факту" in n for n in cons.notes)
+    assert cons.has_facts(Period(2026, 1)) is True
+    assert cons.has_facts(Period(2026, 2)) is False
+
+
 def test_opening_new_month_keeps_previous_values():
     path = build_consolidated()
     cons = Consolidated(path)
