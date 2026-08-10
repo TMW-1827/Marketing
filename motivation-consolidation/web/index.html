@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Зведення мотивацій — ТМ Трускавецька</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>📊</text></svg>">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>Зведення мотивацій · ТМ Трускавецька</h1>
+  <span class="spacer"></span>
+  <span class="status" id="state">завантаження середовища…</span>
+  <button class="ghost" id="btn-download" disabled>Завантажити зведену</button>
+</header>
+
+<main>
+  <section class="card" id="boot">
+    <div class="step">Підготовка</div>
+    <div id="boot-state">
+      <p style="margin:0">Сторінка обробляє файли просто у браузері — нічого
+      нікуди не відправляється. Перший запуск триває до хвилини, поки
+      завантажиться середовище.</p>
+      <div class="progress"><div id="boot-bar"></div></div>
+      <p class="muted" id="boot-note" style="margin:8px 0 0">запускаю…</p>
+    </div>
+  </section>
+
+  <section class="card hide" id="step-cons">
+    <div class="step">Крок 1 · Зведена таблиця</div>
+    <div id="cons-state"></div>
+  </section>
+
+  <section class="card hide" id="step-files">
+    <div class="step">Крок 2 · Файли дистриб'юторів</div>
+    <div class="drop" id="drop">
+      <strong>Перетягни сюди файли Excel</strong>
+      <span>або натисни, щоб обрати. Можна кілька одразу — система сама
+            визначить дистриб'ютора і місяць</span>
+    </div>
+    <input type="file" id="picker" multiple accept=".xls,.xlsx,.xlsm" class="hide">
+    <div id="queue"></div>
+  </section>
+
+  <div id="files"></div>
+</main>
+
+<div class="bar hide" id="bar">
+  <span id="summary" class="status"></span>
+  <span class="spacer"></span>
+  <label class="status"><input type="checkbox" id="fixtotals"> заразом
+    полагодити діапазони «Сума»</label>
+  <button class="ghost" id="btn-clear">Очистити список</button>
+  <button class="primary" id="btn-apply">Внести у зведену</button>
+</div>
+
+<div class="modal" id="modal">
+  <div class="modal-inner" id="modal-body"></div>
+</div>
+
+<script>
+  // середовище Python: типово з CDN, але ?pyodide=<адреса> перемикає
+  // на локальну копію — для роботи без інтернету
+  (function () {
+    const local = new URLSearchParams(location.search).get('pyodide');
+    const base = local || 'https://cdn.jsdelivr.net/pyodide/v0.28.3/full/';
+    document.write('<script src="' + base + 'pyodide.js"><\/script>');
+  })();
+</script>
+<script src="app.js"></script>
+</body>
+</html>

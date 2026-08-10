@@ -1,0 +1,64 @@
+# Відповідність між назвою дистриб'ютора у файлі-джерелі та рядком зведеної.
+#
+# `match` — фрагменти, які шукаються в рядку «Дистрибютор — ...» джерела.
+# Виграє найдовший збіг, тому «Буковина Трек ІФ» не плутається
+# з «Буковина Трек».
+#
+# `promo` — чи веде дистриб'ютор облік залишків акційної продукції
+# (Блок 2). У кого не веде — відсутність блоку не вважається помилкою.
+
+settings:
+  # допуск при звірці чисел; менші розбіжності вважаються округленням
+  tolerance: 0.51
+  # межі, поза якими виконання плану виглядає підозріло
+  performance_min: 0.30
+  performance_max: 2.00
+  # у скільки разів затратність може відхилятись від медіани за пів року
+  cost_deviation: 2.0
+
+distributors:
+  - consolidated: "ФОП Капуста О.Б."
+    match: ["Капуста"]
+    promo: true
+  - consolidated: "АДК ЛЛІР / НЕОШ-М"
+    match: ["Адк Ллір", "АДК ЛЛІР"]
+    promo: true
+  - consolidated: "Омела Маркет"
+    match: ["Омела Маркет"]
+    promo: true
+  - consolidated: "Омела"
+    match: ["ТОВ Омела"]
+    promo: true
+  - consolidated: "Алекс ком"
+    match: ["Алекс ком"]
+    promo: true
+  - consolidated: "ТОВ ГалаТеа"
+    match: ["ГалаТеа"]
+    promo: true
+  - consolidated: "Буковина Трек Чернівці"
+    match: ["Буковина Трек"]
+    promo: true
+  - consolidated: "Буковина Трек ІФ"
+    match: ["Буковина Трек ІФ"]
+    promo: false
+  - consolidated: "Улянченко"
+    match: ["Улянченко"]
+    promo: true
+  - consolidated: "ТОВ РДК"
+    match: ["РДК"]
+    promo: false
+  - consolidated: "ФОП Терещенко"
+    match: ["Терещенко"]
+    promo: true
+  - consolidated: "Олга Торг"
+    match: ["Олга Торг"]
+    promo: false
+  - consolidated: "ТД Бойчак"
+    match: ["Бойчак"]
+    promo: true
+  - consolidated: "Полісся Продукт"
+    match: ["Полісся Продукт"]
+    promo: true
+  - consolidated: "Мілана Логістик"
+    match: ["Мілана Логістик"]
+    promo: true
