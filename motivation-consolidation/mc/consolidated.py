@@ -237,10 +237,17 @@ class Consolidated:
 
     # -- запис -----------------------------------------------------------
 
-    def ensure_month(self, period: Period) -> MonthBlock:
-        """Готує колонки під місяць: закриває попередній, відкриває новий."""
+    def ensure_month(self, period: Period, closed: bool = False) -> MonthBlock:
+        """Готує колонки під місяць.
+
+        `closed=True` означає, що для місяця вже є факт: у відкритій
+        розкладці колонок факту немає взагалі, тож без цього значення
+        просто нікуди було б записати.
+        """
         existing = self.block(period)
         if existing:
+            if closed and not existing.closed:
+                self._close_block(existing, quiet=True)
             return existing
 
         last = self.blocks[-1]
@@ -250,9 +257,12 @@ class Consolidated:
         if not last.closed:
             self._close_block(last)
         start = last.start + last.width
-        return self._open_block(period, start)
+        block = self._open_block(period, start)
+        if closed:
+            self._close_block(block, quiet=True)
+        return block
 
-    def _close_block(self, block: MonthBlock) -> None:
+    def _close_block(self, block: MonthBlock, quiet: bool = False) -> None:
         """Перебудовує відкритий блок (5 колонок) у закритий (8)."""
         ws = self.ws
         saved: dict[int, dict[str, object]] = {}
@@ -276,7 +286,7 @@ class Consolidated:
                         f"({filled} знач.) — у закритому місяці такої колонки немає")
 
         self._remember_open_styles(block)
-        if not self._has_facts(block):
+        if not quiet and not self._has_facts(block):
             self.notes.append(
                 f"{block.period.label}: місяць закрито без факту. Приріст "
                 f"наступного місяця рахується від факту цього, тож поки він "

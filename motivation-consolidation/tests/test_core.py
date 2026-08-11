@@ -350,6 +350,48 @@ def test_closing_month_keeps_roles_and_formats_aligned():
     assert "K2:R2" in merged
 
 
+def test_new_month_with_facts_gets_fact_columns():
+    """Місяць із фактом створюється одразу закритим.
+
+    У відкритій розкладці колонки факту немає взагалі, тож без цього
+    факти й бонуси факту мовчки нікуди не потрапляли б.
+    """
+    path = styled_consolidated()
+    cons = Consolidated(path)
+    cons.ensure_month(Period(2026, 2), closed=True)
+    cons.write(Period(2026, 2), "sales", "Тест Дистриб",
+               {"plan": 2000, "fact": 2200, "bonus_plan": 600,
+                "bonus_fact": 660})
+    cons.save()
+
+    again = Consolidated(path)
+    feb = again.read(Period(2026, 2), "sales", "Тест Дистриб")
+    assert feb["plan"] == 2000 and feb["fact"] == 2200
+    assert feb["bonus_plan"] == 600 and feb["bonus_fact"] == 660
+    assert again.block(Period(2026, 2)).closed
+
+
+def test_existing_open_month_is_closed_when_facts_arrive():
+    """Факт за вже відкритий місяць має дописатись, а не загубитись."""
+    path = styled_consolidated()
+    cons = Consolidated(path)
+    cons.ensure_month(Period(2026, 2))                 # відкритий, без факту
+    cons.write(Period(2026, 2), "sales", "Тест Дистриб", {"plan": 2000})
+    cons.save()
+
+    cons = Consolidated(path)
+    assert not cons.block(Period(2026, 2)).closed
+    cons.ensure_month(Period(2026, 2), closed=True)
+    cons.write(Period(2026, 2), "sales", "Тест Дистриб",
+               {"fact": 2200, "bonus_fact": 660})
+    cons.save()
+
+    again = Consolidated(path)
+    feb = again.read(Period(2026, 2), "sales", "Тест Дистриб")
+    assert feb["plan"] == 2000 and feb["fact"] == 2200
+    assert feb["bonus_fact"] == 660
+
+
 def test_closing_without_facts_is_reported():
     path = styled_consolidated()
     cons = Consolidated(path)

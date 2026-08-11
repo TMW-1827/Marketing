@@ -286,7 +286,7 @@ async function openConfirm() {
   const ready = FILES.filter(f => !f.fatal && f.ok);
   const p = await call('preview', ready, CONS);
   const rows = p.rows.map(r => `<tr><td>${esc(r.distributor)}</td>
-    <td>${esc(r.metric)}</td><td>${esc(r.period)}</td><td>${num(r.plan)}</td>
+    <td>${esc(r.metric_label)}</td><td>${esc(r.period)}</td><td>${num(r.plan)}</td>
     <td>${num(r.fact)}</td><td>${num(r.bonus_plan)}</td>
     <td>${num(r.bonus_fact)}</td></tr>`).join('');
   const banner = p.new_months.length ? `<div class="banner">
@@ -325,7 +325,7 @@ async function doApply(ready) {
   try {
     const r = await call('apply_cards', ready, CONS, $('#fixtotals').checked);
     const rows = r.applied.map(a => `<tr><td>${esc(a.name)}</td>
-      <td>${esc(a.metric)}</td><td>${esc(a.period)}</td>
+      <td>${esc(a.metric_label)}</td><td>${esc(a.period)}</td>
       <td class="muted">${esc(a.cells.join(', '))}</td></tr>`).join('');
     $('#modal-body').innerHTML = `
       <h2>Готово</h2>
