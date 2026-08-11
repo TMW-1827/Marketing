@@ -27,6 +27,26 @@ LEVEL_ORDER = {"ERROR": 0, "WARN": 1, "INFO": 2}
 # колонок; тримаємо розібрану копію, поки файл на диску не змінився
 _CONS_CACHE: dict[str, tuple[float, Consolidated]] = {}
 METRIC_LABEL = {"sales": "продажі", "akb": "АКБ", "revenue": "сума ВП"}
+# порядок показу: спершу продажі, далі АКБ, далі сума ВП
+METRIC_ORDER = {"sales": 0, "akb": 1, "revenue": 2}
+UA_ALPHABET = "абвгґдеєжзиіїйклмнопрстуфхцчшщьюя"
+
+
+def _ua_key(text: str) -> list[int]:
+    """Ключ для сортування українською.
+
+    Звичайне порівняння рядків ставить «і», «ї», «є» після «я», бо в
+    таблиці символів вони лежать поза основним блоком.
+    """
+    return [UA_ALPHABET.index(ch) if ch in UA_ALPHABET else 100 + ord(ch)
+            for ch in (text or "").lower()]
+
+
+def _row_order(row: dict) -> tuple:
+    """Продажі → АКБ → сума ВП, далі дистриб'ютор, далі факт перед планом."""
+    return (METRIC_ORDER.get(row.get("metric"), 9),
+            _ua_key(row.get("distributor") or ""),
+            0 if row.get("fact") is not None else 1)
 
 
 def _fmt(value):
@@ -86,11 +106,34 @@ def analyse(path: str, filename: str, consolidated: str | None = None,
         os.path.exists(consolidated) else None
     cards = [_card(sf, cfg, cons, period, filename)
              for period in periods_to_apply(sf, cons)]
+    _drop_stale_warnings(cards)
     if not cards:
         cards.append({"filename": filename, "distributor": sf.distributor_raw,
                       "fatal": "усе, що є в цьому файлі, вже внесено "
                                "у зведену"})
     return cards
+
+
+def _drop_stale_warnings(cards: list[dict]) -> None:
+    """Прибирає зауваження, які знімає сусідня картка того самого файлу.
+
+    Файл зазвичай приносить одразу факт місяця і план наступного. Поки
+    факт не записано, зведена його не бачить — і на плановій картці
+    зʼявляється попередження, що приріст нема від чого рахувати. Але факт
+    лежить у сусідній картці й буде внесений раніше, тож попередження
+    стосується стану, якого вже не буде.
+    """
+    with_fact = {card["period"] for card in cards
+                 if any(b.get("fact") is not None for b in card.get("blocks", []))}
+    for card in cards:
+        if "period" not in card:
+            continue
+        previous = str(_period_of(card).prev)
+        if previous not in with_fact:
+            continue
+        card["findings"] = [f for f in card["findings"] if f["code"] != "C3"]
+        card["counts"]["warn"] = sum(1 for f in card["findings"]
+                                     if f["level"] == "WARN")
 
 
 def _card(sf, cfg, cons, period: Period, filename: str) -> dict:
@@ -179,13 +222,15 @@ def preview(cards: list[dict], consolidated: str) -> dict:
         for block in card["blocks"]:
             rows.append({
                 "distributor": card["consolidated_name"],
-                "metric": block["metric_label"],
+                "metric": block["metric"],
+                "metric_label": block["metric_label"],
                 "period": card["period_label"],
                 "plan": block["plan"], "fact": block["fact"],
                 "bonus_plan": block["bonus_plan"],
                 "bonus_fact": block["bonus_fact"],
                 "promo": bool(block["promo_terms"]),
             })
+    rows.sort(key=_row_order)
     last = cons.blocks[-1] if cons.blocks else None
     closing = (last.period.label
                if new_months and last and not last.closed else None)
@@ -218,8 +263,12 @@ def apply_cards(cards: list[dict], consolidated: str,
                             "reason": "лишились помилки"})
             continue
         period = _period_of(card)
+        # у картці є факт — місяць має бути в закритій розкладці,
+        # інакше колонок під факт просто не існує
+        has_facts = any(b.get("fact") is not None or b.get("bonus_fact") is not None
+                        for b in card["blocks"])
         try:
-            cons.ensure_month(period)
+            cons.ensure_month(period, closed=has_facts)
         except ValueError as exc:
             skipped.append({"name": card["consolidated_name"],
                             "reason": str(exc)})
@@ -240,12 +289,19 @@ def apply_cards(cards: list[dict], consolidated: str,
                                 "reason": str(exc)})
                 continue
             applied.append({"name": card["consolidated_name"],
-                            "metric": block["metric_label"],
+                            "metric": block["metric"],
+                            "metric_label": block["metric_label"],
                             "period": card["period_label"],
+                            "fact": block["fact"],
                             "cells": cells})
 
     fixed = cons.refresh_totals() if fix_totals else []
     cons.save()
+    # записуємо хронологічно, а показуємо в тому ж порядку, що й у вікні
+    # підтвердження — щоб рядки можна було звірити один в один
+    applied.sort(key=lambda a: (METRIC_ORDER.get(a["metric"], 9),
+                                _ua_key(a["name"]),
+                                0 if a.get("fact") is not None else 1))
     return {"applied": applied, "skipped": skipped, "fixed": fixed,
             "dropped": cons.dropped, "notes": cons.notes,
             "backup": os.path.basename(backup) if backup else None}
