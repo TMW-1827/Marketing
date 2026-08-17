@@ -1,12 +1,13 @@
 name: Публікація сайту
 
-# Збирає навчальний портал і публікує його разом зі звітами на GitHub Pages.
+# Збирає портали і публікує їх разом зі звітами на GitHub Pages.
 #
 # Вимагає Settings → Pages → Source: GitHub Actions.
 #
-# Публікує ВЕСЬ сайт — звіти й портали з кореня репозиторію та
-# свіжозібраний навчальний портал у /training-portal/. Усе лишається
-# за тими самими адресами, що й за гілкової публікації.
+# Публікує ВЕСЬ сайт — звіти й портали з кореня репозиторію, свіжозібраний
+# навчальний портал у /training-portal/ і зовнішній портал для партнерів
+# у /partner-portal/. Усе лишається за тими самими адресами, що й за
+# гілкової публікації.
 #
 # Не запускайте цей workflow, поки Source ще «Deploy from a branch»:
 # GitHub тоді на кожен push збирає сайт сам, і дві публікації одного
@@ -38,29 +39,41 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: training-portal-src/package-lock.json
+          cache-dependency-path: |
+            training-portal-src/package-lock.json
+            partner-portal-src/package-lock.json
 
-      - name: Встановити залежності порталу
+      - name: Встановити залежності навчального порталу
         working-directory: training-portal-src
         run: npm ci
 
-      - name: Зібрати портал
+      - name: Зібрати навчальний портал
         working-directory: training-portal-src
         run: npm run build
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
 
+      - name: Встановити залежності зовнішнього порталу
+        working-directory: partner-portal-src
+        run: npm ci
+
+      - name: Зібрати зовнішній портал
+        working-directory: partner-portal-src
+        run: npm run build
+
       - name: Зібрати сайт докупи
         run: |
           mkdir -p _site
           # Звіти та решта статики з кореня — без вихідних файлів порталу
           rsync -a --exclude '_site' --exclude 'training-portal-src' \
-                   --exclude 'training-portal' --exclude '.git' \
+                   --exclude 'training-portal' --exclude 'partner-portal-src' \
+                   --exclude 'partner-portal' --exclude '.git' \
                    --exclude '.github' ./ _site/
-          # Свіжозібраний портал кладемо поверх того, що лежить у репозиторії
-          mkdir -p _site/training-portal
+          # Свіжозібрані портали кладемо поверх того, що лежить у репозиторії
+          mkdir -p _site/training-portal _site/partner-portal
           cp -r training-portal-src/dist/. _site/training-portal/
+          cp -r partner-portal-src/dist/. _site/partner-portal/
 
       - uses: actions/upload-pages-artifact@v3
         with:
