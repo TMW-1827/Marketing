@@ -43,9 +43,14 @@ npm install
 npm run dev        # http://localhost:5174
 npm run typecheck
 npm run build      # → dist/
+npm run build:demo # → dist-demo/index.html — усе одним самодостатнім файлом
 npm run preview    # http://localhost:4173
 npm run smoke      # перевірка сценаріїв у браузері; потрібен запущений preview
 ```
+
+`build:demo` інлайнить у єдиний HTML увесь код, стилі та шрифти й не реєструє
+service worker. Такий файл відкривається з диска і працює без мережі — зручно
+показати портал за посиланням або надіслати вкладенням до погодження.
 
 Для `smoke` потрібен браузер Playwright: `npx playwright install chromium`.
 
