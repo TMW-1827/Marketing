@@ -1,0 +1,824 @@
+/* Компоненти контенту: картки, нотатки, таблиці, списки, кнопки. */
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.lede {
+  font-size: 15.5px;
+  line-height: 1.62;
+  color: var(--ink-soft);
+  max-width: 68ch;
+  margin-bottom: 22px;
+}
+
+.rule {
+  height: 3px;
+  background: var(--ink);
+  width: 52px;
+  margin: 14px 0 20px;
+}
+
+/* ---------- Картки ---------- */
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 17px 16px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-card);
+}
+
+.card > h3 {
+  margin-bottom: 12px;
+}
+
+.card--blue {
+  border-left: 3px solid var(--blue);
+}
+.card--green {
+  border-left: 3px solid var(--green);
+}
+.card--red {
+  border-left: 3px solid var(--warn);
+}
+
+.card__title--green {
+  color: var(--ok);
+}
+.card__title--red {
+  color: var(--warn);
+}
+
+.card > *:last-child {
+  margin-bottom: 0;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+/* ---------- Показники ---------- */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 11px;
+  margin-bottom: 22px;
+}
+
+.stat {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--blue);
+  border-radius: 10px;
+  padding: 13px 14px;
+}
+
+.stat__value {
+  font-family: var(--disp);
+  font-size: 31px;
+  font-weight: 900;
+  line-height: 0.94;
+  color: var(--blue);
+}
+
+.stat__value small {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+/* Порожній показник: словами й дрібніше — велика риска читається як помилка */
+.stat__value--empty {
+  font-family: var(--body);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink-faint);
+  line-height: 1.3;
+}
+
+.stat__label {
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  margin-top: 7px;
+  line-height: 1.45;
+}
+
+.stat--green {
+  border-left-color: var(--green);
+}
+.stat--green .stat__value {
+  color: var(--green);
+}
+
+/* ---------- Слоган ---------- */
+
+.display {
+  font-family: var(--disp);
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.display--primary {
+  font-size: clamp(28px, 7vw, 38px);
+  color: var(--blue);
+}
+
+.display--muted {
+  font-size: clamp(21px, 5.5vw, 25px);
+  color: var(--ink-soft);
+  font-weight: 800;
+  margin-top: 22px;
+}
+
+.display__caption {
+  font-size: 13.5px;
+  color: var(--ink-soft);
+}
+
+/* ---------- Таблиці ---------- */
+
+.tablewrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  position: relative;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 7px 8px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+
+th {
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  font-weight: 600;
+  background: var(--card-soft);
+  position: sticky;
+  top: 0;
+}
+
+td.num,
+th.num {
+  text-align: right;
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+
+tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+td.comment {
+  color: var(--ink-soft);
+  font-size: 11.5px;
+  line-height: 1.55;
+}
+
+/* ---------- Списки ---------- */
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 14px;
+}
+
+.list li {
+  padding: 9px 0 9px 26px;
+  border-bottom: 1px solid var(--line);
+  position: relative;
+  font-size: 14px;
+}
+
+.list li:last-child {
+  border-bottom: 0;
+}
+
+.list li::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 17px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--blue);
+}
+
+.list--green li::before {
+  background: var(--green);
+}
+
+.list--check li::before {
+  content: '✓';
+  background: none;
+  left: 2px;
+  top: 9px;
+  width: auto;
+  height: auto;
+  color: var(--green);
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.list--cross li::before {
+  content: '×';
+  background: none;
+  left: 2px;
+  top: 8px;
+  width: auto;
+  height: auto;
+  color: var(--warn);
+  font-weight: 700;
+  font-size: 17px;
+}
+
+.steps {
+  counter-reset: step;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.steps li {
+  position: relative;
+  padding: 0 0 14px 34px;
+  font-size: 14px;
+}
+
+.steps li::before {
+  counter-increment: step;
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--info-bg);
+  color: var(--blue-deep);
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.steps li:last-child {
+  padding-bottom: 0;
+}
+
+/* ---------- Нотатки ---------- */
+
+.note {
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin: 14px 0;
+  font-size: 13.5px;
+  border: 1px solid;
+}
+
+/* Заголовок нотатки — тільки провідний <b>. Жирний текст усередині речення
+   лишається звичайним: інакше «19 із 20» перетворювалось би на «19 ІЗ 20». */
+.note > b:first-child {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 12.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.note--ok {
+  background: var(--ok-bg);
+  border-color: var(--ok-line);
+}
+.note--warn {
+  background: var(--warn-bg);
+  border-color: var(--warn-line);
+}
+.note--info {
+  background: var(--info-bg);
+  border-color: var(--info-line);
+}
+.note--amber {
+  background: var(--amber-bg);
+  border-color: var(--amber-line);
+}
+
+/* ---------- Мітки ---------- */
+
+.tags {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.tag {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 20px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.tag--blue {
+  background: #e4effa;
+  color: var(--blue-deep);
+}
+.tag--green {
+  background: var(--ok-bg);
+  color: var(--ok);
+}
+.tag--amber {
+  background: var(--amber-bg);
+  color: var(--amber);
+}
+.tag--red {
+  background: var(--warn-bg);
+  color: var(--warn);
+}
+.tag--neutral {
+  background: #eef2f6;
+  color: var(--ink-soft);
+}
+
+/* ---------- Означення ---------- */
+
+.definitions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  font-size: 13.5px;
+  margin: 0;
+}
+
+.definitions dt {
+  color: var(--ink-soft);
+  padding: 8px 0 0;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.definitions dd {
+  margin: 0;
+  padding: 1px 0 8px;
+  border-bottom: 1px solid var(--line);
+  font-weight: 600;
+  font-size: 14.5px;
+}
+
+.definitions dd:last-child {
+  border-bottom: 0;
+}
+
+.definitions--wide dt {
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.definitions--wide dd {
+  font-weight: 400;
+  font-size: 13.5px;
+  color: var(--ink-soft);
+}
+
+.codeblock {
+  font-family: var(--mono);
+  background: var(--card-soft);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 12px 14px;
+  font-size: 12px;
+  line-height: 1.9;
+  overflow-wrap: anywhere;
+  margin-bottom: 14px;
+}
+
+/* ---------- Кольори бренду ---------- */
+
+.swatches {
+  display: flex;
+  gap: 11px;
+  flex-wrap: wrap;
+}
+
+.swatches > div {
+  flex: 1 1 118px;
+  min-width: 110px;
+}
+
+.swatch__chip {
+  height: 54px;
+  border-radius: var(--r-sm);
+  border: 1px solid rgba(11, 33, 55, 0.12);
+}
+
+.swatch__label {
+  font-family: var(--mono);
+  font-size: 11px;
+  margin-top: 7px;
+  line-height: 1.5;
+}
+
+/* ---------- Кнопки й поля ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: var(--tap);
+  background: var(--blue);
+  color: #fff;
+  border: 0;
+  border-radius: var(--r-sm);
+  padding: 12px 20px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btn:hover:not(:disabled) {
+  background: var(--blue-deep);
+}
+
+.btn--ghost {
+  background: #fff;
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+
+.btn--ghost:hover:not(:disabled) {
+  background: var(--paper);
+}
+
+.btn--green {
+  background: var(--green);
+}
+
+.btn--green:hover:not(:disabled) {
+  background: var(--green-deep);
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+select,
+input[type='text'],
+input[type='email'],
+input[type='password'],
+input[type='search'],
+input[type='number'] {
+  font-family: var(--body);
+  /* 16px — інакше Safari на iOS зумить сторінку при фокусі */
+  font-size: 16px;
+  padding: 10px 11px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: #fff;
+  color: var(--ink);
+  min-height: var(--tap);
+  width: 100%;
+}
+
+select:focus,
+input:focus {
+  outline: 2px solid var(--blue);
+  outline-offset: -1px;
+}
+
+.field-label {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+/* ---------- Перехід між розділами ---------- */
+
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 30px;
+}
+
+/* ---------- Плитка переходів (головна) ---------- */
+
+.linkgrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.linkcard {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: start;
+  gap: 2px 12px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--blue);
+  border-radius: var(--r-md);
+  padding: 14px 16px;
+  text-decoration: none;
+  color: var(--ink);
+  box-shadow: var(--shadow-card);
+  transition:
+    transform 0.14s ease,
+    border-color 0.14s ease;
+}
+
+.linkcard:hover {
+  transform: translateY(-2px);
+  border-color: var(--blue);
+}
+
+.linkcard--green {
+  border-left-color: var(--green);
+}
+
+.linkcard--green:hover {
+  border-color: var(--green);
+}
+
+.linkcard--red {
+  border-left-color: var(--red);
+}
+
+.linkcard--red:hover {
+  border-color: var(--red);
+}
+
+.linkcard b {
+  font-family: var(--disp);
+  font-weight: 800;
+  font-size: 21px;
+  text-transform: uppercase;
+  line-height: 1.05;
+}
+
+.linkcard span {
+  grid-column: 1;
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.55;
+}
+
+.linkcard i {
+  grid-row: 1 / span 2;
+  grid-column: 2;
+  align-self: center;
+  font-style: normal;
+  color: var(--ink-faint);
+  font-size: 18px;
+}
+
+/* ---------- Питання-відповіді ---------- */
+
+.faq {
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: #fff;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.faq details + details {
+  border-top: 1px solid var(--line);
+}
+
+.faq summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 13px 40px 13px 16px;
+  font-weight: 600;
+  font-size: 14.5px;
+  min-height: var(--tap);
+  position: relative;
+}
+
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Стрілка-шеврон; повертається, коли відповідь розгорнута */
+.faq summary::after {
+  content: '';
+  position: absolute;
+  right: 18px;
+  top: 20px;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid var(--ink-faint);
+  border-bottom: 2px solid var(--ink-faint);
+  transform: rotate(45deg);
+  transition: transform 0.16s ease;
+}
+
+.faq details[open] summary {
+  color: var(--blue);
+}
+
+.faq details[open] summary::after {
+  transform: rotate(-135deg);
+  top: 23px;
+}
+
+.faq details p {
+  margin: 0;
+  padding: 0 16px 15px;
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+/* ---------- Контакти ---------- */
+
+.contacts {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.contact {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 14px 16px;
+  box-shadow: var(--shadow-card);
+}
+
+.contact__label {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.contact__value {
+  display: block;
+  font-family: var(--disp);
+  font-weight: 800;
+  font-size: 24px;
+  line-height: 1.1;
+  color: var(--blue);
+  text-decoration: none;
+  font-variant-numeric: tabular-nums;
+}
+
+a.contact__value:hover {
+  text-decoration: underline;
+}
+
+.contact__note {
+  display: block;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  margin-top: 5px;
+}
+
+.footer-note {
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  border-top: 1px solid var(--line);
+  margin-top: 30px;
+  padding-top: 16px;
+  line-height: 1.7;
+}
+
+/* ---------- Десктоп ---------- */
+
+@media (min-width: 641px) {
+  .card {
+    padding: 22px 24px;
+    border-radius: 12px;
+  }
+
+  .linkgrid,
+  .contacts {
+    grid-template-columns: repeat(auto-fit, minmax(268px, 1fr));
+    gap: 12px;
+  }
+
+  .lede {
+    font-size: 17px;
+    margin-bottom: 28px;
+  }
+
+  .rule {
+    margin: 18px 0 26px;
+  }
+
+  table {
+    font-size: 13px;
+  }
+
+  th,
+  td {
+    padding: 9px 11px;
+  }
+
+  td.comment {
+    font-size: 12.5px;
+    max-width: 460px;
+  }
+
+  .stats {
+    grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));
+    gap: 14px;
+  }
+
+  .stat {
+    padding: 16px 18px;
+  }
+
+  .stat__value {
+    font-size: 38px;
+  }
+
+  .stat__value small {
+    font-size: 18px;
+  }
+
+  .definitions {
+    grid-template-columns: 1fr auto;
+    gap: 2px 14px;
+  }
+
+  .definitions dt {
+    padding: 7px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 13.5px;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  .definitions dd {
+    padding: 7px 0;
+    text-align: right;
+    font-size: 13.5px;
+  }
+
+  .definitions--wide {
+    grid-template-columns: 190px 1fr;
+  }
+
+  .definitions--wide dd {
+    text-align: left;
+  }
+
+  .columns {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+  }
+
+  .columns > .card {
+    margin-bottom: 0;
+  }
+}

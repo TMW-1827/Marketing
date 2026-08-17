@@ -1,0 +1,33 @@
+{
+  "name": "truskavetska-partner-portal",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Зовнішній портал ТМ «Трускавецька» — для дистриб'юторів, мереж, HoReCa, споживачів і партнерів спонсорських проєктів",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "build:demo": "BUILD_TARGET=demo vite build --outDir dist-demo",
+    "preview": "vite preview",
+    "typecheck": "tsc -b",
+    "smoke": "node scripts/smoke.mjs"
+  },
+  "dependencies": {
+    "@fontsource/montserrat": "5.2.5",
+    "@fontsource/sofia-sans-extra-condensed": "5.2.5",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "react-router-dom": "7.9.3"
+  },
+  "devDependencies": {
+    "@types/node": "22.18.6",
+    "@types/react": "19.2.0",
+    "@types/react-dom": "19.2.0",
+    "@vitejs/plugin-react": "5.0.4",
+    "playwright": "1.56.0",
+    "typescript": "5.9.3",
+    "vite": "7.1.7",
+    "vite-plugin-pwa": "1.0.3",
+    "vite-plugin-singlefile": "2.3.0"
+  }
+}
