@@ -1,0 +1,4028 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Аналітичний звіт · Трускавецька · H1 2025 vs H1 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root{
+  --bg:#f0f4f8;
+  --bg-2:#e4ebf2;
+  --bg-3:#d6e0ea;
+  --surface:#ffffff;
+  --surface-2:#eaf0f7;
+  --border:rgba(30,80,140,0.14);
+  --border-strong:rgba(30,80,140,0.32);
+  --text:#0d1e35;
+  --text-muted:#3a5372;
+  --text-dim:#6b87a3;
+  --accent:#0b5fcc;
+  --accent-2:#0a9e7a;
+  --water:#1278b8;
+  --water-deep:#0a5285;
+  --gold:#c07a00;
+  --rose:#c0184a;
+  --violet:#6b38b8;
+  --green:#0a8a52;
+  --red:#c0231a;
+  --orange:#c05c00;
+  --shadow:0 2px 16px rgba(0,30,80,0.10);
+  --radius:12px;
+  --radius-lg:20px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Manrope',-apple-system,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.6;
+  min-height:100vh;
+  background-image:
+    radial-gradient(at 20% 0%,rgba(11,95,204,0.05) 0%,transparent 50%),
+    radial-gradient(at 80% 50%,rgba(10,158,122,0.03) 0%,transparent 50%);
+  -webkit-font-smoothing:antialiased;
+}
+
+/* === Header === */
+.hero{
+  position:relative;
+  padding:64px 24px 48px;
+  border-bottom:1px solid var(--border);
+  background:linear-gradient(135deg,#0b5fcc 0%,#0a3a7a 100%);
+  overflow:hidden;
+}
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.06) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.06) 1px,transparent 1px);
+  background-size:48px 48px;
+  mask-image:linear-gradient(180deg,rgba(0,0,0,0.5),transparent);
+  pointer-events:none;
+}
+.hero-inner{position:relative;max-width:1280px;margin:0 auto}
+.hero .eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 12px;border:1px solid rgba(255,255,255,0.3);
+  border-radius:100px;font-size:11px;letter-spacing:0.15em;
+  text-transform:uppercase;color:rgba(255,255,255,0.9);
+  margin-bottom:20px;font-weight:600;background:rgba(255,255,255,0.1);
+}
+.hero .eyebrow .pulse{width:6px;height:6px;border-radius:50%;background:#5df5c8;box-shadow:0 0 0 0 #5df5c8;animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(93,245,200,0.5)}100%{box-shadow:0 0 0 12px rgba(93,245,200,0)}}
+.hero h1{
+  font-size:clamp(28px,5vw,52px);
+  font-weight:800;line-height:1.1;
+  letter-spacing:-0.025em;
+  margin-bottom:16px;
+  color:#ffffff;
+}
+.hero h1 .accent{color:#7dd8ff;font-style:italic;font-weight:400}
+.hero p.lead{font-size:clamp(15px,1.6vw,18px);color:rgba(255,255,255,0.8);max-width:680px;font-weight:300}
+.hero-meta{margin-top:32px;display:flex;flex-wrap:wrap;gap:24px}
+.hero-meta div{font-size:12px;color:rgba(255,255,255,0.6)}
+.hero-meta div strong{display:block;color:#ffffff;font-size:14px;font-weight:600;margin-top:2px}
+
+/* === Nav === */
+.nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(255,255,255,0.95);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-bottom:2px solid var(--border);
+  padding:0 16px;
+  box-shadow:0 2px 8px rgba(0,30,80,0.08);
+}
+.nav-inner{
+  max-width:1280px;margin:0 auto;
+  display:flex;align-items:center;
+  overflow-x:auto;
+  scrollbar-width:none;
+  -ms-overflow-style:none;
+  gap:4px;
+}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav button{
+  background:none;border:none;color:var(--text-muted);
+  font-family:inherit;font-size:13px;font-weight:500;
+  padding:18px 16px;cursor:pointer;
+  white-space:nowrap;border-bottom:2px solid transparent;
+  transition:color 0.2s,border-color 0.2s;
+  letter-spacing:-0.01em;
+}
+.nav button:hover{color:var(--text)}
+.nav button.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* === Section === */
+.section{padding:48px 24px;max-width:1280px;margin:0 auto;display:none}
+.section.active{display:block;animation:fadeIn 0.4s ease-out}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.section-header{margin-bottom:32px}
+.section-header .pre{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:8px}
+.section-header h2{font-size:clamp(24px,3.5vw,36px);font-weight:700;letter-spacing:-0.02em;margin-bottom:8px}
+.section-header p{color:var(--text-muted);max-width:780px;font-weight:300;font-size:15px}
+
+/* === Cards === */
+.kpi-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:16px;margin-bottom:32px;
+}
+.kpi{
+  position:relative;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:24px;
+  overflow:hidden;
+  transition:transform 0.2s,border-color 0.2s;
+  box-shadow:var(--shadow);
+}
+.kpi:hover{transform:translateY(-2px);border-color:var(--border-strong)}
+.kpi::after{
+  content:"";position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--accent),transparent);
+  opacity:0.9;
+}
+.kpi.success::after{background:linear-gradient(90deg,var(--green),transparent)}
+.kpi.warn::after{background:linear-gradient(90deg,var(--gold),transparent)}
+.kpi.danger::after{background:linear-gradient(90deg,var(--red),transparent)}
+.kpi-label{font-size:11px;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-dim);font-weight:700}
+.kpi-value{font-size:32px;font-weight:800;line-height:1;margin:14px 0 8px;letter-spacing:-0.02em;font-family:'JetBrains Mono',monospace;color:var(--text)}
+.kpi-sub{font-size:13px;color:var(--text-muted)}
+.kpi-delta{display:inline-flex;align-items:center;gap:4px;font-weight:700;font-size:13px;padding:3px 10px;border-radius:100px;margin-top:12px}
+.kpi-delta.up{background:rgba(10,138,82,0.12);color:var(--green)}
+.kpi-delta.down{background:rgba(192,35,26,0.10);color:var(--red)}
+.kpi-delta.flat{background:rgba(58,83,114,0.1);color:var(--text-muted)}
+
+/* === Charts === */
+.chart-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:24px;
+  margin-bottom:24px;
+  box-shadow:var(--shadow);
+}
+.chart-card h3{font-size:17px;font-weight:700;margin-bottom:6px;letter-spacing:-0.01em;color:var(--text)}
+.chart-card .desc{font-size:13px;color:var(--text-muted);margin-bottom:20px}
+.chart-wrap{position:relative;width:100%;height:340px}
+.chart-wrap.tall{height:480px}
+.chart-wrap.short{height:260px}
+
+/* === Toggles === */
+.toggle-group{
+  display:inline-flex;gap:2px;
+  background:var(--bg-2);border:1px solid var(--border);
+  border-radius:100px;padding:4px;margin-bottom:20px;
+}
+.toggle-group button{
+  background:none;border:none;color:var(--text-muted);
+  font-family:inherit;font-size:12px;font-weight:600;
+  padding:8px 16px;cursor:pointer;border-radius:100px;
+  transition:all 0.2s;
+}
+.toggle-group button.active{background:var(--accent);color:#ffffff}
+
+/* === Two col === */
+.two-col{display:grid;grid-template-columns:1fr;gap:20px;margin-bottom:24px}
+@media(min-width:900px){.two-col{grid-template-columns:1fr 1fr}}
+.two-thirds-one-third{display:grid;grid-template-columns:1fr;gap:20px;margin-bottom:24px;align-items:start}
+@media(min-width:1024px){.two-thirds-one-third{grid-template-columns:2fr 1fr}}
+.two-thirds-one-third .chart-card{min-width:0;overflow:hidden}
+.two-thirds-one-third canvas{max-width:100%}
+.three-col{display:grid;grid-template-columns:1fr;gap:20px}
+@media(min-width:1024px){.three-col{grid-template-columns:repeat(3,1fr)}}
+
+/* === Insight === */
+.insight{
+  background:linear-gradient(135deg,rgba(11,95,204,0.06),rgba(10,158,122,0.03));
+  border:1px solid rgba(11,95,204,0.2);
+  border-left:4px solid var(--accent);
+  padding:20px 24px;border-radius:var(--radius);
+  margin:24px 0;
+}
+.insight strong{color:var(--accent);font-weight:700}
+.insight.warn{border-left-color:var(--gold);background:linear-gradient(135deg,rgba(192,122,0,0.07),transparent)}
+.insight.warn strong{color:var(--gold)}
+.insight.danger{border-left-color:var(--red);background:linear-gradient(135deg,rgba(192,35,26,0.07),transparent)}
+.insight.danger strong{color:var(--red)}
+.insight.success{border-left-color:var(--green);background:linear-gradient(135deg,rgba(10,138,82,0.07),transparent)}
+.insight.success strong{color:var(--green)}
+
+/* === Tables === */
+.table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);box-shadow:var(--shadow)}
+table{width:100%;border-collapse:collapse;font-size:12px;min-width:700px}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--border)}
+th{background:var(--bg-2);color:var(--text-muted);font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:0.08em;white-space:nowrap}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(11,95,204,0.04)}
+td.num{font-family:'JetBrains Mono',monospace;text-align:right;white-space:nowrap}
+td.center,th.center{text-align:center}
+#networkTable td:nth-child(1){white-space:nowrap;font-size:12px}
+#networkTable td:nth-child(2){white-space:nowrap;font-size:11px;font-family:'JetBrains Mono',monospace;text-align:right}
+#networkTable td:nth-child(4){white-space:nowrap;font-size:11px;font-family:'JetBrains Mono',monospace;text-align:right}
+#networkTable td:nth-child(6){white-space:nowrap;font-size:11px;font-family:'JetBrains Mono',monospace;text-align:right}
+#networkTable td:nth-child(3),#networkTable th:nth-child(3),
+#networkTable td:nth-child(5),#networkTable th:nth-child(5),
+#networkTable td:nth-child(7),#networkTable th:nth-child(7),
+#networkTable td:nth-child(8),#networkTable th:nth-child(8){text-align:center}
+.badge{display:inline-block;padding:3px 10px;border-radius:100px;font-size:12px;font-weight:700;font-family:'JetBrains Mono',monospace}
+.badge.up{background:rgba(10,138,82,0.13);color:#076b3e;border:1px solid rgba(10,138,82,0.25)}
+.badge.down{background:rgba(192,35,26,0.11);color:#922015;border:1px solid rgba(192,35,26,0.22)}
+.badge.flat{background:rgba(58,83,114,0.09);color:var(--text-muted);border:1px solid var(--border)}
+
+/* === Bars (horizontal mini) === */
+.bar-row{display:flex;align-items:center;gap:12px;margin:8px 0;font-size:13px}
+.bar-row .label{flex:0 0 140px;color:var(--text-muted)}
+.bar-row .bar-container{flex:1;height:8px;background:var(--bg-2);border-radius:4px;overflow:hidden;position:relative}
+.bar-row .bar{height:100%;border-radius:4px;background:var(--accent);transition:width 0.6s}
+.bar-row .val{flex:0 0 auto;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--text);font-size:12px}
+
+/* === Promodo === */
+.promo-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;box-shadow:var(--shadow)}
+.promo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:16px}
+.metric{padding:14px;background:var(--bg-2);border-radius:var(--radius);border:1px solid var(--border)}
+.metric .name{font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;font-weight:700}
+.metric .plan-fact{display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);margin-top:4px}
+.metric .fact{font-size:18px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--text)}
+.metric .delta{font-size:11px;font-weight:700;padding:2px 6px;border-radius:4px;display:inline-block;margin-top:4px}
+.metric .delta.up{background:rgba(10,138,82,0.12);color:#076b3e}
+.metric .delta.down{background:rgba(192,35,26,0.10);color:#922015}
+.metric .delta.flat{background:rgba(58,83,114,0.09);color:var(--text-muted)}
+
+/* Network tabs */
+.net-tabs-wrap{display:flex;flex-wrap:wrap;gap:6px;padding-bottom:4px}
+.net-tab{
+  background:var(--bg-2);border:1px solid var(--border);
+  border-radius:100px;padding:6px 14px;
+  font-size:12px;font-weight:600;font-family:inherit;
+  color:var(--text-muted);cursor:pointer;
+  transition:all 0.18s;white-space:nowrap;
+}
+.net-tab:hover{border-color:var(--accent);color:var(--accent)}
+.net-tab.active{background:var(--accent);border-color:var(--accent);color:#ffffff;font-weight:700}
+
+/* Position tooltip */
+.pos-wrap{position:relative;display:inline-block}
+.pos-tooltip{
+  display:none;position:fixed;z-index:9999;
+  background:#0d1e35;color:#e8f0fc;
+  border:1px solid rgba(11,95,204,0.4);
+  border-radius:10px;padding:12px 14px;
+  min-width:340px;max-width:420px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.25);
+  font-size:12px;line-height:1.5;
+  pointer-events:none;
+}
+.pos-wrap.tip-open .pos-tooltip{display:block}
+.pos-tooltip-title{
+  font-size:10px;text-transform:uppercase;letter-spacing:0.12em;
+  color:rgba(255,255,255,0.5);font-weight:700;
+  margin-bottom:8px;padding-bottom:6px;
+  border-bottom:1px solid rgba(255,255,255,0.1);
+}
+.pos-tooltip-row{
+  display:grid;grid-template-columns:20px 1fr auto auto auto;
+  gap:6px;align-items:center;padding:4px 0;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.pos-tooltip-row:last-child{border-bottom:none}
+.pos-tooltip-highlight{background:rgba(11,95,204,0.2);border-radius:6px;padding:4px 6px;margin:0 -6px}
+.pos-medal{font-size:13px;text-align:center}
+.pos-brand{font-weight:600;color:#ffffff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pos-growth{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:12px;text-align:right;white-space:nowrap}
+.pos-up{color:#5df5c8}
+.pos-down{color:#ff8080}
+.pos-vol{font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(255,255,255,0.55);white-space:nowrap;text-align:right}
+.pos-share{font-size:10px;color:rgba(255,255,255,0.4);white-space:nowrap;text-align:right}
+
+/* Footer */
+.footer{margin-top:60px;padding:32px 24px;border-top:1px solid var(--border);text-align:center;color:var(--text-dim);font-size:12px}
+
+/* Sources */
+.sources{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.sources span{font-size:11px;padding:3px 10px;background:var(--bg-3);border:1px solid var(--border);border-radius:100px;color:var(--text-muted)}
+
+/* Mobile */
+@media(max-width:680px){
+  .hero{padding:40px 16px 32px}
+  .section{padding:32px 16px}
+  .kpi{padding:20px}
+  .kpi-value{font-size:26px}
+  .chart-card{padding:16px}
+  .chart-wrap{height:280px}
+  .chart-wrap.tall{height:380px}
+  .nav button{padding:14px 12px;font-size:12px}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+<div class="hero-grid"></div>
+<div class="hero-inner">
+<div class="eyebrow"><span class="pulse"></span>H1 2025 vs H1 2026 · Аналітика ринку</div>
+<h1>Трускавецька <span class="accent">в національному ринку</span> мінеральних вод</h1>
+<p class="lead">Інтерактивний звіт з продажів на тлі категорії, конкурентів, мереж, регіонів, акційних активностей та Promodo Media кампаній. Січень — червень 2025/2026.</p>
+<div class="hero-meta">
+<div>Період<strong>Січ – Чер 2025/2026</strong></div>
+<div>Одиниці<strong>Пляшки</strong></div>
+<div>Покриття<strong>23 області, 20 мереж</strong></div>
+<div>Promodo кампанії<strong>2 флайти</strong></div>
+</div>
+</div>
+</header>
+
+<nav class="nav">
+<div class="nav-inner" id="navInner">
+<button data-target="overview" class="active">Огляд</button>
+<button data-target="competitors">Конкуренти</button>
+<button data-target="networks">Мережі</button>
+<button data-target="geo">Регіони</button>
+<button data-target="sku">SKU & пакування</button>
+<button data-target="promo">Акції × продажі</button>
+<button data-target="media">Promodo Media</button>
+<button data-target="conclusions">Висновки</button>
+</div>
+</nav>
+
+<!-- ========== OVERVIEW ========== -->
+<section id="overview" class="section active">
+<div class="section-header">
+<div class="pre">Розділ 1 / 8</div>
+<h2>Огляд: Трускавецька зростає утричі швидше за ринок</h2>
+<p>Категорія додала 6,2% (+14,2 млн пляшок), Трускавецька — 17,5% (+4,3 млн). Частка бренду в категорії — 11,95%. Половину приросту забезпечив власний бренд, половину — приватні марки мереж.</p>
+</div>
+
+<div class="kpi-grid">
+<div class="kpi success">
+<div class="kpi-label">Обсяг ринку H1 2026</div>
+<div class="kpi-value">241,5M</div>
+<div class="kpi-sub">пляшок · vs 227,3M у H1 2025</div>
+<span class="kpi-delta up">↑ 6,2%</span>
+</div>
+<div class="kpi success">
+<div class="kpi-label">Трускавецька</div>
+<div class="kpi-value">28,9M</div>
+<div class="kpi-sub">пляшок · vs 24,6M у H1 2025</div>
+<span class="kpi-delta up">↑ 17,5%</span>
+</div>
+<div class="kpi success">
+<div class="kpi-label">З них власний бренд</div>
+<div class="kpi-value">6,44M</div>
+<div class="kpi-sub">пляшок · 22% обсягу · vs 4,27M</div>
+<span class="kpi-delta up">↑ 50,7%</span>
+</div>
+<div class="kpi success">
+<div class="kpi-label">Частка ринку</div>
+<div class="kpi-value">11,95%</div>
+<div class="kpi-sub">+1,15 в.п. до H1 2025</div>
+<span class="kpi-delta up">↑ +1,15 в.п.</span>
+</div>
+</div>
+
+<div class="two-thirds-one-third">
+<div class="chart-card">
+<h3>Динаміка по місяцях: Категорія vs Трускавецька</h3>
+<div class="desc">Помісячний обсяг продажів у пляшках за перше півріччя обох років.</div>
+<div class="chart-wrap" style="height:300px"><canvas id="chartMonthly" role="img" aria-label="Помісячна динаміка категорії та Трускавецької">Графік помісячної динаміки</canvas></div>
+</div>
+<div class="chart-card">
+<h3>Зростання частки ринку</h3>
+<div class="desc">Трускавецька наростила частку з 10,80% до 11,95% (+1,15 в.п.).</div>
+<div class="chart-wrap" style="height:260px"><canvas id="chartShare" role="img" aria-label="Зростання частки ринку Трускавецької">Графік частки</canvas></div>
+</div>
+</div>
+
+<div class="insight success">
+<strong>Ключовий висновок:</strong> Приріст розподілився порівну: половину дав власний бренд (+2,17 млн пляшок, +50,7%), половину — приватні марки (+2,14 млн, Своя Лінія в АТБ та Сірко в Рукавичка). Власний бренд зростає майже втричі швидше, що поступово знижує залежність від приватних марок.
+</div>
+
+<div class="chart-card">
+<h3>Структура зростання: власний бренд vs приватні марки</h3>
+<div class="desc">Звідки приріст +4,31M пляшок: рівно половина (50%) — власний бренд Трускавецька, друга половина — приватні марки (Своя Лінія в АТБ, Сірко в Рукавичка).</div>
+<div class="chart-wrap short"><canvas id="chartWaterfall" role="img" aria-label="Структура зростання">Декомпозиція приросту</canvas></div>
+</div>
+
+</section>
+
+<!-- ========== COMPETITORS ========== -->
+<section id="competitors" class="section">
+<div class="section-header">
+<div class="pre">Розділ 2 / 8</div>
+<h2>Конкурентний ландшафт: хто виграє H1 2026</h2>
+<p>Трускавецька (+17,5%) зростає майже втричі швидше за категорію. Buvette продовжує скорочення (-20,2%), Моршинська зростає повільніше за ринок (+7,4%), Карпатська Джерельна тримає темп (+13,7%), Девайтіс додає найбільше у відсотках (+60,6%), але з малої бази.</p>
+</div>
+
+<div class="chart-card">
+<h3>Динаміка обсягів брендів H1 2025 → H1 2026</h3>
+<div class="desc">Стовпчики попарно: 2025 vs 2026. Логарифмічний масштаб для співмірного відображення Моршинська-лідера та інших брендів.</div>
+<div class="toggle-group" id="competitorsScale">
+<button class="active" data-scale="linear">Лінійна шкала</button>
+<button data-scale="logarithmic">Логарифмічна</button>
+</div>
+<div class="chart-wrap tall"><canvas id="chartBrands" role="img" aria-label="Динаміка обсягів брендів">Бренди порівняння</canvas></div>
+</div>
+
+<div class="two-col">
+<div class="chart-card">
+<h3>Темп зростання H1 2026 vs H1 2025</h3>
+<div class="desc">Хто прискорився, хто відстає за темпом зростання обсягу.</div>
+<div class="chart-wrap"><canvas id="chartGrowth" role="img" aria-label="Темп зростання брендів">Темп зростання</canvas></div>
+</div>
+<div class="chart-card">
+<h3>Частка ринку: до і після</h3>
+<div class="desc">Як змінились частки топ-брендів у H1 2026 порівняно з H1 2025.</div>
+<div class="chart-wrap"><canvas id="chartShareBrands" role="img" aria-label="Частка ринку брендів">Частка ринку</canvas></div>
+</div>
+</div>
+
+<div class="chart-card">
+<h3>Помісячні траєкторії топ-брендів</h3>
+<div class="desc">Як рухались бренди місяць за місяцем. Buvette знижується майже в усі місяці 2026 року — найглибше в січні (-36%) та березні (-34%).</div>
+<div class="chart-wrap tall"><canvas id="chartBrandsMonthly" role="img" aria-label="Помісячна динаміка брендів">Помісячна динаміка брендів</canvas></div>
+</div>
+
+<div class="insight">
+<strong>Ключові спостереження:</strong> Трускавецька утримує <strong>2-е місце</strong> в категорії після Моршинської (82,0M) обидва періоди. Відрив від найближчого переслідувача — Карпатської Джерельної (21,5M) — зріс з 5,7M до 7,4M пляшок. Buvette продовжує скорочення (-20,2%) і за півріччя опустилася нижче Миргородської. Зростання частки <strong>Трускавецької на +1,15 в.п.</strong> (з 10,80% до 11,95%) — найбільше серед усіх топ-брендів.
+</div>
+
+</section>
+
+<!-- ========== NETWORKS ========== -->
+<section id="networks" class="section">
+<div class="section-header">
+<div class="pre">Розділ 3 / 8</div>
+<h2>Мережі: де Трускавецька зміцнила, а де віддала позиції</h2>
+<p>Трускавецька наростила частку у 15 із 20 мереж, ще у 2 (Еко, Делві) з'явилася з нуля. Найбільший приріст частки — Сільпо (+3,34 в.п.), Рукавичка (+3,10 в.п.), Близенько (+2,94 в.п.), Епіцентр (+2,76 в.п.). За темпом зростання Трускавецька — №1 у 9 мережах.</p>
+</div>
+
+<div class="kpi-grid">
+<div class="kpi success">
+<div class="kpi-label">Мереж із зростанням частки</div>
+<div class="kpi-value">17<span style="font-size:18px;color:var(--text-muted);font-weight:400;">/20</span></div>
+<div class="kpi-sub">15 наростили + 2 нові з нуля</div>
+</div>
+<div class="kpi success">
+<div class="kpi-label">Найбільший приріст частки</div>
+<div class="kpi-value">+3,34 <span style="font-size:14px;color:var(--text-muted)">в.п.</span></div>
+<div class="kpi-sub">Сільпо · 4,52% → 7,86%</div>
+</div>
+<div class="kpi">
+<div class="kpi-label">Найбільший приріст обсягу</div>
+<div class="kpi-value">+2,12M</div>
+<div class="kpi-sub">АТБ · 20,25M → 22,37M</div>
+</div>
+<div class="kpi success">
+<div class="kpi-label">№1 за темпом зростання</div>
+<div class="kpi-value">9<span style="font-size:18px;color:var(--text-muted);font-weight:400;">/20</span></div>
+<div class="kpi-sub">мереж, де ТМ лідер за динамікою</div>
+</div>
+</div>
+
+<div class="chart-card">
+<h3>Зміна частки Трускавецької у мережах (в.п.)</h3>
+<div class="desc">Червоні стовпчики = втрата частки, зелені = зростання. Топ-мережі впорядковані за абсолютним розміром.</div>
+<div class="chart-wrap tall"><canvas id="chartNetworkShare" role="img" aria-label="Зміна частки Трускавецької">Зміна частки</canvas></div>
+</div>
+
+<div class="chart-card" style="margin-bottom:24px">
+<h3>Топ мереж за обсягом Трускавецької H1 2026</h3>
+<div class="desc">АТБ домінує (78% обсягу), решта мереж формують конкурентний фонд.</div>
+<div class="chart-wrap tall"><canvas id="chartNetworkVolume" role="img" aria-label="Обсяги Трускавецької по мережах">Обсяги по мережах</canvas></div>
+</div>
+
+<div class="chart-card">
+<h3>Темп зростання по мережах: Трускавецька vs кожен конкурент</h3>
+<div class="desc">Оберіть мережу, щоб побачити темп зростання кожного бренду окремо. «Решта категорії» — всі інші бренди разом. Показано всі 20 мереж, де бренд присутній у H1 2026.</div>
+<div class="net-tabs-wrap" id="networkTabsWrap"></div>
+<div style="position:relative;width:100%;height:320px;margin-top:16px">
+  <canvas id="chartNetworkGrowth" role="img" aria-label="Темп зростання у мережах"></canvas>
+</div>
+</div>
+
+<div class="chart-card">
+<h3>Деталізація по мережах</h3>
+<div class="desc">Динаміка категорії (загальний ринок мережі), динаміка Трускавецької та її позиція за темпом серед топ-брендів (Трускавецька, Моршинська, Карпатська Дж., Миргородська, Buvette, Девайтіс).</div>
+<div class="table-wrap">
+<table id="networkTable">
+<thead>
+<tr>
+<th>Мережа</th>
+<th>Категорія H1'25 → H1'26</th>
+<th>Δ категорії</th>
+<th>Трускавецька H1'25 → H1'26</th>
+<th>Δ ТМ</th>
+<th>Частка H1'25 → H1'26</th>
+<th>Δ частки</th>
+<th>Позиція за темпом</th>
+</tr>
+</thead>
+<tbody id="networkTableBody"></tbody>
+</table>
+</div>
+</div>
+
+<div class="insight success">
+<strong>Загальна картина:</strong> Трускавецька — №1 за темпом зростання у <strong>9 із 20 мереж</strong>. Найбільший внесок в абсолютний приріст дають АТБ (+2,12M пляшок), Сільпо (+944K), Фора (+223K), Близенько (+209K) та Рукавичка (+139K) — разом це 84% усього приросту бренду.
+</div>
+
+<div class="insight warn" style="margin-top:16px">
+<strong>На що звернути увагу:</strong>
+
+<br><br><strong>1. Сільпо — найбільший стрибок.</strong> Частка зросла з 4,52% до 7,86% (+3,34 в.п.), обсяг +79%. Це друга за розміром мережа для бренду після АТБ, і саме тут відбувся найпомітніший прорив за півріччя.
+
+<br><br><strong>2. Мережі з високою промо-активністю показують результат.</strong> Близенько (+2,94 в.п. частки, 52 акції), Епіцентр (+2,76 в.п., 41 акція), ОККО (+2,18 в.п., 42 акції) — прямий зв'язок між кількістю активностей і зростанням частки.
+
+<br><br><strong>3. Мережі зі зниженням: Таврія та Велика Кишеня.</strong> Обидві втратили близько 11% обсягу бренду при зростанні власної категорії (+0,6% і +2,0%). Причини різні.
+
+<br><br>У <strong>Таврії</strong> (частка 1,84% → 1,62%) промо-активність скоротилася вдвічі: 24 акції у H1 2025 проти 12 у H1 2026. Глибша знижка (20,8% → 30,0%) цього не компенсувала — рідші активності означають менше днів на полиці за акційною ціною. Конкурентний тиск помірний: Моршинська +3,4%, Миргородська +8,2%, тоді як Карпатська Джерельна (-8,9%) і Buvette (-14,7%) також просіли. Тобто ринок мережі майже не зростав, а бренд втратив саме на промо.
+
+<br><br>У <strong>Великій Кишені</strong> (частка 3,00% → 2,62%) кількість акцій майже не змінилася (17 → 15), але тут інша картина конкуренції: Buvette зросла на 48,9%, Девайтіс — на 43,8%, тоді як інші великі бренди теж втратили (Моршинська -4,4%, Миргородська -18,6%). Зростання Buvette і Девайтіс, ймовірно, забрало частину полиці та промо-слотів.
+
+<br><br><strong>4. Сім23 — зростання нижче ринку.</strong> Обсяг бренду +36,5%, але категорія мережі зросла швидше (+39,2%), тому частка знизилася на 0,08 в.п. Промо тут стабільне (8 → 9 акцій), тож це радше швидке розширення самої мережі, ніж проблема бренду.
+
+<br><br><strong>5. Нова дистрибуція.</strong> Еко та Делві з'явилися з нуля — це нові точки зростання, які ще не вийшли на повну потужність.
+</div>
+
+</section>
+
+<!-- ========== GEO ========== -->
+<section id="geo" class="section">
+<div class="section-header">
+<div class="pre">Розділ 4 / 8</div>
+<h2>Регіони: де нарощуємо, де втрачаємо</h2>
+<p>21 із 23 областей у плюсі. Лідери за абсолютним приростом — Київська, Дніпропетровська, Львівська. Найвищі темпи — Тернопільська (+45%), Івано-Франківська (+44%), Волинська (+43%). У мінусі — Херсонська (-10,1%) та Сумська (-0,6%).</p>
+</div>
+
+
+<div class="kpi-grid" id="geoKpi"></div>
+
+<div class="two-col">
+<div class="chart-card">
+<h3>Топ-10 областей за обсягом H1 2026</h3>
+<div class="desc">Області відсортовані за обсягом продажів H1 2026 від найбільшого до найменшого.</div>
+<div class="chart-wrap tall"><canvas id="chartGeoVolume" role="img" aria-label="Топ-10 областей">Топ-10 областей</canvas></div>
+</div>
+<div class="chart-card">
+<h3>Темп зростання по областях</h3>
+<div class="desc">Області відсортовані за відсотковим зростанням H1 2026 vs H1 2025.</div>
+<div class="chart-wrap tall"><canvas id="chartGeoGrowth" role="img" aria-label="Темп зростання по областях">Темп зростання областей</canvas></div>
+</div>
+</div>
+
+<div class="chart-card">
+<h3>Усі області: обсяг та динаміка</h3>
+<div class="desc">Бульбашкова діаграма: розмір = обсяг 2026, позиція по Y = темп зростання.</div>
+<div class="chart-wrap tall"><canvas id="chartGeoBubble" role="img" aria-label="Області: обсяг та динаміка">Області обсяг динаміка</canvas></div>
+</div>
+
+<div class="insight warn" style="margin-bottom:24px">
+<strong>⚠️ Примітка щодо даних:</strong> Аналіз охоплює мережі з географічним розподілом — це 94% обсягу. Без розподілу по областях: Близенько, Торба, Сім23, Коло, Велика Кишеня, Новус, Окко, Копійка, Таврія (1,13 млн → 1,66 млн пляшок).
+</div>
+
+<div class="insight success">
+<strong>Загальна картина по регіонах:</strong> 21 з 23 областей у плюсі. Загальне зростання географії +16,1% (+3,78 млн пляшок). У мінусі лише Херсонська (-10,1%) та Сумська (-0,6%) — обидві з невеликими обсягами.
+</div>
+
+<div class="insight" style="margin-top:16px">
+<strong>Структура зростання:</strong>
+
+<br><br><strong>1. Київщина та Дніпропетровщина — ядро бізнесу.</strong> Разом дають 45% обсягу географії. Темпи помірні (+14,7% і +10,7%), але через масштаб забезпечують найбільший абсолютний приріст.
+
+<br><br><strong>2. Західна Україна та схід — найшвидші темпи.</strong> Львівська (+33,3%), Харківська (+29,1%), Запорізька (+27,0%) зростають удвічі швидше за середній темп по країні.
+
+<br><br><strong>3. Регіони активної експансії.</strong> Кіровоградська, Черкаська, Волинська та Дніпропетровська показують найвищі темпи — саме там власний бренд найактивніше завойовує нові позиції. Кіровоградська вирізняється завдяки входу в мережу Делві.
+
+<br><br><strong>4. Концентрація помірна.</strong> Топ-3 області генерують 51,3% обсягу. Решта розподілена між 20 областями з темпами 15–35%, що свідчить про збалансовану географію без критичної залежності від одного-двох регіонів.
+
+<br><br><strong>5. Зони уваги.</strong> Херсонська (-10,1%) та Одеська (+1,8%) суттєво відстають від загального темпу +16,1%.
+</div>
+
+</section>
+<section id="sku" class="section">
+<div class="section-header">
+<div class="pre">Розділ 5 / 8</div>
+<h2>SKU та пакування: великі формати задають темп</h2>
+<p>PET 1,5л формує 64% обсягу (18,5 млн пляшок). Темп задають великі формати — PET 7л (+633,0%) та PET 5л (+75,9%). Тут різниця між загальними продажами та власним брендом критична: приватні марки зосереджені у форматі 1,5л і майже не додають, тоді як бренд у тому ж форматі зростає на 37,5%. Тому далі показано обидва зрізи.</p>
+</div>
+
+<div class="chart-card">
+<h3>Структура продажів по об'єму: H1 2025 vs H1 2026</h3>
+<div class="desc">Усі продажі Трускавецької. 1,5л домінує, великі формати ростуть найшвидше.</div>
+<div class="chart-wrap tall"><canvas id="chartSkuVolume" role="img" aria-label="Об'єми пакувань">Об'єми пакувань</canvas></div>
+</div>
+
+<div class="two-col">
+<div class="chart-card">
+<h3>Власний бренд за форматами: H1 2025 vs H1 2026</h3>
+<div class="desc">Лише власний бренд, без приватних марок. Тут 1,5л зростає на 37,5% замість 8,6% у загальному обсязі. PET 5л — спеціальний формат для АЗК ОККО.</div>
+<div class="chart-wrap"><canvas id="chartSku" role="img" aria-label="Власний бренд за форматами">Власний бренд</canvas></div>
+</div>
+<div class="chart-card">
+<h3>Зміни продажів за типами газованості</h3>
+<div class="desc">Кольори відповідають маркуванню продукції: негазована — біла, слабогазована — зелена, сильногазована — синя. У загальних продажах Сильногазована майже стоїть (+5,2%), але у власному бренді вона зростає на 39,2% — розрив створюють приватні марки.</div>
+<div class="toggle-group" id="carbToggle">
+<button class="active" data-mode="with-pl">Усі продажі</button>
+<button data-mode="no-pl">Власний бренд</button>
+</div>
+<div class="chart-wrap"><canvas id="chartSkuGrowth" role="img" aria-label="Зміни за газованістю">Зміни за газованістю</canvas></div>
+</div>
+</div>
+
+</section>
+
+<!-- ========== PROMO ========== -->
+<section id="promo" class="section">
+<div class="section-header">
+<div class="pre">Розділ 6 / 8</div>
+<h2>Акції × продажі: накладання активностей</h2>
+<p>H1 2026 показав на 43% більшу промо-активність порівняно з H1 2025: 622 акції проти 434, середня кількість одночасно активних акцій зросла з 35 до 51 на день. Накладання на криву продажів власного бренду демонструє зв'язок із піками промо-активності.</p>
+</div>
+
+<div class="kpi-grid">
+<div class="kpi success">
+<div class="kpi-label">Акцій у H1 2025</div>
+<div class="kpi-value">434</div>
+<div class="kpi-sub">у середньому 35/день</div>
+</div>
+<div class="kpi success">
+<div class="kpi-label">Акцій у H1 2026</div>
+<div class="kpi-value">622</div>
+<div class="kpi-sub">у середньому 51/день · ↑ 43%</div>
+</div>
+<div class="kpi success">
+<div class="kpi-label">Найактивніша мережа H1'26</div>
+<div class="kpi-value">Арсен</div>
+<div class="kpi-sub">97 акцій за півріччя</div>
+</div>
+<div class="kpi">
+<div class="kpi-label">Пік активності</div>
+<div class="kpi-value">Травень</div>
+<div class="kpi-sub">68,5 акцій/день у середньому</div>
+</div>
+</div>
+
+<div class="chart-card">
+<h3>Накладання: продажі власного бренду × активні акції</h3>
+<div class="desc">Стовпчики — продажі власного бренду по місяцях (акції проводяться саме на нього, не на приватні марки). Лінія — середня кількість активних акцій на день.</div>
+<div class="chart-wrap tall"><canvas id="chartPromoOverlay" role="img" aria-label="Продажі та акції">Накладання продажів та акцій</canvas></div>
+</div>
+
+<div class="chart-card">
+<h3>Помісячна динаміка активних акцій</h3>
+<div class="desc">Середня кількість одночасно активних акцій на день. H1 2026 стабільно вище H1 2025 у всі місяці, окрім червня.</div>
+<div class="chart-wrap"><canvas id="chartPromoWeekly" role="img" aria-label="Акції по тижнях">Акції по тижнях</canvas></div>
+</div>
+
+<div class="two-col">
+<div class="chart-card">
+<h3>Тривалість акцій по мережах: H1 2025 vs H1 2026</h3>
+<div class="desc">Середня тривалість однієї акції в днях. ОККО-ДРАЙВ та Метро проводять найдовші акції (31-35 днів), Арсен та Близенько — короткі, але часті.</div>
+<div class="chart-wrap tall"><canvas id="chartPromoDuration" role="img" aria-label="Тривалість акцій">Тривалість акцій</canvas></div>
+</div>
+<div class="chart-card">
+<h3>Середня глибина знижки по мережах: H1 2025 vs H1 2026</h3>
+<div class="desc">Середній % знижки у акціях мережі. ОККО-ДРАЙВ (25,4%), Арсен (25,0%) та Сільпо (24,6%) дають найглибші знижки.</div>
+<div class="chart-wrap tall"><canvas id="chartPromoDiscount" role="img" aria-label="Глибина знижки">Глибина знижки</canvas></div>
+</div>
+</div>
+
+<div class="two-col">
+<div class="chart-card">
+<h3>Кількість акцій: H1 2025 vs H1 2026</h3>
+<div class="desc">Кількість проведених акцій за півріччя. Арсен лідирує з 97 активностями.</div>
+<div class="chart-wrap tall"><canvas id="chartPromoCompare" role="img" aria-label="Порівняння промо-мереж">Порівняння промо</canvas></div>
+</div>
+<div class="chart-card">
+<h3>Кількість акцій vs тривалість (H1 2026)</h3>
+<div class="desc">Бульбашкова діаграма: розмір бульбашки = глибина знижки. Дозволяє бачити мережі де багато акцій але вони короткі, та де мало але довгі.</div>
+<div class="chart-wrap tall"><canvas id="chartPromoBubble" role="img" aria-label="Акції vs тривалість">Акції vs тривалість</canvas></div>
+</div>
+</div>
+
+<div class="insight success">
+<strong>Зв'язок промо та продажів:</strong> Пік акційної активності припав на травень 2026 (68,5 акцій/день) — того ж місяця продажі власного бренду склали 1,17 млн пляшок. Найвищий місячний обсяг півріччя — червень (1,56 млн пляшок) при 44 акціях/день, що вказує на сезонний фактор поряд із промо. Загалом H1 2026 дав на 43% більше акцій, а продажі власного бренду зросли на 50,7%.
+</div>
+
+</section>
+
+<!-- ========== MEDIA ========== -->
+<section id="media" class="section">
+<div class="section-header">
+<div class="pre">Розділ 7 / 8</div>
+<h2>Promodo Media: дві кампанії, що підсилили продажі</h2>
+<p>За період H1 2026 повністю відпрацювали дві медіа-кампанії: грудень 2025 — лютий 2026 (флайт 1) та березень — травень 2026 (флайт 2). Обидві перевиконали план за кліками (+203% і +92%) та CPC (-67% і -50%). Brand Lift у березні 2026 досяг 60,81% в експериментальній групі.</p>
+</div>
+
+<div class="chart-card">
+<h3>Накладання: продажі × акції × Promodo медіа-флайти</h3>
+<div class="desc">Усе на одному графіку — продажі власного бренду, кількість активних акцій та періоди медіа-кампаній (затінені зони). Обидва флайти припадають на першу половину 2026 року.</div>
+<div class="chart-wrap tall"><canvas id="chartFullOverlay" role="img" aria-label="Повне накладання даних">Накладання продажів акцій та медіа</canvas></div>
+</div>
+
+<div class="chart-card">
+<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px">
+<h3 style="margin-bottom:0">Показники Promodo Media кампаній</h3>
+<div class="toggle-group" id="campToggle" style="margin-bottom:0">
+<button class="active" data-camp="1">Кампанія 1 · Груд 2025 – Лют 2026</button>
+<button data-camp="2">Кампанія 2 · Бер – Трав 2026</button>
+</div>
+</div>
+<div id="campMeta" style="font-size:12px;color:var(--text-muted);margin-bottom:12px"></div>
+<div class="promo-grid" id="promoCampaignActive"></div>
+</div>
+
+<div class="chart-card">
+<h3>Brand Lift: динаміка впізнаваності бренду 2024-2026</h3>
+<div class="desc">Експериментальна група (бачила рекламу) vs Контрольна (не бачила). Видно прирости від кожного флайту та "проседання" базового рівня у періоди пауз.</div>
+<div class="chart-wrap"><canvas id="chartBrandLift" role="img" aria-label="Brand Lift динаміка">Brand Lift</canvas></div>
+</div>
+
+<div class="insight success">
+<strong>Висновок Promodo:</strong> кампанії послідовно нарощують ядро впізнаваності — у березні 2026 експериментальна група сягнула 60,81% (+4,97 в.п. до контролю), що є найвищим показником за весь період вимірювань з червня 2024. Перерви між флайтами призводять до деякого «провисання» базового рівня (-4 в.п.), але кожне повернення комунікації відновлює та нарощує ефект.
+</div>
+
+</section>
+
+<!-- ========== CONCLUSIONS ========== -->
+<section id="conclusions" class="section">
+<div class="section-header">
+<div class="pre">Розділ 8 / 8</div>
+<h2>Висновки та рекомендації</h2>
+<p>Поєднання трьох факторів — розширення дистрибуції, зростання промо-активності та послідовна медіа-підтримка — забезпечило Трускавецькій зростання утричі швидше за ринок за перше півріччя 2026 року.</p>
+</div>
+
+<div class="three-col">
+<div class="chart-card">
+<h3>📈 Працює добре</h3>
+<ul style="list-style:none;padding:0;margin-top:12px">
+<li style="padding:10px 0;border-bottom:1px solid var(--border);color:var(--text-muted);font-size:14px">Зростання утричі швидше за ринок (+17,5% vs +6,2%)</li>
+<li style="padding:10px 0;border-bottom:1px solid var(--border);color:var(--text-muted);font-size:14px">Частка ринку 11,95% (+1,15 в.п.) — найбільший приріст у категорії</li>
+<li style="padding:10px 0;border-bottom:1px solid var(--border);color:var(--text-muted);font-size:14px">Власний бренд +50,7% — утричі швидше за приватні марки</li>
+<li style="padding:10px 0;border-bottom:1px solid var(--border);color:var(--text-muted);font-size:14px">Сільпо: частка 4,52% → 7,86%, обсяг +79%</li>
+<li style="padding:10px 0;border-bottom:1px solid var(--border);color:var(--text-muted);font-size:14px">Великі формати: PET 7л +633%, PET 5л +76%</li>
+<li style="padding:10px 0;color:var(--text-muted);font-size:14px">Brand Lift 60,8% у березні — найвище за два роки вимірювань</li>
+</ul>
+</div>
+<div class="chart-card">
+<h3>⚠️ На що звернути увагу</h3>
+<ul style="list-style:none;padding:0;margin-top:12px">
+<li style="padding:10px 0;border-bottom:1px solid var(--border);color:var(--text-muted);font-size:14px">Таврія та Велика Кишеня: обсяг ТМ -11%, частка -0,22 і -0,38 в.п.</li>
+<li style="padding:10px 0;border-bottom:1px solid var(--border);color:var(--text-muted);font-size:14px">Херсонська обл. -10,1%, Сумська -0,6% — єдині в мінусі</li>
+<li style="padding:10px 0;border-bottom:1px solid var(--border);color:var(--text-muted);font-size:14px">Одеська обл. +1,8% — суттєво нижче середнього темпу +16%</li>
+<li style="padding:10px 0;border-bottom:1px solid var(--border);color:var(--text-muted);font-size:14px">Сильногазована у загальних продажах +5,2% при +30% у негазованої</li>
+<li style="padding:10px 0;color:var(--text-muted);font-size:14px">Перерви між Promodo флайтами знижують Brand Lift на ~4 в.п.</li>
+</ul>
+</div>
+<div class="chart-card">
+<h3>🎯 Рекомендації</h3>
+<ul style="list-style:none;padding:0;margin-top:12px">
+<li style="padding:10px 0;border-bottom:1px solid var(--border);color:var(--text-muted);font-size:14px">Відновити промо в Таврії — кількість акцій скоротилась удвічі (24 → 12)</li>
+<li style="padding:10px 0;border-bottom:1px solid var(--border);color:var(--text-muted);font-size:14px">Масштабувати модель Сільпо на інші великі мережі</li>
+<li style="padding:10px 0;border-bottom:1px solid var(--border);color:var(--text-muted);font-size:14px">Велика Кишеня: Buvette +49% і Девайтіс +44% забирають полицю</li>
+<li style="padding:10px 0;border-bottom:1px solid var(--border);color:var(--text-muted);font-size:14px">Розширювати дистрибуцію PET 7л та 5л — формати з найвищим темпом</li>
+<li style="padding:10px 0;border-bottom:1px solid var(--border);color:var(--text-muted);font-size:14px">Одеська (+1,8%) та Херсонська (-10,1%) — найслабші регіони півріччя</li>
+<li style="padding:10px 0;color:var(--text-muted);font-size:14px">Скоротити паузу між Promodo флайтами до 2 тижнів</li>
+</ul>
+</div>
+</div>
+
+<div class="chart-card" style="margin-top:24px">
+<h3>Підсумкова матриця: розмір × зростання</h3>
+<div class="desc">Обсяг H1 2026 та темп зростання для кожного бренду категорії.</div>
+<div class="chart-wrap tall"><canvas id="chartMatrix" role="img" aria-label="Підсумкова матриця">Підсумкова матриця</canvas></div>
+</div>
+
+<div class="sources">
+<span>Продажі_Категорії + квітень-червень 2026</span>
+<span>Продажі_Трускавецька + квітень-червень 2026</span>
+<span>Продажі_по_брендах + квітень-червень 2026</span>
+<span>Категорія_в_розрізі_мереж_та_брендів</span>
+<span>Географія_продаж_* (з PL / без PL)</span>
+<span>ТОП_SKU_Трускавецька_* (з PL / без PL)</span>
+<span>Графік_акцій_у_мережах (обидва періоди)</span>
+<span>Campaign_Results_Truskavetska_Promodo_Media</span>
+</div>
+
+</section>
+
+<footer class="footer">
+Інтерактивний звіт згенеровано на основі внутрішніх даних · Звітний період: січень — червень 2025 vs січень — червень 2026 · Усі обсяги — у пляшках
+</footer>
+
+<script id="reportData" type="application/json">{
+ "summary": {
+  "h1_2025": {
+   "category": 227314468,
+   "truskavetska_with_pl": 24560397,
+   "truskavetska_no_pl": 4274704
+  },
+  "h1_2026": {
+   "category": 241505897,
+   "truskavetska_with_pl": 28869646,
+   "truskavetska_no_pl": 6439946
+  }
+ },
+ "monthly": {
+  "months": [
+   "Січ 2025",
+   "Лют 2025",
+   "Бер 2025",
+   "Кві 2025",
+   "Тра 2025",
+   "Чер 2025",
+   "Січ 2026",
+   "Лют 2026",
+   "Бер 2026",
+   "Кві 2026",
+   "Тра 2026",
+   "Чер 2026"
+  ],
+  "category": [
+   32964146,
+   29311294,
+   37705867,
+   40585365,
+   39587102,
+   47160694,
+   32848093,
+   31663692,
+   39881450,
+   39517672,
+   46765947,
+   50829043
+  ],
+  "truskavetska_with_pl": [
+   2291479,
+   2876806,
+   4209152,
+   4204121,
+   5066802,
+   5912037,
+   3499003,
+   3222880,
+   5201782,
+   4971095,
+   5938717,
+   6036169
+  ],
+  "truskavetska_no_pl": [
+   463825,
+   433041,
+   701764,
+   881135,
+   685941,
+   1108998,
+   727264,
+   748188,
+   1178434,
+   1054169,
+   1172336,
+   1559555
+  ],
+  "morshynska": [
+   10989299,
+   9624110,
+   12695033,
+   13925194,
+   13272142,
+   15901047,
+   10449406,
+   10345022,
+   13016379,
+   12997350,
+   17086982,
+   18152332
+  ],
+  "karpatska": [
+   2826558,
+   2596834,
+   2903018,
+   3210465,
+   3360734,
+   4002357,
+   3196396,
+   3085348,
+   3835285,
+   3249710,
+   3748649,
+   4379120
+  ],
+  "myrhorodska": [
+   2860060,
+   2482618,
+   3266201,
+   3823438,
+   3183612,
+   3445053,
+   2954117,
+   2615254,
+   3471073,
+   3360725,
+   4133318,
+   4173308
+  ],
+  "buvette": [
+   3125996,
+   2495959,
+   3169455,
+   3682195,
+   2777726,
+   4830905,
+   1994045,
+   2558440,
+   2090215,
+   3370969,
+   2058982,
+   3952700
+  ],
+  "devaytis": [
+   175200,
+   178898,
+   231947,
+   258647,
+   246524,
+   343539,
+   287476,
+   314412,
+   374439,
+   317462,
+   488248,
+   521558
+  ]
+ },
+ "networks": [
+  {
+   "name": "АТБ",
+   "cat25": 103012247,
+   "cat26": 107288975,
+   "t25": 20246015,
+   "t26": 22369762
+  },
+  {
+   "name": "Сільпо",
+   "cat25": 26373166,
+   "cat26": 27165049,
+   "t25": 1192419,
+   "t26": 2136385
+  },
+  {
+   "name": "Фора",
+   "cat25": 15653763,
+   "cat26": 18025504,
+   "t25": 618966,
+   "t26": 842346
+  },
+  {
+   "name": "Метро",
+   "cat25": 16585094,
+   "cat26": 17039767,
+   "t25": 787015,
+   "t26": 854754
+  },
+  {
+   "name": "Новус",
+   "cat25": 9531933,
+   "cat26": 10763068,
+   "t25": 297355,
+   "t26": 363944
+  },
+  {
+   "name": "Варус",
+   "cat25": 7211058,
+   "cat26": 7257340,
+   "t25": 14041,
+   "t26": 78927
+  },
+  {
+   "name": "Таврія",
+   "cat25": 7002643,
+   "cat26": 7047704,
+   "t25": 128933,
+   "t26": 114524
+  },
+  {
+   "name": "Велика Кишеня",
+   "cat25": 5947225,
+   "cat26": 6064190,
+   "t25": 178330,
+   "t26": 158679
+  },
+  {
+   "name": "Сім23",
+   "cat25": 4312062,
+   "cat26": 6000515,
+   "t25": 169713,
+   "t26": 231625
+  },
+  {
+   "name": "Траш",
+   "cat25": 3590169,
+   "cat26": 4702654,
+   "t25": 38872,
+   "t26": 62988
+  },
+  {
+   "name": "Близенько",
+   "cat25": 3431584,
+   "cat26": 4420654,
+   "t25": 274333,
+   "t26": 483264
+  },
+  {
+   "name": "Рукавичка",
+   "cat25": 3032304,
+   "cat26": 3366290,
+   "t25": 311702,
+   "t26": 450512
+  },
+  {
+   "name": "Окко",
+   "cat25": 2938581,
+   "cat26": 3281622,
+   "t25": 186830,
+   "t26": 280214
+  },
+  {
+   "name": "Епіцентр",
+   "cat25": 1677644,
+   "cat26": 2330406,
+   "t25": 36364,
+   "t26": 114813
+  },
+  {
+   "name": "Експансія",
+   "cat25": 2575544,
+   "cat26": 2301847,
+   "t25": 29707,
+   "t26": 60392
+  },
+  {
+   "name": "Еко",
+   "cat25": 1847663,
+   "cat26": 1936749,
+   "t25": 0,
+   "t26": 24352
+  },
+  {
+   "name": "Торба",
+   "cat25": 1398632,
+   "cat26": 1860899,
+   "t25": 21898,
+   "t26": 45360
+  },
+  {
+   "name": "Коло",
+   "cat25": 1736943,
+   "cat26": 1756715,
+   "t25": 4367,
+   "t26": 30965
+  },
+  {
+   "name": "Делві",
+   "cat25": 1611824,
+   "cat26": 1678827,
+   "t25": 0,
+   "t26": 132320
+  },
+  {
+   "name": "Обжора",
+   "cat25": 885211,
+   "cat26": 938160,
+   "t25": 23531,
+   "t26": 33519
+  }
+ ],
+ "brands_by_network": {
+  "Окко": {
+   "Трускавецька": {
+    "q25": 186830,
+    "q26": 280214
+   },
+   "Моршинська": {
+    "q25": 1957245,
+    "q26": 2304330
+   },
+   "Buvette": {
+    "q25": 32092,
+    "q26": 566
+   },
+   "Карпатська Джерельна": {
+    "q25": 247528,
+    "q26": 206227
+   },
+   "Миргородська": {
+    "q25": 56774,
+    "q26": 60887
+   }
+  },
+  "Епіцентр": {
+   "Трускавецька": {
+    "q25": 36364,
+    "q26": 114813
+   },
+   "Моршинська": {
+    "q25": 656629,
+    "q26": 851445
+   },
+   "Buvette": {
+    "q25": 83774,
+    "q26": 63490
+   },
+   "Карпатська Джерельна": {
+    "q25": 250530,
+    "q26": 384055
+   },
+   "Миргородська": {
+    "q25": 101533,
+    "q26": 142309
+   }
+  },
+  "Пчілка": {
+   "Карпатська Джерельна": {
+    "q25": 153144,
+    "q26": 150388
+   },
+   "Миргородська": {
+    "q25": 75171,
+    "q26": 69248
+   },
+   "Моршинська": {
+    "q25": 275862,
+    "q26": 252284
+   },
+   "Buvette": {
+    "q25": 77383,
+    "q26": 73399
+   }
+  },
+  "Ашан": {
+   "Моршинська": {
+    "q25": 1031324,
+    "q26": 827911
+   },
+   "Buvette": {
+    "q25": 221600,
+    "q26": 130315
+   },
+   "Карпатська Джерельна": {
+    "q25": 483761,
+    "q26": 443619
+   },
+   "Миргородська": {
+    "q25": 196052,
+    "q26": 152557
+   }
+  },
+  "Сільпо": {
+   "Трускавецька": {
+    "q25": 1192419,
+    "q26": 2136385
+   },
+   "Девайтіс": {
+    "q25": 169111,
+    "q26": 272786
+   },
+   "Моршинська": {
+    "q25": 11451578,
+    "q26": 11918951
+   },
+   "Buvette": {
+    "q25": 621361,
+    "q26": 210
+   },
+   "Карпатська Джерельна": {
+    "q25": 2567546,
+    "q26": 2691141
+   },
+   "Миргородська": {
+    "q25": 2223538,
+    "q26": 2397763
+   }
+  },
+  "Торба": {
+   "Трускавецька": {
+    "q25": 41385,
+    "q26": 58081
+   },
+   "Девайтіс": {
+    "q25": 159834,
+    "q26": 252305
+   },
+   "Моршинська": {
+    "q25": 386950,
+    "q26": 516673
+   },
+   "Buvette": {
+    "q25": 198787,
+    "q26": 216867
+   },
+   "Карпатська Джерельна": {
+    "q25": 0,
+    "q26": 10366
+   },
+   "Миргородська": {
+    "q25": 65997,
+    "q26": 79046
+   }
+  },
+  "АТБ": {
+   "Карпатська Джерельна": {
+    "q25": 3586909,
+    "q26": 4193366
+   },
+   "Миргородська": {
+    "q25": 9505665,
+    "q26": 10255712
+   },
+   "Моршинська": {
+    "q25": 29618901,
+    "q26": 31405774
+   },
+   "Buvette": {
+    "q25": 14098932,
+    "q26": 11488014
+   }
+  },
+  "Траш": {
+   "Трускавецька": {
+    "q25": 38872,
+    "q26": 62988
+   },
+   "Девайтіс": {
+    "q25": 43537,
+    "q26": 67425
+   },
+   "Моршинська": {
+    "q25": 1244292,
+    "q26": 1658896
+   },
+   "Buvette": {
+    "q25": 412459,
+    "q26": 430475
+   },
+   "Карпатська Джерельна": {
+    "q25": 433796,
+    "q26": 736486
+   },
+   "Миргородська": {
+    "q25": 477530,
+    "q26": 615155
+   }
+  },
+  "Близенько": {
+   "Трускавецька": {
+    "q25": 274333,
+    "q26": 483264
+   },
+   "Девайтіс": {
+    "q25": 301814,
+    "q26": 474894
+   },
+   "Моршинська": {
+    "q25": 1033811,
+    "q26": 1204047
+   },
+   "Buvette": {
+    "q25": 109586,
+    "q26": 132709
+   },
+   "Карпатська Джерельна": {
+    "q25": 762604,
+    "q26": 1045064
+   },
+   "Миргородська": {
+    "q25": 32137,
+    "q26": 89836
+   }
+  },
+  "Рукавичка": {
+   "Трускавецька": {
+    "q25": 274730,
+    "q26": 390576
+   },
+   "Девайтіс": {
+    "q25": 1198,
+    "q26": 140098
+   },
+   "Моршинська": {
+    "q25": 405115,
+    "q26": 402930
+   },
+   "Buvette": {
+    "q25": 34178,
+    "q26": 57519
+   },
+   "Карпатська Джерельна": {
+    "q25": 936303,
+    "q26": 1036447
+   }
+  },
+  "Делві": {
+   "Миргородська": {
+    "q25": 56100,
+    "q26": 36689
+   },
+   "Моршинська": {
+    "q25": 253780,
+    "q26": 185093
+   },
+   "Трускавецька": {
+    "q25": 0,
+    "q26": 132320
+   },
+   "Buvette": {
+    "q25": 212073,
+    "q26": 225614
+   }
+  },
+  "Таврія": {
+   "Трускавецька": {
+    "q25": 128933,
+    "q26": 114524
+   },
+   "Девайтіс": {
+    "q25": 10575,
+    "q26": 15927
+   },
+   "Моршинська": {
+    "q25": 2309893,
+    "q26": 2388060
+   },
+   "Buvette": {
+    "q25": 524683,
+    "q26": 447815
+   },
+   "Карпатська Джерельна": {
+    "q25": 837988,
+    "q26": 763626
+   },
+   "Миргородська": {
+    "q25": 443122,
+    "q26": 479471
+   }
+  },
+  "Фора": {
+   "Трускавецька": {
+    "q25": 618966,
+    "q26": 842346
+   },
+   "Моршинська": {
+    "q25": 5672081,
+    "q26": 6503496
+   },
+   "Buvette": {
+    "q25": 0,
+    "q26": 1772
+   },
+   "Карпатська Джерельна": {
+    "q25": 2536289,
+    "q26": 2915210
+   },
+   "Миргородська": {
+    "q25": 2061345,
+    "q26": 2232301
+   }
+  },
+  "Велика Кишеня": {
+   "Трускавецька": {
+    "q25": 178330,
+    "q26": 158679
+   },
+   "Девайтіс": {
+    "q25": 28492,
+    "q26": 40980
+   },
+   "Моршинська": {
+    "q25": 1477755,
+    "q26": 1413435
+   },
+   "Buvette": {
+    "q25": 126623,
+    "q26": 188544
+   },
+   "Карпатська Джерельна": {
+    "q25": 1109816,
+    "q26": 1066219
+   },
+   "Миргородська": {
+    "q25": 585258,
+    "q26": 476247
+   }
+  },
+  "Обжора": {
+   "Трускавецька": {
+    "q25": 23531,
+    "q26": 33519
+   },
+   "Моршинська": {
+    "q25": 375489,
+    "q26": 398527
+   },
+   "Buvette": {
+    "q25": 82486,
+    "q26": 90137
+   },
+   "Карпатська Джерельна": {
+    "q25": 78902,
+    "q26": 83111
+   },
+   "Миргородська": {
+    "q25": 70436,
+    "q26": 69727
+   }
+  },
+  "Сім23": {
+   "Трускавецька": {
+    "q25": 169713,
+    "q26": 231625
+   },
+   "Девайтіс": {
+    "q25": 294538,
+    "q26": 509432
+   },
+   "Моршинська": {
+    "q25": 1607372,
+    "q26": 2214121
+   },
+   "Карпатська Джерельна": {
+    "q25": 719732,
+    "q26": 1158687
+   },
+   "Миргородська": {
+    "q25": 164557,
+    "q26": 242596
+   }
+  },
+  "Експансія": {
+   "Трускавецька": {
+    "q25": 29707,
+    "q26": 60392
+   },
+   "Девайтіс": {
+    "q25": 6518,
+    "q26": 6053
+   },
+   "Моршинська": {
+    "q25": 652288,
+    "q26": 635058
+   },
+   "Buvette": {
+    "q25": 35944,
+    "q26": 25183
+   },
+   "Карпатська Джерельна": {
+    "q25": 283278,
+    "q26": 310678
+   },
+   "Миргородська": {
+    "q25": 205729,
+    "q26": 206140
+   }
+  },
+  "Еко": {
+   "Трускавецька": {
+    "q25": 0,
+    "q26": 24352
+   },
+   "Девайтіс": {
+    "q25": 183616,
+    "q26": 179414
+   },
+   "Моршинська": {
+    "q25": 654592,
+    "q26": 647059
+   },
+   "Карпатська Джерельна": {
+    "q25": 213005,
+    "q26": 259353
+   },
+   "Миргородська": {
+    "q25": 321103,
+    "q26": 268812
+   }
+  },
+  "Варус": {
+   "Трускавецька": {
+    "q25": 11339,
+    "q26": 78927
+   },
+   "Девайтіс": {
+    "q25": 71147,
+    "q26": 100468
+   },
+   "Моршинська": {
+    "q25": 2134251,
+    "q26": 2133699
+   },
+   "Buvette": {
+    "q25": 783551,
+    "q26": 590134
+   },
+   "Карпатська Джерельна": {
+    "q25": 590506,
+    "q26": 531329
+   },
+   "Миргородська": {
+    "q25": 714828,
+    "q26": 773785
+   }
+  },
+  "Метро": {
+   "Трускавецька": {
+    "q25": 787015,
+    "q26": 854754
+   },
+   "Девайтіс": {
+    "q25": 49026,
+    "q26": 24453
+   },
+   "Моршинська": {
+    "q25": 7575262,
+    "q26": 7995627
+   },
+   "Buvette": {
+    "q25": 1872984,
+    "q26": 1582741
+   },
+   "Карпатська Джерельна": {
+    "q25": 1142008,
+    "q26": 1334099
+   },
+   "Миргородська": {
+    "q25": 669775,
+    "q26": 784815
+   }
+  },
+  "Копійка": {
+   "Моршинська": {
+    "q25": 960761,
+    "q26": 932131
+   },
+   "Buvette": {
+    "q25": 330865,
+    "q26": 267834
+   },
+   "Карпатська Джерельна": {
+    "q25": 200187,
+    "q26": 137437
+   },
+   "Миргородська": {
+    "q25": 252528,
+    "q26": 253052
+   }
+  },
+  "Новус": {
+   "Трускавецька": {
+    "q25": 297355,
+    "q26": 363944
+   },
+   "Девайтіс": {
+    "q25": 84606,
+    "q26": 171686
+   },
+   "Моршинська": {
+    "q25": 3872781,
+    "q26": 4461998
+   },
+   "Buvette": {
+    "q25": 215155,
+    "q26": 5
+   },
+   "Карпатська Джерельна": {
+    "q25": 1425067,
+    "q26": 1708955
+   },
+   "Миргородська": {
+    "q25": 684052,
+    "q26": 930265
+   }
+  },
+  "Коло": {
+   "Трускавецька": {
+    "q25": 4367,
+    "q26": 30965
+   },
+   "Девайтіс": {
+    "q25": 30743,
+    "q26": 47673
+   },
+   "Моршинська": {
+    "q25": 798813,
+    "q26": 795926
+   },
+   "Buvette": {
+    "q25": 7719,
+    "q26": 12005
+   },
+   "Карпатська Джерельна": {
+    "q25": 341067,
+    "q26": 328645
+   },
+   "Миргородська": {
+    "q25": 97750,
+    "q26": 91380
+   }
+  }
+ },
+ "competitors": [
+  {
+   "label": "Моршинська",
+   "d25": 76406825,
+   "d26": 82047471
+  },
+  {
+   "label": "Миргородська",
+   "d25": 19060982,
+   "d26": 20707795
+  },
+  {
+   "label": "Девайтіс",
+   "d25": 1434755,
+   "d26": 2303595
+  },
+  {
+   "label": "Карпатська Джерельна",
+   "d25": 18899966,
+   "d26": 21494508
+  },
+  {
+   "label": "Buvette",
+   "d25": 20082236,
+   "d26": 16025351
+  },
+  {
+   "label": "Трускавецька з PL",
+   "d25": 24560397,
+   "d26": 28869646,
+   "highlight": true
+  },
+  {
+   "label": "Трускавецька без PL",
+   "d25": 4274704,
+   "d26": 6439946,
+   "highlight": true
+  }
+ ],
+ "geo_with_pl": [
+  {
+   "name": "Київська",
+   "q25": 5950573,
+   "q26": 6823933
+  },
+  {
+   "name": "Дніпропетровська",
+   "q25": 4836795,
+   "q26": 5353299
+  },
+  {
+   "name": "Львівська",
+   "q25": 1333452,
+   "q26": 1777407
+  },
+  {
+   "name": "Харківська",
+   "q25": 1166650,
+   "q26": 1506067
+  },
+  {
+   "name": "Одеська",
+   "q25": 1445050,
+   "q26": 1471335
+  },
+  {
+   "name": "Запорізька",
+   "q25": 1060263,
+   "q26": 1346679
+  },
+  {
+   "name": "Вінницька",
+   "q25": 751841,
+   "q26": 891557
+  },
+  {
+   "name": "Миколаївська",
+   "q25": 757550,
+   "q26": 811990
+  },
+  {
+   "name": "Полтавська",
+   "q25": 705481,
+   "q26": 808850
+  },
+  {
+   "name": "Черкаська",
+   "q25": 632093,
+   "q26": 747152
+  },
+  {
+   "name": "Житомирська",
+   "q25": 629431,
+   "q26": 708814
+  },
+  {
+   "name": "Хмельницька",
+   "q25": 554218,
+   "q26": 703033
+  },
+  {
+   "name": "Чернігівська",
+   "q25": 656094,
+   "q26": 702481
+  },
+  {
+   "name": "Івано-Франківська",
+   "q25": 428184,
+   "q26": 585574
+  },
+  {
+   "name": "Сумська",
+   "q25": 584933,
+   "q26": 581540
+  },
+  {
+   "name": "Рівенська",
+   "q25": 405144,
+   "q26": 520979
+  },
+  {
+   "name": "Кіровоградська",
+   "q25": 452288,
+   "q26": 492676
+  },
+  {
+   "name": "Тернопільська",
+   "q25": 290645,
+   "q26": 416034
+  },
+  {
+   "name": "Волинська",
+   "q25": 247767,
+   "q26": 338292
+  },
+  {
+   "name": "Закарпатська",
+   "q25": 206037,
+   "q26": 264553
+  },
+  {
+   "name": "Чернівецька",
+   "q25": 178392,
+   "q26": 214484
+  },
+  {
+   "name": "Херсонська",
+   "q25": 154690,
+   "q26": 139067
+  },
+  {
+   "name": "Донецька",
+   "q25": 0,
+   "q26": 523
+  }
+ ],
+ "geo_no_pl": [
+  {
+   "name": "Київська",
+   "q25": 1454774,
+   "q26": 2196422
+  },
+  {
+   "name": "Львівська",
+   "q25": 456245,
+   "q26": 665711
+  },
+  {
+   "name": "Дніпропетровська",
+   "q25": 163843,
+   "q26": 384438
+  },
+  {
+   "name": "Одеська",
+   "q25": 321217,
+   "q26": 337566
+  },
+  {
+   "name": "Вінницька",
+   "q25": 96847,
+   "q26": 154060
+  },
+  {
+   "name": "Івано-Франківська",
+   "q25": 71125,
+   "q26": 118414
+  },
+  {
+   "name": "Житомирська",
+   "q25": 69678,
+   "q26": 111357
+  },
+  {
+   "name": "Запорізька",
+   "q25": 62408,
+   "q26": 101709
+  },
+  {
+   "name": "Харківська",
+   "q25": 60927,
+   "q26": 90079
+  },
+  {
+   "name": "Чернігівська",
+   "q25": 51825,
+   "q26": 82456
+  },
+  {
+   "name": "Полтавська",
+   "q25": 56615,
+   "q26": 79524
+  },
+  {
+   "name": "Тернопільська",
+   "q25": 37183,
+   "q26": 64529
+  },
+  {
+   "name": "Хмельницька",
+   "q25": 34035,
+   "q26": 61682
+  },
+  {
+   "name": "Черкаська",
+   "q25": 25384,
+   "q26": 60911
+  },
+  {
+   "name": "Чернівецька",
+   "q25": 52387,
+   "q26": 58064
+  },
+  {
+   "name": "Миколаївська",
+   "q25": 46255,
+   "q26": 51146
+  },
+  {
+   "name": "Рівенська",
+   "q25": 27862,
+   "q26": 49947
+  },
+  {
+   "name": "Волинська",
+   "q25": 11059,
+   "q26": 26383
+  },
+  {
+   "name": "Сумська",
+   "q25": 13326,
+   "q26": 26326
+  },
+  {
+   "name": "Закарпатська",
+   "q25": 14818,
+   "q26": 24029
+  },
+  {
+   "name": "Кіровоградська",
+   "q25": 5036,
+   "q26": 16581
+  },
+  {
+   "name": "Херсонська",
+   "q25": 9029,
+   "q26": 14762
+  },
+  {
+   "name": "Донецька",
+   "q25": 0,
+   "q26": 523
+  }
+ ],
+ "geo_norasp": {
+  "with_pl": {
+   "q25": 1132821,
+   "q26": 1660978
+  },
+  "no_pl": {
+   "q25": 1132821,
+   "q26": 1660978
+  }
+ },
+ "carb_with_pl": {
+  "Слабогазована": {
+   "q25": 6033132,
+   "q26": 7053669
+  },
+  "Негазована": {
+   "q25": 9367019,
+   "q26": 12181120
+  },
+  "Сильногазована": {
+   "q25": 9160246,
+   "q26": 9634857
+  }
+ },
+ "carb_no_pl": {
+  "Слабогазована": {
+   "q25": 1213551,
+   "q26": 1714495
+  },
+  "Негазована": {
+   "q25": 1738071,
+   "q26": 2883868
+  },
+  "Сильногазована": {
+   "q25": 1323082,
+   "q26": 1841583
+  }
+ },
+ "vol_with_pl": {
+  "PET 1,5л": {
+   "q25": 17000234,
+   "q26": 18464917
+  },
+  "PET 0,5л": {
+   "q25": 4642867,
+   "q26": 5451075
+  },
+  "PET 0,75л": {
+   "q25": 1996491,
+   "q26": 2611723
+  },
+  "PET 7л": {
+   "q25": 131723,
+   "q26": 965579
+  },
+  "PET 5л": {
+   "q25": 746132,
+   "q26": 1312086
+  },
+  "PET 2л": {
+   "q25": 2336,
+   "q26": 19680
+  },
+  "Скло 0,33л": {
+   "q25": 33719,
+   "q26": 28022
+  },
+  "Скло 0,75л": {
+   "q25": 4595,
+   "q26": 16564
+  }
+ },
+ "vol_no_pl": {
+  "PET 1,5л": {
+   "q25": 3006573,
+   "q26": 4135453
+  },
+  "PET 0,5л": {
+   "q25": 645302,
+   "q26": 945913
+  },
+  "PET 0,75л": {
+   "q25": 451179,
+   "q26": 851674
+  },
+  "PET 7л": {
+   "q25": 128700,
+   "q26": 440111
+  },
+  "PET 2л": {
+   "q25": 2336,
+   "q26": 19680
+  },
+  "PET 5л": {
+   "q25": 0,
+   "q26": 2529
+  },
+  "Скло 0,33л": {
+   "q25": 33719,
+   "q26": 28022
+  },
+  "Скло 0,75л": {
+   "q25": 4595,
+   "q26": 16564
+  }
+ },
+ "promo": {
+  "monthly_avg_2025": [
+   8.8,
+   29.0,
+   37.1,
+   45.0,
+   36.9,
+   53.9
+  ],
+  "monthly_avg_2026": [
+   38.2,
+   38.0,
+   55.3,
+   60.2,
+   68.5,
+   44.0
+  ],
+  "total_h1_2025": 434,
+  "total_h1_2026": 622,
+  "detail": {
+   "networks": [
+    "Арсен",
+    "Близенько",
+    "ОККО-ДРАЙВ",
+    "ФОРА",
+    "ЕПІЦЕНТР",
+    "ОБЖОРА",
+    "Рукавичка",
+    "МЕТРО",
+    "Делікат Рітейл",
+    "ЕКО Маркет",
+    "СІЛЬПО",
+    "БАБАК"
+   ],
+   "h1_25": {
+    "Арсен": {
+     "count": 49,
+     "avg_duration": 5.2,
+     "avg_discount": 23.3
+    },
+    "Близенько": {
+     "count": 47,
+     "avg_duration": 6.6,
+     "avg_discount": 22.7
+    },
+    "ОККО-ДРАЙВ": {
+     "count": 12,
+     "avg_duration": 29.4,
+     "avg_discount": 19.5
+    },
+    "ФОРА": {
+     "count": 14,
+     "avg_duration": 15.5,
+     "avg_discount": 22.1
+    },
+    "ЕПІЦЕНТР": {
+     "count": 21,
+     "avg_duration": 14.0,
+     "avg_discount": 16.5
+    },
+    "ОБЖОРА": {
+     "count": 24,
+     "avg_duration": 14.2,
+     "avg_discount": 19.4
+    },
+    "Рукавичка": {
+     "count": 27,
+     "avg_duration": 14.0,
+     "avg_discount": 18.4
+    },
+    "МЕТРО": {
+     "count": 52,
+     "avg_duration": 32.9,
+     "avg_discount": 19.6
+    },
+    "Делікат Рітейл": {
+     "count": 0,
+     "avg_duration": null,
+     "avg_discount": null
+    },
+    "ЕКО Маркет": {
+     "count": 0,
+     "avg_duration": null,
+     "avg_discount": null
+    },
+    "СІЛЬПО": {
+     "count": 32,
+     "avg_duration": 18.9,
+     "avg_discount": 22.9
+    },
+    "БАБАК": {
+     "count": 14,
+     "avg_duration": 14.0,
+     "avg_discount": 15.0
+    }
+   },
+   "h1_26": {
+    "Арсен": {
+     "count": 97,
+     "avg_duration": 9.1,
+     "avg_discount": 25.0
+    },
+    "Близенько": {
+     "count": 52,
+     "avg_duration": 7.5,
+     "avg_discount": 23.4
+    },
+    "ОККО-ДРАЙВ": {
+     "count": 42,
+     "avg_duration": 35.1,
+     "avg_discount": 25.4
+    },
+    "ФОРА": {
+     "count": 42,
+     "avg_duration": 11.3,
+     "avg_discount": 22.9
+    },
+    "ЕПІЦЕНТР": {
+     "count": 41,
+     "avg_duration": 24.2,
+     "avg_discount": 17.1
+    },
+    "ОБЖОРА": {
+     "count": 36,
+     "avg_duration": 16.2,
+     "avg_discount": 20.3
+    },
+    "Рукавичка": {
+     "count": 36,
+     "avg_duration": 14.0,
+     "avg_discount": 19.5
+    },
+    "МЕТРО": {
+     "count": 31,
+     "avg_duration": 31.4,
+     "avg_discount": 19.7
+    },
+    "Делікат Рітейл": {
+     "count": 30,
+     "avg_duration": 29.9,
+     "avg_discount": 18.8
+    },
+    "ЕКО Маркет": {
+     "count": 29,
+     "avg_duration": 14.1,
+     "avg_discount": 22.1
+    },
+    "СІЛЬПО": {
+     "count": 28,
+     "avg_duration": 14.0,
+     "avg_discount": 24.6
+    },
+    "БАБАК": {
+     "count": 27,
+     "avg_duration": 14.0,
+     "avg_discount": 15.0
+    }
+   }
+  },
+  "compare": [
+   {
+    "name": "Арсен",
+    "c25": 49,
+    "c26": 97
+   },
+   {
+    "name": "Близенько",
+    "c25": 47,
+    "c26": 52
+   },
+   {
+    "name": "ОККО-ДРАЙВ",
+    "c25": 12,
+    "c26": 42
+   },
+   {
+    "name": "ФОРА",
+    "c25": 14,
+    "c26": 42
+   },
+   {
+    "name": "ЕПІЦЕНТР",
+    "c25": 21,
+    "c26": 41
+   },
+   {
+    "name": "ОБЖОРА",
+    "c25": 24,
+    "c26": 36
+   },
+   {
+    "name": "Рукавичка",
+    "c25": 27,
+    "c26": 36
+   },
+   {
+    "name": "МЕТРО",
+    "c25": 52,
+    "c26": 31
+   },
+   {
+    "name": "Делікат Рітейл",
+    "c25": 0,
+    "c26": 30
+   },
+   {
+    "name": "ЕКО Маркет",
+    "c25": 0,
+    "c26": 29
+   },
+   {
+    "name": "СІЛЬПО",
+    "c25": 32,
+    "c26": 28
+   },
+   {
+    "name": "БАБАК",
+    "c25": 14,
+    "c26": 27
+   }
+  ]
+ },
+ "promodo": {
+  "campaign1": {
+   "metrics": [
+    {
+     "name": "Покази",
+     "plan": 37822500,
+     "fact": 53651245,
+     "diff": "+42%"
+    },
+    {
+     "name": "CPM",
+     "plan": 50,
+     "fact": 35,
+     "diff": "-30%",
+     "unit": "грн"
+    },
+    {
+     "name": "Перегляди",
+     "plan": 14442500,
+     "fact": 19679981,
+     "diff": "+36%"
+    },
+    {
+     "name": "% перегляду відео",
+     "plan": 69,
+     "fact": 75,
+     "diff": "+9%",
+     "unit": "%"
+    },
+    {
+     "name": "Частота контакту",
+     "plan": 5.9,
+     "fact": 7.6,
+     "diff": "+29%"
+    },
+    {
+     "name": "Охоплення",
+     "plan": 6368128,
+     "fact": 7020281,
+     "diff": "+10%"
+    },
+    {
+     "name": "Охоплення %",
+     "plan": 80,
+     "fact": 88,
+     "diff": "+10%",
+     "unit": "%"
+    },
+    {
+     "name": "Кліки",
+     "plan": 81830,
+     "fact": 247568,
+     "diff": "+203%"
+    },
+    {
+     "name": "CPC",
+     "plan": 23.0,
+     "fact": 7.6,
+     "diff": "-67%",
+     "unit": "грн"
+    },
+    {
+     "name": "CTR",
+     "plan": 0.24,
+     "fact": 0.5,
+     "diff": "+108%",
+     "unit": "%"
+    },
+    {
+     "name": "Бюджет",
+     "plan": 1883153,
+     "fact": 1881964,
+     "diff": "0%",
+     "unit": "грн"
+    }
+   ]
+  },
+  "campaign2": {
+   "metrics": [
+    {
+     "name": "Покази",
+     "plan": 32024000,
+     "fact": 32400383,
+     "diff": "+1%"
+    },
+    {
+     "name": "CPM",
+     "plan": 45,
+     "fact": 43,
+     "diff": "-4%",
+     "unit": "грн"
+    },
+    {
+     "name": "Перегляди",
+     "plan": 12075700,
+     "fact": 11582189,
+     "diff": "-4%"
+    },
+    {
+     "name": "% перегляду відео",
+     "plan": 74,
+     "fact": 75,
+     "diff": "+2%",
+     "unit": "%"
+    },
+    {
+     "name": "Частота контакту",
+     "plan": 5.5,
+     "fact": 5.1,
+     "diff": "-7%"
+    },
+    {
+     "name": "Охоплення",
+     "plan": 5839957,
+     "fact": 6330138,
+     "diff": "+8%"
+    },
+    {
+     "name": "Охоплення %",
+     "plan": 71,
+     "fact": 77,
+     "diff": "+8%",
+     "unit": "%"
+    },
+    {
+     "name": "Кліки",
+     "plan": 57274,
+     "fact": 110074,
+     "diff": "+92%"
+    },
+    {
+     "name": "CPC",
+     "plan": 25.0,
+     "fact": 12.6,
+     "diff": "-50%",
+     "unit": "грн"
+    },
+    {
+     "name": "CTR",
+     "plan": 0.2,
+     "fact": 0.37,
+     "diff": "+89%",
+     "unit": "%"
+    },
+    {
+     "name": "Бюджет",
+     "plan": 1433560,
+     "fact": 1385799,
+     "diff": "-3%",
+     "unit": "грн"
+    }
+   ]
+  },
+  "brand_lift": {
+   "periods": [
+    "Чер 2024",
+    "Вер 2024",
+    "Лис 2024",
+    "Кві 2025",
+    "Чер 2025",
+    "Гру 2025",
+    "Січ 2026",
+    "Бер 2026"
+   ],
+   "control": [
+    51.8,
+    55.34,
+    54.6,
+    57.5,
+    56.69,
+    52.0,
+    56.4,
+    55.84
+   ],
+   "experimental": [
+    52.81,
+    57.56,
+    59.62,
+    57.49,
+    59.43,
+    57.3,
+    58.1,
+    60.81
+   ],
+   "change": [
+    1.1,
+    2.2,
+    5.0,
+    -0.01,
+    2.74,
+    5.3,
+    1.65,
+    4.97
+   ]
+  }
+ }
+}</script>
+<script>
+
+// ===== Глобальні налаштування Chart.js =====
+Chart.defaults.font.family = "'Manrope', sans-serif";
+Chart.defaults.font.size = 12;
+Chart.defaults.color = '#3a5372';
+Chart.defaults.borderColor = 'rgba(30,80,140,0.12)';
+Chart.defaults.plugins.legend.labels.usePointStyle = true;
+Chart.defaults.plugins.legend.labels.padding = 14;
+Chart.defaults.plugins.legend.labels.boxWidth = 8;
+Chart.defaults.plugins.legend.labels.boxHeight = 8;
+Chart.defaults.plugins.tooltip.backgroundColor = 'rgba(13,30,53,0.94)';
+Chart.defaults.plugins.tooltip.borderColor = 'rgba(11,95,204,0.35)';
+Chart.defaults.plugins.tooltip.borderWidth = 1;
+Chart.defaults.plugins.tooltip.titleColor = '#ffffff';
+Chart.defaults.plugins.tooltip.bodyColor = '#cdd8e8';
+Chart.defaults.plugins.tooltip.padding = 12;
+Chart.defaults.plugins.tooltip.cornerRadius = 8;
+Chart.defaults.plugins.tooltip.titleFont = {weight:'600',size:13};
+Chart.defaults.plugins.tooltip.bodyFont = {weight:'400',size:12};
+Chart.defaults.plugins.tooltip.boxPadding = 6;
+
+const COLORS = {
+  trusk: '#0b5fcc',
+  truskNoPL: '#0a9e7a',
+  category: '#8fa8c4',
+  morsh: '#c0184a',
+  karp: '#c07a00',
+  myrh: '#6b38b8',
+  buvet: '#c05c00',
+  devay: '#0a7a3a',
+  pos: '#0a8a52',
+  neg: '#c0231a',
+  neutral: '#8fa8c4',
+  promo: '#c07a00',
+  bg: '#ffffff',
+  bgDeep: '#f0f4f8',
+  violet: '#6b38b8',
+};
+
+const fmt = n => new Intl.NumberFormat('uk-UA').format(Math.round(n));
+const fmtM = n => (n/1e6).toLocaleString('uk-UA', {maximumFractionDigits:2}) + 'M';
+const fmtK = n => Math.round(n/1e3).toLocaleString('uk-UA') + 'K';
+const fmtPct = n => (n>=0?'+':'') + n.toFixed(1) + '%';
+const fmtPctPt = n => (n>=0?'+':'') + n.toFixed(2) + ' в.п.';
+
+const data = JSON.parse(document.getElementById('reportData').textContent);
+
+// ===== Tabs nav =====
+document.querySelectorAll('.nav button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById(btn.dataset.target).classList.add('active');
+    window.scrollTo({top:0, behavior:'smooth'});
+    setTimeout(() => initChartsForSection(btn.dataset.target), 80);
+  });
+});
+
+const initialized = new Set();
+
+function initChartsForSection(id){
+  if(initialized.has(id)) return;
+  initialized.add(id);
+  if(id==='overview') initOverview();
+  if(id==='competitors') initCompetitors();
+  if(id==='networks') initNetworks();
+  if(id==='geo') initGeo();
+  if(id==='sku') initSku();
+  if(id==='promo') initPromo();
+  if(id==='media') initMedia();
+  if(id==='conclusions') initConclusions();
+}
+
+// ===== OVERVIEW =====
+function initOverview(){
+  const months = data.monthly.months;
+
+  new Chart(document.getElementById('chartMonthly'), {
+    type:'bar',
+    data:{
+      labels: months,
+      datasets:[
+        {label:'Категорія (всього)', data: data.monthly.category, backgroundColor:'rgba(100,115,148,0.3)', borderColor:COLORS.category, borderWidth:1, yAxisID:'y'},
+        {label:'Трускавецька', data: data.monthly.truskavetska_with_pl, backgroundColor:COLORS.trusk, borderColor:COLORS.trusk, borderWidth:1, yAxisID:'y2'},
+        {label:'Власний бренд', data: data.monthly.truskavetska_no_pl, backgroundColor:COLORS.truskNoPL, borderColor:COLORS.truskNoPL, borderWidth:1, yAxisID:'y2'},
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      interaction:{mode:'index'},
+      scales:{
+        y:{position:'left',grid:{color:'rgba(30,80,140,0.08)'},ticks:{callback:v=>fmtM(v)}},
+        y2:{position:'right',grid:{display:false},ticks:{callback:v=>fmtM(v),color:COLORS.truskNoPL}},
+        x:{grid:{display:false}}
+      },
+      plugins:{
+        tooltip:{callbacks:{label:c=>c.dataset.label+': '+fmt(c.parsed.y)+' пляшок'}},
+        legend:{position:'bottom'}
+      }
+    }
+  });
+
+  // Share comparison bar chart
+  const SH25 = data.summary.h1_2025.truskavetska_with_pl / data.summary.h1_2025.category * 100;
+  const SH26 = data.summary.h1_2026.truskavetska_with_pl / data.summary.h1_2026.category * 100;
+  new Chart(document.getElementById('chartShare'), {
+    type:'bar',
+    data:{
+      labels:['H1 2025','H1 2026'],
+      datasets:[
+        {label:'Трускавецька · H1 2025', data:[SH25, null], backgroundColor:COLORS.trusk, borderRadius:6, barThickness:40, stack:'s'},
+        {label:'Трускавецька · H1 2026', data:[null, SH26], backgroundColor:COLORS.truskNoPL, borderRadius:6, barThickness:40, stack:'s'},
+        {label:'Решта ринку · H1 2025', data:[100-SH25, null], backgroundColor:'rgba(140,165,195,0.35)', borderRadius:6, barThickness:40, stack:'s'},
+        {label:'Решта ринку · H1 2026', data:[null, 100-SH26], backgroundColor:'rgba(140,165,195,0.55)', borderRadius:6, barThickness:40, stack:'s'},
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      indexAxis:'y',
+      scales:{
+        x:{stacked:true, grid:{color:'rgba(30,80,140,0.08)'}, ticks:{callback:v=>v+'%'}, max:100},
+        y:{stacked:true, grid:{display:false}}
+      },
+      plugins:{
+        legend:{position:'bottom', labels:{boxWidth:10, padding:12, font:{size:11}}},
+        tooltip:{callbacks:{label:c=>c.dataset.label+': '+(c.parsed.x||0).toFixed(2)+'%'}}
+      },
+      layout:{padding:{top:8, bottom:4}}
+    }
+  });
+
+  // Waterfall structure
+  const totalGrowthPL = data.summary.h1_2026.truskavetska_with_pl - data.summary.h1_2025.truskavetska_with_pl;
+  const noPLGrowth = data.summary.h1_2026.truskavetska_no_pl - data.summary.h1_2025.truskavetska_no_pl;
+  const plGrowth = totalGrowthPL - noPLGrowth;
+
+  new Chart(document.getElementById('chartWaterfall'), {
+    type:'bar',
+    data:{
+      labels:['H1 2025\nТрускавецька','+ Власний бренд','+ Приватні марки\n(Своя Лінія + Сірко)','H1 2026\nТрускавецька'],
+      datasets:[{
+        data:[data.summary.h1_2025.truskavetska_with_pl, noPLGrowth, plGrowth, data.summary.h1_2026.truskavetska_with_pl],
+        backgroundColor:[COLORS.trusk, COLORS.truskNoPL, COLORS.karp, COLORS.trusk],
+        borderRadius: 6,
+      }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false, indexAxis:'x',
+      scales:{
+        y:{grid:{color:'rgba(30,80,140,0.08)'},ticks:{callback:v=>fmtM(v)}},
+        x:{grid:{display:false},ticks:{font:{size:11}}}
+      },
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:c=>fmt(c.parsed.y)+' пляшок'}}
+      }
+    }
+  });
+}
+
+// ===== COMPETITORS =====
+let chartBrandsRef;
+function initCompetitors(){
+  const ORDER = ['Моршинська','Трускавецька з PL','Карпатська Джерельна','Миргородська','Buvette','Девайтіс'];
+  const SHORT = {'Карпатська Джерельна':'Карпатська Дж.','Трускавецька з PL':'Трускавецька'};
+  const competitors = ORDER.map(l => {
+    const c = data.competitors.find(x => x.label === l);
+    return c ? {label: SHORT[l] || l, d25: c.d25, d26: c.d26, highlight: !!c.highlight} : null;
+  }).filter(Boolean);
+
+  function makeBrandsChart(scale){
+    if(chartBrandsRef) chartBrandsRef.destroy();
+    chartBrandsRef = new Chart(document.getElementById('chartBrands'), {
+      type:'bar',
+      data:{
+        labels:competitors.map(c=>c.label),
+        datasets:[
+          {label:'H1 2025', data:competitors.map(c=>c.d25), backgroundColor:'rgba(140,165,195,0.55)', borderRadius:4},
+          {label:'H1 2026', data:competitors.map(c=>c.d26), backgroundColor:competitors.map(c=>c.highlight?COLORS.trusk:COLORS.karp), borderRadius:4},
+        ]
+      },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        scales:{
+          y:{type:scale, grid:{color:'rgba(30,80,140,0.08)'},ticks:{callback:v=>v>=1e6?fmtM(v):fmtK(v)}},
+          x:{grid:{display:false},ticks:{font:{size:11}, maxRotation:30, minRotation:30}}
+        },
+        plugins:{
+          legend:{position:'bottom'},
+          tooltip:{callbacks:{label:c=>c.dataset.label+': '+fmt(c.parsed.y)+' пляшок'}}
+        }
+      }
+    });
+  }
+  makeBrandsChart('linear');
+
+  document.querySelectorAll('#competitorsScale button').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('#competitorsScale button').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      makeBrandsChart(b.dataset.scale);
+    });
+  });
+
+  // Growth chart
+  const sortedByGrowth = [...competitors].sort((a,b)=>(b.d26/b.d25)-(a.d26/a.d25));
+  new Chart(document.getElementById('chartGrowth'), {
+    type:'bar',
+    data:{
+      labels:sortedByGrowth.map(c=>c.label),
+      datasets:[{
+        data:sortedByGrowth.map(c=>((c.d26/c.d25-1)*100)),
+        backgroundColor:sortedByGrowth.map(c=>{
+          const g=(c.d26/c.d25-1)*100;
+          if(g<0) return COLORS.neg;
+          if(c.highlight) return COLORS.trusk;
+          return COLORS.pos;
+        }),
+        borderRadius:4
+      }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false, indexAxis:'y',
+      scales:{
+        x:{grid:{color:'rgba(30,80,140,0.08)'},ticks:{callback:v=>v+'%'}},
+        y:{grid:{display:false},ticks:{font:{size:11}}}
+      },
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:c=>fmtPct(c.parsed.x)}}
+      }
+    }
+  });
+
+  // Share chart
+  const shareData = competitors.map(c=>({
+    ...c,
+    sh25:(c.d25/data.summary.h1_2025.category*100),
+    sh26:(c.d26/data.summary.h1_2026.category*100)
+  }));
+
+  // Plugin для відображення зміни в.п. над парою стовпчиків
+  const sharePointsPlugin = {
+    id:'sharePoints',
+    afterDatasetsDraw: (chart) => {
+      const {ctx, scales:{x,y}} = chart;
+      if(!chart.data.datasets || chart.data.datasets.length < 2) return;
+      const meta25 = chart.getDatasetMeta(0);
+      const meta26 = chart.getDatasetMeta(1);
+      const ds25 = chart.data.datasets[0].data;
+      const ds26 = chart.data.datasets[1].data;
+      if(!ds25 || !ds26 || !meta25.data || !meta26.data) return;
+      
+      ds25.forEach((v25, i) => {
+        const v26 = ds26[i];
+        const diff = v26 - v25;
+        const bar25 = meta25.data[i];
+        const bar26 = meta26.data[i];
+        // Позиція по центру пари стовпчиків
+        const cx = (bar25.x + bar26.x) / 2;
+        const topY = Math.min(bar25.y, bar26.y) - 8;
+        
+        // Колір залежно від зміни
+        const isPositive = diff >= 0;
+        const color = isPositive ? '#076b3e' : '#c0231a';
+        const text = (isPositive?'+':'') + diff.toFixed(2) + ' в.п.';
+        
+        ctx.save();
+        ctx.font = '600 11px Manrope';
+        const textWidth = ctx.measureText(text).width;
+        const padX = 6, padY = 3;
+        const boxW = textWidth + padX*2;
+        const boxH = 18;
+        const boxX = cx - boxW/2;
+        const boxY = topY - boxH;
+        
+        // Фон з обвідкою
+        ctx.fillStyle = isPositive ? 'rgba(10,138,82,0.12)' : 'rgba(192,35,26,0.10)';
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 1;
+        const r = 4;
+        ctx.beginPath();
+        ctx.moveTo(boxX+r, boxY);
+        ctx.lineTo(boxX+boxW-r, boxY);
+        ctx.quadraticCurveTo(boxX+boxW, boxY, boxX+boxW, boxY+r);
+        ctx.lineTo(boxX+boxW, boxY+boxH-r);
+        ctx.quadraticCurveTo(boxX+boxW, boxY+boxH, boxX+boxW-r, boxY+boxH);
+        ctx.lineTo(boxX+r, boxY+boxH);
+        ctx.quadraticCurveTo(boxX, boxY+boxH, boxX, boxY+boxH-r);
+        ctx.lineTo(boxX, boxY+r);
+        ctx.quadraticCurveTo(boxX, boxY, boxX+r, boxY);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        
+        // Текст
+        ctx.fillStyle = color;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(text, cx, boxY + boxH/2);
+        ctx.restore();
+      });
+    }
+  };
+
+  new Chart(document.getElementById('chartShareBrands'), {
+    type:'bar',
+    plugins:[sharePointsPlugin],
+    data:{
+      labels:shareData.map(c=>c.label),
+      datasets:[
+        {label:'Частка H1 2025', data:shareData.map(c=>c.sh25), backgroundColor:'rgba(140,165,195,0.55)', borderRadius:4},
+        {label:'Частка H1 2026', data:shareData.map(c=>c.sh26), backgroundColor:shareData.map(c=>c.highlight?COLORS.trusk:COLORS.karp), borderRadius:4},
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      layout:{padding:{top:28}},
+      scales:{
+        y:{grid:{color:'rgba(30,80,140,0.08)'},ticks:{callback:v=>v+'%'}},
+        x:{grid:{display:false},ticks:{font:{size:11}, maxRotation:30, minRotation:30}}
+      },
+      plugins:{
+        legend:{position:'bottom'},
+        tooltip:{callbacks:{
+          label:c=>c.dataset.label+': '+c.parsed.y.toFixed(2)+'%',
+          afterBody:(items)=>{
+            if(items.length<2) return '';
+            const i = items[0].dataIndex;
+            const diff = shareData[i].sh26 - shareData[i].sh25;
+            return 'Δ: '+(diff>=0?'+':'')+diff.toFixed(2)+' в.п.';
+          }
+        }}
+      }
+    }
+  });
+
+  // Brands monthly
+  new Chart(document.getElementById('chartBrandsMonthly'), {
+    type:'line',
+    data:{
+      labels:data.monthly.months,
+      datasets:[
+        {label:'Моршинська', data:data.monthly.morshynska, borderColor:COLORS.morsh, backgroundColor:'rgba(236,103,136,0.05)', tension:0.35, borderWidth:2, pointRadius:3},
+        {label:'Карпатська Дж.', data:data.monthly.karpatska, borderColor:COLORS.karp, backgroundColor:'rgba(244,197,96,0.05)', tension:0.35, borderWidth:2, pointRadius:3},
+        {label:'Миргородська', data:data.monthly.myrhorodska, borderColor:COLORS.myrh, backgroundColor:'rgba(167,132,224,0.05)', tension:0.35, borderWidth:2, pointRadius:3},
+        {label:'Трускавецька', data:data.monthly.truskavetska_with_pl, borderColor:COLORS.trusk, backgroundColor:"rgba(11,95,204,0.06)", tension:0.35, borderWidth:3, pointRadius:4},
+        {label:'Buvette', data:data.monthly.buvette, borderColor:COLORS.buvet, backgroundColor:'rgba(255,153,84,0.05)', tension:0.35, borderWidth:2, pointRadius:3, borderDash:[4,4]},
+        {label:'Девайтіс', data:data.monthly.devaytis, borderColor:COLORS.devay, backgroundColor:'rgba(93,211,148,0.05)', tension:0.35, borderWidth:2, pointRadius:3, borderDash:[2,4]},
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      interaction:{mode:'index'},
+      scales:{
+        y:{grid:{color:'rgba(30,80,140,0.08)'},ticks:{callback:v=>v>=1e6?fmtM(v):fmtK(v)}},
+        x:{grid:{display:false},ticks:{font:{size:11}, maxRotation:30, minRotation:30}}
+      },
+      plugins:{
+        legend:{position:'bottom'},
+        tooltip:{callbacks:{label:c=>c.dataset.label+': '+fmt(c.parsed.y)}}
+      }
+    }
+  });
+}
+
+// ===== NETWORKS =====
+function initNetworks(){
+  const enriched = data.networks.map(n => {
+    const sh25 = n.cat25>0 ? n.t25/n.cat25*100 : 0;
+    const sh26 = n.cat26>0 ? n.t26/n.cat26*100 : 0;
+    const compVol25 = n.cat25 - n.t25;
+    const compVol26 = n.cat26 - n.t26;
+    return {
+      ...n, sh25, sh26,
+      diffShare: sh26 - sh25,
+      diffT: n.t25>0 ? (n.t26/n.t25-1)*100 : null,
+      diffCompetitor: compVol25>0 ? (compVol26/compVol25-1)*100 : 0,
+      diffCat: n.cat25>0 ? (n.cat26/n.cat25-1)*100 : 0
+    };
+  });
+
+  // Share change
+  const sortedByShare = [...enriched].sort((a,b)=>b.cat26-a.cat26).slice(0, 18);
+  new Chart(document.getElementById('chartNetworkShare'), {
+    type:'bar',
+    data:{
+      labels:sortedByShare.map(n=>n.name),
+      datasets:[{
+        data:sortedByShare.map(n=>n.diffShare),
+        backgroundColor:sortedByShare.map(n=>n.diffShare>=0?COLORS.pos:COLORS.neg),
+        borderRadius:4
+      }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false, indexAxis:'y',
+      scales:{
+        x:{grid:{color:'rgba(30,80,140,0.08)'},ticks:{callback:v=>(v>=0?'+':'')+v.toFixed(1)+' в.п.'}},
+        y:{grid:{display:false},ticks:{font:{size:11}}}
+      },
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:c=>{
+          const n = sortedByShare[c.dataIndex];
+          return [
+            'Δ частки: '+fmtPctPt(n.diffShare),
+            'Частка Q1\'25: '+n.sh25.toFixed(2)+'%',
+            'Частка Q1\'26: '+n.sh26.toFixed(2)+'%'
+          ];
+        }}}
+      }
+    }
+  });
+
+  // Growth comparison — вкладки по мережах
+  // Усі мережі, де бренд присутній у H1 2026
+  const networkNames = [...new Set(
+    [...enriched].filter(n=>n.t26>0).sort((a,b)=>b.t26-a.t26).map(n=>n.name)
+  )];
+
+  const brandColors = {
+    'Трускавецька':           COLORS.trusk,
+    'Моршинська':             COLORS.morsh,
+    'Карпатська Джерельна':   COLORS.karp,
+    'Миргородська':           COLORS.myrh,
+    'Buvette':                COLORS.buvet,
+    'Девайтіс':               COLORS.devay,
+    'Решта категорії':        'rgba(140,165,195,0.5)',
+  };
+  const brandOrder = ['Трускавецька','Моршинська','Карпатська Джерельна','Миргородська','Buvette','Девайтіс','Решта категорії'];
+
+  // Будуємо вкладки
+  const tabsWrap = document.getElementById('networkTabsWrap');
+  networkNames.forEach((name, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'net-tab' + (i===0?' active':'');
+    btn.textContent = name;
+    btn.dataset.network = name;
+    tabsWrap.appendChild(btn);
+  });
+
+  // Функція отримання даних по мережі
+  function getNetworkBrandData(networkName){
+    const bbn = data.brands_by_network[networkName] || {};
+    const netEnriched = enriched.find(n=>n.name===networkName);
+    return brandOrder.map(brand => {
+      let growth = null;
+      if(brand === 'Трускавецька'){
+        if(netEnriched && netEnriched.diffT !== null) growth = netEnriched.diffT;
+        else if(netEnriched && netEnriched.t25 === 0 && netEnriched.t26 > 0){
+          // Нова мережа — темпу немає, але бренд присутній
+          return {brand, growth: 0, isNew: true};
+        }
+      } else if(brand === 'Решта категорії'){
+        growth = netEnriched ? netEnriched.diffCompetitor : null;
+      } else {
+        const bd = bbn[brand];
+        if(bd && bd.q25 > 0) growth = (bd.q26/bd.q25-1)*100;
+      }
+      return {brand, growth};
+    }).filter(d => d.growth !== null && d.growth !== undefined);
+  }
+
+  // Плагін: позначка для нової мережі
+  const newNetworkPlugin = {
+    id: 'newNetworkBadge',
+    afterDatasetsDraw(chart) {
+      const {ctx, scales:{y}} = chart;
+      const ds = chart.data.datasets[0];
+      if(!ds || !ds._isNew) return;
+      const meta = chart.getDatasetMeta(0);
+      ds._isNew.forEach((isNew, i) => {
+        if(!isNew) return;
+        const bar = meta.data[i];
+        if(!bar) return;
+        const cx = bar.x;
+        const zeroY = y.getPixelForValue(0);
+        const text = '🆕 перші продажі';
+        ctx.save();
+        ctx.font = '700 11px Manrope';
+        const tw = ctx.measureText(text).width;
+        const pad = 8, h = 24;
+        const bx = cx - (tw+pad*2)/2, by = zeroY - h - 8;
+        ctx.fillStyle = 'rgba(11,95,204,0.12)';
+        ctx.strokeStyle = '#0b5fcc';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        if(ctx.roundRect) ctx.roundRect(bx, by, tw+pad*2, h, 6);
+        else ctx.rect(bx, by, tw+pad*2, h, 6);
+        ctx.fill(); ctx.stroke();
+        ctx.fillStyle = '#0b5fcc';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(text, cx, by + h/2);
+        // Пунктирна лінія до осі
+        ctx.setLineDash([3,3]);
+        ctx.beginPath();
+        ctx.moveTo(cx, by + h);
+        ctx.lineTo(cx, zeroY);
+        ctx.stroke();
+        ctx.restore();
+      });
+    }
+  };
+
+  // Плагін: стрілка + значення над обрізаними стовпчиками
+  const cappedLabelPlugin = {
+    id: 'cappedLabels',
+    afterDatasetsDraw(chart) {
+      const {ctx, scales:{x,y}, data} = chart;
+      const ds = data.datasets[0];
+      if(!ds || !ds._realData || !ds._hasCapped) return;
+      const meta = chart.getDatasetMeta(0);
+      ds._realData.forEach((realVal, i) => {
+        if(ds._isNew && ds._isNew[i]) return;
+        if(realVal === null || realVal <= 100) return;
+        const bar = meta.data[i];
+        if(!bar) return;
+        const bx = bar.x;
+        const topY = y.getPixelForValue(100);
+        const label = '+' + realVal.toFixed(0) + '%';
+        ctx.save();
+        // Стрілка вгору
+        ctx.fillStyle = '#5eb8ff';
+        ctx.beginPath();
+        ctx.moveTo(bx, topY - 14);
+        ctx.lineTo(bx - 5, topY - 6);
+        ctx.lineTo(bx + 5, topY - 6);
+        ctx.closePath();
+        ctx.fill();
+        // Текст
+        ctx.fillStyle = '#5eb8ff';
+        ctx.font = '600 11px Manrope';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'bottom';
+        ctx.fillText(label, bx, topY - 16);
+        ctx.restore();
+      });
+    }
+  };
+
+  // Створюємо chart
+  let netGrowthChart = new Chart(document.getElementById('chartNetworkGrowth'), {
+    type:'bar',
+    plugins:[cappedLabelPlugin, newNetworkPlugin],
+    data:{labels:[], datasets:[]},
+    options:{
+      responsive:true, maintainAspectRatio:false, indexAxis:'x',
+      scales:{
+        y:{
+          grid:{color:'rgba(30,80,140,0.08)'},
+          ticks:{callback:v=>v.toFixed(0)+'%'},
+          title:{display:true, text:'Темп зростання H1 2026 vs H1 2025, %', color:'#3a5372'}
+        },
+        x:{grid:{display:false},ticks:{font:{size:12}}}
+      },
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{
+          title: items => items[0]?.label || '',
+          label: c => {
+            const ds = c.dataset;
+            if(ds._isNew && ds._isNew[c.dataIndex]) return 'Нова мережа — перші продажі у H1 2026';
+            const realVal = ds._realData ? ds._realData[c.dataIndex] : c.parsed.y;
+            return fmtPct(realVal);
+          },
+        }}
+      }
+    }
+  });
+
+  function updateNetworkChart(networkName){
+    const items = getNetworkBrandData(networkName);
+    const realValues = items.map(d=>d.growth);
+    const hasCapped = realValues.some(v => v !== null && v > 100);
+    const cappedValues = hasCapped
+      ? realValues.map(v => v === null ? null : Math.min(v, 100))
+      : realValues;
+
+    // Межа осі Y
+    const minVal = Math.min(0, ...realValues.filter(v=>v!==null));
+    const maxVal = Math.max(...realValues.filter(v=>v!==null));
+    netGrowthChart.options.scales.y.max = hasCapped ? 100 : Math.ceil(maxVal / 10) * 10 + 5;
+    netGrowthChart.options.scales.y.min = minVal < 0 ? Math.max(minVal - 10, -120) : undefined;
+    netGrowthChart.options.scales.y.ticks.callback = v =>
+      hasCapped && v === 100 ? '100%+' : v.toFixed(0) + '%';
+
+    netGrowthChart.data.labels = items.map(d => d.brand);
+    netGrowthChart.data.datasets = [{
+      data: cappedValues,
+      _realData: realValues,
+      _hasCapped: hasCapped,
+      _isNew: items.map(d => !!d.isNew),
+      backgroundColor: items.map(d=> d.brand==='Трускавецька'
+        ? COLORS.trusk
+        : d.growth >= 0 ? 'rgba(140,165,195,0.55)' : "rgba(192,35,26,0.40)"),
+      borderColor: items.map(d=> d.brand==='Трускавецька' ? COLORS.trusk : 'transparent'),
+      borderWidth: items.map(d=> d.brand==='Трускавецька' ? 2 : 0),
+      borderRadius: 6,
+    }];
+    netGrowthChart.update();
+  }
+
+  // Обробники вкладок
+  tabsWrap.querySelectorAll('.net-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabsWrap.querySelectorAll('.net-tab').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      updateNetworkChart(btn.dataset.network);
+    });
+  });
+
+  // Ініціалізуємо першу вкладку
+  updateNetworkChart(networkNames[0]);
+
+  // Volume top
+  const top10 = [...enriched].sort((a,b)=>b.t26-a.t26).slice(0,10);
+  new Chart(document.getElementById('chartNetworkVolume'), {
+    type:'bar',
+    data:{
+      labels:top10.map(n=>n.name),
+      datasets:[
+        {label:'H1 2025', data:top10.map(n=>n.t25), backgroundColor:'rgba(140,165,195,0.55)', borderRadius:4},
+        {label:'H1 2026', data:top10.map(n=>n.t26), backgroundColor:COLORS.trusk, borderRadius:4}
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false, indexAxis:'y',
+      scales:{
+        x:{grid:{color:'rgba(30,80,140,0.08)'},ticks:{callback:v=>v>=1e6?fmtM(v):fmtK(v)}},
+        y:{grid:{display:false},ticks:{font:{size:11}}}
+      },
+      plugins:{
+        legend:{position:'bottom'},
+        tooltip:{callbacks:{label:c=>c.dataset.label+': '+fmt(c.parsed.x)}}
+      }
+    }
+  });
+
+  // Table
+  const tbody = document.getElementById('networkTableBody');
+  const sortedTable = [...enriched].sort((a,b)=>b.cat26-a.cat26);
+  sortedTable.forEach(n => {
+    const tr = document.createElement('tr');
+
+    // Динаміка категорії
+    const diffCatPct = n.cat25>0 ? (n.cat26/n.cat25-1)*100 : 0;
+
+    // Позиція Трускавецької за темпом серед усіх брендів у мережі
+    const bbn = data.brands_by_network[n.name] || {};
+    const brandGrowths = [];
+    // Додаємо Трускавецьку
+    if(n.diffT !== null) brandGrowths.push({name:'Трускавецька', g: n.diffT});
+    // Додаємо конкурентів
+    const competitorNames = ['Моршинська','Карпатська Джерельна','Миргородська','Buvette','Девайтіс'];
+    competitorNames.forEach(b => {
+      const bd = bbn[b];
+      if(bd && bd.q25>0) brandGrowths.push({name:b, g:(bd.q26/bd.q25-1)*100});
+    });
+    // Сортуємо за темпом спадання
+    brandGrowths.sort((a,b)=>b.g-a.g);
+    const truskPos = brandGrowths.findIndex(b=>b.name==='Трускавецька');
+    const totalBrands = brandGrowths.length;
+
+    // Позначка позиції
+    let posLabel = '—';
+    let posBadgeClass = 'flat';
+    if(n.t25 === 0 && n.t26 > 0){
+      posLabel = '🆕 нова мережа';
+      posBadgeClass = 'flat';
+    } else if(truskPos !== -1){
+      const pos = truskPos + 1;
+      if(pos === 1){
+        posLabel = '🥇 1-е з ' + totalBrands;
+        posBadgeClass = 'up';
+      } else if(pos === 2){
+        posLabel = '🥈 2-е з ' + totalBrands;
+        posBadgeClass = 'up';
+      } else if(pos === 3){
+        posLabel = '🥉 3-є з ' + totalBrands;
+        posBadgeClass = 'flat';
+      } else {
+        posLabel = pos + '-е з ' + totalBrands;
+        posBadgeClass = 'down';
+      }
+    }
+
+    // Будуємо HTML tooltip з детальною інформацією
+    let tooltipHtml = '';
+    if(n.t25 === 0 && n.t26 > 0){
+      // Нова мережа: показуємо конкурентів з їх темпами + Трускавецьку окремим рядком
+      const bbnNew = data.brands_by_network[n.name] || {};
+      const rivals = [];
+      competitorNames.forEach(b => {
+        const bd = bbnNew[b];
+        if(bd && bd.q25 > 0) rivals.push({name:b, g:(bd.q26/bd.q25-1)*100, q25:bd.q25, q26:bd.q26});
+      });
+      rivals.sort((a,b)=>b.g-a.g);
+
+      tooltipHtml = '<div class="pos-tooltip-title">Нова мережа · темп H1 2026 vs H1 2025</div>';
+      tooltipHtml += `<div class="pos-tooltip-row pos-tooltip-highlight">
+        <span class="pos-medal">🆕</span>
+        <span class="pos-brand">Трускавецька</span>
+        <span class="pos-growth pos-up">нова</span>
+        <span class="pos-vol">0→${fmtK(n.t26)}</span>
+        <span class="pos-share">0%→${((n.t26/n.cat26)*100).toFixed(1)}%</span>
+      </div>`;
+      rivals.forEach((b, i) => {
+        const medal = `${i+1}.`;
+        const sh = ((b.q25/n.cat25)*100).toFixed(1)+'%→'+((b.q26/n.cat26)*100).toFixed(1)+'%';
+        tooltipHtml += `<div class="pos-tooltip-row">
+          <span class="pos-medal">${medal}</span>
+          <span class="pos-brand">${b.name}</span>
+          <span class="pos-growth ${b.g>=0?'pos-up':'pos-down'}">${b.g>=0?'+':''}${b.g.toFixed(1)}%</span>
+          <span class="pos-vol">${fmtK(b.q25)}→${fmtK(b.q26)}</span>
+          <span class="pos-share">${sh}</span>
+        </div>`;
+      });
+      if(!rivals.length) tooltipHtml += '<div class="pos-tooltip-row"><span class="pos-brand">Немає даних по конкурентах</span></div>';
+    } else if(brandGrowths.length > 0){
+      const bbn2 = data.brands_by_network[n.name] || {};
+      tooltipHtml = `<div class="pos-tooltip-title">Темп H1 2026 vs H1 2025</div>`;
+      brandGrowths.forEach((b, i) => {
+        const medal = i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}.`;
+        const isT = b.name==='Трускавецька';
+        const bd = isT ? {q25: n.t25, q26: n.t26} : (bbn2[b.name]||{});
+        const vol25 = bd.q25 ? fmtK(bd.q25) : '—';
+        const vol26 = bd.q26 ? fmtK(bd.q26) : '—';
+        const sh = bd.q25 ? ((bd.q25/n.cat25)*100).toFixed(1)+'%→'+((bd.q26/n.cat26)*100).toFixed(1)+'%' : '';
+        tooltipHtml += `<div class="pos-tooltip-row${isT?' pos-tooltip-highlight':''}">
+          <span class="pos-medal">${medal}</span>
+          <span class="pos-brand">${b.name}</span>
+          <span class="pos-growth ${b.g>=0?'pos-up':'pos-down'}">${b.g>=0?'+':''}${b.g.toFixed(1)}%</span>
+          <span class="pos-vol">${vol25}→${vol26}</span>
+          ${sh?`<span class="pos-share">${sh}</span>`:''}
+        </div>`;
+      });
+    }
+
+    const fmtCell = v => v >= 1e6 ? (v/1e6).toLocaleString('uk-UA',{maximumFractionDigits:2})+'M' : fmtK(v);
+
+    tr.innerHTML = `
+      <td><strong>${n.name}</strong></td>
+      <td class="num">${fmtCell(n.cat25)} → ${fmtCell(n.cat26)}</td>
+      <td><span class="badge ${diffCatPct>=0?'up':'down'}">${fmtPct(diffCatPct)}</span></td>
+      <td class="num">${fmtCell(n.t25)} → ${fmtCell(n.t26)}</td>
+      <td><span class="badge ${n.diffT!==null&&n.diffT>=0?'up':'down'}">${n.diffT===null?'<span style="color:var(--accent);font-size:11px">🆕 нова</span>':fmtPct(n.diffT)}</span></td>
+      <td class="num">${n.sh25.toFixed(2)}% → ${n.sh26.toFixed(2)}%</td>
+      <td><span class="badge ${n.diffShare>=0?'up':'down'}">${fmtPctPt(n.diffShare)}</span></td>
+      <td>
+        <div class="pos-wrap">
+          <span class="badge ${posBadgeClass}" style="font-size:11px;cursor:default">${posLabel}</span>
+          <div class="pos-tooltip">${tooltipHtml}</div>
+        </div>
+      </td>`;
+    tbody.appendChild(tr);
+  });
+
+  // Tooltip позиції: fixed-позиціонування, щоб не обрізався контейнером таблиці
+  tbody.querySelectorAll('.pos-wrap').forEach(wrap => {
+    const tip = wrap.querySelector('.pos-tooltip');
+    if(!tip) return;
+
+    function place(){
+      wrap.classList.add('tip-open');
+      tip.style.visibility = 'hidden';
+      tip.style.left = '0px';
+      tip.style.top = '0px';
+      const b = wrap.getBoundingClientRect();
+      const th = tip.offsetHeight;
+      const tw = tip.offsetWidth;
+      const vh = window.innerHeight;
+      const vw = window.innerWidth;
+      const GAP = 8;
+
+      // По вертикалі: знизу, якщо влазить; інакше зверху; інакше притискаємо до краю
+      let top = b.bottom + GAP;
+      if(top + th > vh - 8){
+        top = b.top - th - GAP;
+        if(top < 8) top = Math.max(8, vh - th - 8);
+      }
+      // По горизонталі: вирівнюємо по правому краю бейджа, тримаємо в межах вікна
+      let left = b.right - tw;
+      if(left < 8) left = 8;
+      if(left + tw > vw - 8) left = Math.max(8, vw - tw - 8);
+
+      tip.style.left = left + 'px';
+      tip.style.top = top + 'px';
+      tip.style.visibility = 'visible';
+    }
+
+    function hide(){
+      wrap.classList.remove('tip-open');
+      tip.style.visibility = '';
+    }
+
+    wrap.addEventListener('mouseenter', place);
+    wrap.addEventListener('mouseleave', hide);
+    // Тач-пристрої: тап відкриває, повторний тап або тап поза — закриває
+    wrap.addEventListener('click', e => {
+      e.stopPropagation();
+      if(wrap.classList.contains('tip-open')) hide();
+      else {
+        tbody.querySelectorAll('.pos-wrap.tip-open').forEach(w => {
+          w.classList.remove('tip-open');
+          const t2 = w.querySelector('.pos-tooltip');
+          if(t2) t2.style.visibility = '';
+        });
+        place();
+      }
+    });
+  });
+
+  document.addEventListener('click', () => {
+    tbody.querySelectorAll('.pos-wrap.tip-open').forEach(w => {
+      w.classList.remove('tip-open');
+      const t2 = w.querySelector('.pos-tooltip');
+      if(t2) t2.style.visibility = '';
+    });
+  });
+
+  window.addEventListener('scroll', () => {
+    tbody.querySelectorAll('.pos-wrap.tip-open').forEach(w => {
+      w.classList.remove('tip-open');
+      const t2 = w.querySelector('.pos-tooltip');
+      if(t2) t2.style.visibility = '';
+    });
+  }, {passive:true});
+}
+
+// ===== GEO =====
+let chartGeoVolumeRef, chartGeoGrowthRef, chartGeoBubbleRef;
+function initGeo(){
+  renderGeo('with-pl');
+}
+
+function renderGeo(mode){
+  const arr = mode==='with-pl' ? data.geo_with_pl : data.geo_no_pl;
+  const total25 = arr.reduce((s,a)=>s+a.q25,0);
+  const total26 = arr.reduce((s,a)=>s+a.q26,0);
+  const overallGrowth = (total26/total25-1)*100;
+
+  // KPI
+  const sortedByGrowth = [...arr].filter(a=>a.q25>1000).sort((a,b)=>(b.q26/b.q25)-(a.q26/a.q25));
+  const top1 = sortedByGrowth[0];
+  const negCount = arr.filter(a => a.q26 < a.q25).length;
+  const posCount = arr.filter(a => a.q26 > a.q25).length;
+
+  const kpi = document.getElementById('geoKpi');
+  kpi.innerHTML = `
+    <div class="kpi success">
+      <div class="kpi-label">Загальний обсяг H1 2026</div>
+      <div class="kpi-value">${fmtM(total26)}</div>
+      <div class="kpi-sub">пляшок · vs ${fmtM(total25)} у H1 2025</div>
+      <span class="kpi-delta up">↑ ${overallGrowth.toFixed(1)}%</span>
+    </div>
+    <div class="kpi success">
+      <div class="kpi-label">Області з ростом</div>
+      <div class="kpi-value">${posCount}<span style="font-size:18px;color:var(--text-muted);font-weight:400;">/${arr.length}</span></div>
+      <div class="kpi-sub">${negCount} в мінусі</div>
+    </div>
+    <div class="kpi success">
+      <div class="kpi-label">Лідер за темпом</div>
+      <div class="kpi-value">${top1.name.split('-')[0]}</div>
+      <div class="kpi-sub">+${((top1.q26/top1.q25-1)*100).toFixed(0)}% H1'26 vs H1'25</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Топ-3 області</div>
+      <div class="kpi-value">${(([...arr].sort((a,b)=>b.q26-a.q26).slice(0,3).reduce((s,a)=>s+a.q26,0)/total26)*100).toFixed(0)}%</div>
+      <div class="kpi-sub">обсягу — концентрація</div>
+    </div>
+  `;
+
+  // Top 10 chart
+  const top10 = [...arr].sort((a,b)=>b.q26-a.q26).slice(0,10);
+  if(chartGeoVolumeRef) chartGeoVolumeRef.destroy();
+  chartGeoVolumeRef = new Chart(document.getElementById('chartGeoVolume'), {
+    type:'bar',
+    data:{
+      labels:top10.map(a=>a.name),
+      datasets:[
+        {label:'H1 2025', data:top10.map(a=>a.q25), backgroundColor:'rgba(140,165,195,0.55)', borderRadius:4},
+        {label:'H1 2026', data:top10.map(a=>a.q26), backgroundColor:COLORS.trusk, borderRadius:4}
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false, indexAxis:'y',
+      scales:{
+        x:{grid:{color:'rgba(30,80,140,0.08)'},ticks:{callback:v=>v>=1e6?fmtM(v):fmtK(v)}},
+        y:{grid:{display:false},ticks:{font:{size:11}}}
+      },
+      plugins:{
+        legend:{position:'bottom'},
+        tooltip:{callbacks:{label:c=>c.dataset.label+': '+fmt(c.parsed.x)}}
+      }
+    }
+  });
+
+  // Growth chart (виключаємо нові області з q25=0 — для них немає темпу)
+  const sortedAll = [...arr].filter(a=>a.q25>0).sort((a,b)=>(b.q26/b.q25)-(a.q26/a.q25));
+  if(chartGeoGrowthRef) chartGeoGrowthRef.destroy();
+  chartGeoGrowthRef = new Chart(document.getElementById('chartGeoGrowth'), {
+    type:'bar',
+    data:{
+      labels:sortedAll.map(a=>a.name),
+      datasets:[{
+        data:sortedAll.map(a=>(a.q26/a.q25-1)*100),
+        backgroundColor:sortedAll.map(a=>(a.q26/a.q25-1)*100>=0?COLORS.pos:COLORS.neg),
+        borderRadius:4
+      }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false, indexAxis:'y',
+      scales:{
+        x:{grid:{color:'rgba(30,80,140,0.08)'},ticks:{callback:v=>v.toFixed(0)+'%'}},
+        y:{grid:{display:false},ticks:{font:{size:11}}}
+      },
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:c=>fmtPct(c.parsed.x)}}
+      }
+    }
+  });
+
+  // Bubble (виключаємо нові області з q25=0 — для них немає темпу)
+  if(chartGeoBubbleRef) chartGeoBubbleRef.destroy();
+  const bubbleArr = arr.filter(a=>a.q25>0);
+  chartGeoBubbleRef = new Chart(document.getElementById('chartGeoBubble'), {
+    type:'bubble',
+    data:{
+      datasets:[{
+        label:'Області',
+        data:bubbleArr.map(a=>({
+          x:a.q26,
+          y:(a.q26/a.q25-1)*100,
+          r:Math.max(4, Math.sqrt(a.q26)/40),
+          name:a.name
+        })),
+        backgroundColor:bubbleArr.map(a=>(a.q26/a.q25-1)*100>=0?"rgba(10,158,122,0.45)":"rgba(192,35,26,0.40)"),
+        borderColor:bubbleArr.map(a=>(a.q26/a.q25-1)*100>=0?COLORS.pos:COLORS.neg),
+        borderWidth:1.5
+      }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      scales:{
+        x:{type:'logarithmic', grid:{color:'rgba(30,80,140,0.08)'}, title:{display:true, text:'Обсяг H1 2026 (лог. шкала)', color:'#3a5372'}, ticks:{callback:v=>v>=1e6?fmtM(v):fmtK(v)}},
+        y:{grid:{color:'rgba(30,80,140,0.08)'}, title:{display:true, text:'Темп зростання, %', color:'#3a5372'}, ticks:{callback:v=>v.toFixed(0)+'%'}}
+      },
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:c=>{
+          const a = c.raw;
+          return [a.name, 'Обсяг: '+fmt(a.x)+' пляшок', 'Темп: '+fmtPct(a.y)];
+        }}}
+      }
+    }
+  });
+}
+
+// ===== SKU =====
+function initSku(){
+  const VL = {'1,5':'PET 1,5л','0,5':'PET 0,5л','0,75':'PET 0,75л','7':'PET 7л','5':'PET 5л','2':'PET 2л','0,33':'Скло 0,33л'};
+  const ranked = Object.entries(data.vol_no_pl)
+    .map(([k,v]) => ({name: VL[k] || k, q25: v.q25, q26: v.q26}))
+    .filter(v => v.q25 > 500 || v.q26 > 500)
+    .sort((a,b) => b.q26 - a.q26);
+
+  new Chart(document.getElementById('chartSku'), {
+    type:'bar',
+    data:{
+      labels:ranked.map(s=>s.name),
+      datasets:[
+        {label:'H1 2025', data:ranked.map(s=>s.q25), backgroundColor:'rgba(140,165,195,0.55)', borderRadius:4},
+        {label:'H1 2026', data:ranked.map(s=>s.q26), backgroundColor:COLORS.truskNoPL, borderRadius:4}
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      scales:{
+        y:{grid:{color:'rgba(30,80,140,0.08)'},ticks:{callback:v=>fmtK(v)}},
+        x:{grid:{display:false},ticks:{font:{size:10}, maxRotation:35, minRotation:35}}
+      },
+      plugins:{
+        legend:{position:'bottom'},
+        tooltip:{callbacks:{
+          label:c=>c.dataset.label+': '+fmt(c.parsed.y),
+          afterBody:(items)=>{
+            if(items.length<2) return '';
+            const i=items[0].dataIndex, a=ranked[i].q25, b=ranked[i].q26;
+            if(!a) return 'новий формат';
+            return 'Δ: '+((b/a-1)*100>=0?'+':'')+((b/a-1)*100).toFixed(1)+'%';
+          }
+        }}
+      }
+    }
+  });
+
+  // Volume by package size (without PL)
+  const VOL_LABELS = {'1,5':'PET 1,5л','0,5':'PET 0,5л','0,75':'PET 0,75л','7':'PET 7л','5':'PET 5л','2':'PET 2л','0,33':'Скло 0,33л'};
+  const volQ1 = Object.entries(data.vol_with_pl)
+    .map(([k,v]) => ({label: VOL_LABELS[k] || k, q25: v.q25, q26: v.q26}))
+    .filter(v => v.q25 > 1000 || v.q26 > 1000)
+    .sort((a,b) => b.q26 - a.q26);
+
+  // Plugin для відображення % змін над парою стовпчиків
+  const skuVolumePlugin = {
+    id:'skuVolumeChange',
+    afterDatasetsDraw: (chart) => {
+      const {ctx} = chart;
+      if(!chart.data.datasets || chart.data.datasets.length < 2) return;
+      const meta25 = chart.getDatasetMeta(0);
+      const meta26 = chart.getDatasetMeta(1);
+      const ds25 = chart.data.datasets[0].data;
+      const ds26 = chart.data.datasets[1].data;
+      if(!ds25 || !ds26 || !meta25.data || !meta26.data) return;
+      ds25.forEach((v25, i) => {
+        const v26 = ds26[i];
+        if(!v25 || v25 === 0) return;
+        const growth = (v26/v25-1)*100;
+        const bar25 = meta25.data[i];
+        const bar26 = meta26.data[i];
+        const cx = (bar25.x + bar26.x) / 2;
+        const topY = Math.min(bar25.y, bar26.y) - 8;
+
+        const isPositive = growth >= 0;
+        const color = isPositive ? '#076b3e' : '#c0231a';
+        const text = (isPositive?'+':'') + growth.toFixed(0) + '%';
+
+        ctx.save();
+        ctx.font = '600 11px Manrope';
+        const textWidth = ctx.measureText(text).width;
+        const padX = 6;
+        const boxW = textWidth + padX*2;
+        const boxH = 18;
+        const boxX = cx - boxW/2;
+        const boxY = topY - boxH;
+
+        ctx.fillStyle = isPositive ? 'rgba(10,138,82,0.12)' : 'rgba(192,35,26,0.10)';
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 1;
+        const r = 4;
+        ctx.beginPath();
+        ctx.moveTo(boxX+r, boxY);
+        ctx.lineTo(boxX+boxW-r, boxY);
+        ctx.quadraticCurveTo(boxX+boxW, boxY, boxX+boxW, boxY+r);
+        ctx.lineTo(boxX+boxW, boxY+boxH-r);
+        ctx.quadraticCurveTo(boxX+boxW, boxY+boxH, boxX+boxW-r, boxY+boxH);
+        ctx.lineTo(boxX+r, boxY+boxH);
+        ctx.quadraticCurveTo(boxX, boxY+boxH, boxX, boxY+boxH-r);
+        ctx.lineTo(boxX, boxY+r);
+        ctx.quadraticCurveTo(boxX, boxY, boxX+r, boxY);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = color;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(text, cx, boxY + boxH/2);
+        ctx.restore();
+      });
+    }
+  };
+
+  new Chart(document.getElementById('chartSkuVolume'), {
+    type:'bar',
+    plugins:[skuVolumePlugin],
+    data:{
+      labels:volQ1.map(v=>v.label),
+      datasets:[
+        {label:'H1 2025', data:volQ1.map(v=>v.q25), backgroundColor:'rgba(140,165,195,0.55)', borderRadius:4},
+        {label:'H1 2026', data:volQ1.map(v=>v.q26), backgroundColor:COLORS.truskNoPL, borderRadius:4}
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      layout:{padding:{top:28}},
+      scales:{
+        y:{grid:{color:'rgba(30,80,140,0.08)'},ticks:{callback:v=>fmtK(v)}},
+        x:{grid:{display:false}}
+      },
+      plugins:{
+        legend:{position:'bottom'},
+        tooltip:{callbacks:{
+          label:c=>c.dataset.label+': '+fmt(c.parsed.y),
+          afterBody:(items)=>{
+            if(items.length<2) return '';
+            const i = items[0].dataIndex;
+            const v25 = volQ1[i].q25;
+            const v26 = volQ1[i].q26;
+            if(!v25) return '';
+            const g = (v26/v25-1)*100;
+            return 'Δ: '+(g>=0?'+':'')+g.toFixed(1)+'%';
+          }
+        }}
+      }
+    }
+  });
+
+  // Carbonation: пара стовпчиків H1'25 vs H1'26 за типом газованості, + bagdes з %
+  const carbOrder = ['Слабогазована','Негазована','Сильногазована'];
+  // Кольори за маркуванням продукції: негазована — біла, слабогазована — зелена,
+  // сильногазована — синя. Біла має чітку темну обводку, щоб не зливалась із тлом.
+  const carbColors = {
+    'Негазована':     '#ffffff',
+    'Слабогазована':  '#0a9e7a',
+    'Сильногазована': '#0b5fcc',
+  };
+  const carbBorders = {
+    'Негазована':     '#3a5372',
+    'Слабогазована':  '#0a9e7a',
+    'Сильногазована': '#0b5fcc',
+  };
+
+  const carbBadgePlugin = {
+    id:'carbBadges',
+    afterDatasetsDraw: (chart) => {
+      const {ctx} = chart;
+      if(!chart.data.datasets || chart.data.datasets.length < 2) return;
+      const meta25 = chart.getDatasetMeta(0);
+      const meta26 = chart.getDatasetMeta(1);
+      const ds25 = chart.data.datasets[0].data;
+      const ds26 = chart.data.datasets[1].data;
+      if(!ds25 || !ds26 || !meta25.data || !meta26.data) return;
+      ds25.forEach((v25, i) => {
+        const v26 = ds26[i];
+        if(!v25 || v25 === 0) return;
+        const growth = (v26/v25-1)*100;
+        const bar25 = meta25.data[i];
+        const bar26 = meta26.data[i];
+        const cx = (bar25.x + bar26.x) / 2;
+        const topY = Math.min(bar25.y, bar26.y) - 8;
+        const isPositive = growth >= 0;
+        const color = isPositive ? '#076b3e' : '#c0231a';
+        const text = (isPositive?'+':'') + growth.toFixed(1) + '%';
+        ctx.save();
+        ctx.font = '600 11px Manrope';
+        const textWidth = ctx.measureText(text).width;
+        const padX = 6;
+        const boxW = textWidth + padX*2;
+        const boxH = 18;
+        const boxX = cx - boxW/2;
+        const boxY = topY - boxH;
+        ctx.fillStyle = isPositive ? 'rgba(10,138,82,0.12)' : 'rgba(192,35,26,0.10)';
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 1;
+        const r = 4;
+        ctx.beginPath();
+        ctx.moveTo(boxX+r, boxY);
+        ctx.lineTo(boxX+boxW-r, boxY);
+        ctx.quadraticCurveTo(boxX+boxW, boxY, boxX+boxW, boxY+r);
+        ctx.lineTo(boxX+boxW, boxY+boxH-r);
+        ctx.quadraticCurveTo(boxX+boxW, boxY+boxH, boxX+boxW-r, boxY+boxH);
+        ctx.lineTo(boxX+r, boxY+boxH);
+        ctx.quadraticCurveTo(boxX, boxY+boxH, boxX, boxY+boxH-r);
+        ctx.lineTo(boxX, boxY+r);
+        ctx.quadraticCurveTo(boxX, boxY, boxX+r, boxY);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = color;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(text, cx, boxY + boxH/2);
+        ctx.restore();
+      });
+    }
+  };
+
+  let carbChart = new Chart(document.getElementById('chartSkuGrowth'), {
+    type:'bar',
+    plugins:[carbBadgePlugin],
+    data:{labels:[], datasets:[]},
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      layout:{padding:{top:28}},
+      scales:{
+        y:{grid:{color:'rgba(30,80,140,0.08)'},ticks:{callback:v=>fmtK(v)}, title:{display:true, text:'Пляшки', color:'#3a5372'}},
+        x:{grid:{display:false}}
+      },
+      plugins:{
+        legend:{position:'bottom'},
+        tooltip:{callbacks:{
+          label:c=>c.dataset.label+': '+fmt(c.parsed.y)+' пляшок',
+          afterBody:(items)=>{
+            if(items.length<2) return '';
+            const v25 = items[0].parsed.y;
+            const v26 = items[1].parsed.y;
+            if(!v25) return '';
+            const g = (v26/v25-1)*100;
+            return 'Δ: '+(g>=0?'+':'')+g.toFixed(1)+'%';
+          }
+        }}
+      }
+    }
+  });
+
+  function renderCarb(mode){
+    const source = mode === 'with-pl' ? data.carb_with_pl : data.carb_no_pl;
+    const labels = carbOrder.filter(c => source[c]);
+    const v25 = labels.map(c => source[c].q25);
+    const v26 = labels.map(c => source[c].q26);
+    carbChart.data.labels = labels;
+    carbChart.data.datasets = [
+      {label:'H1 2025', data:v25, backgroundColor:'rgba(140,165,195,0.55)', borderRadius:4},
+      {label:'H1 2026', data:v26,
+        backgroundColor:labels.map(c=>carbColors[c]),
+        borderColor:labels.map(c=>carbBorders[c]),
+        borderWidth:labels.map(c=>c==='Негазована'?2:0),
+        borderRadius:4},
+    ];
+    carbChart.update();
+  }
+  renderCarb('with-pl');
+
+  document.querySelectorAll('#carbToggle button').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('#carbToggle button').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      renderCarb(b.dataset.mode);
+    });
+  });
+}
+
+// ===== PROMO =====
+function initPromo(){
+  // Overlay sales × promotions
+  new Chart(document.getElementById('chartPromoOverlay'), {
+    type:'bar',
+    data:{
+      labels:data.monthly.months,
+      datasets:[
+        {type:'bar', label:'Продажі Трускавецька (без PL)', data:data.monthly.truskavetska_no_pl, backgroundColor:"rgba(11,95,204,0.7)", borderRadius:4, yAxisID:'y', order:2},
+        {type:'line', label:'Активних акцій / день (середньо)', data:[...data.promo.monthly_avg_2025, ...data.promo.monthly_avg_2026], borderColor:COLORS.promo, backgroundColor:'rgba(244,197,96,0.1)', borderWidth:3, tension:0.35, pointRadius:5, pointBackgroundColor:COLORS.promo, yAxisID:'y2', order:1, fill:true},
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      interaction:{mode:'index'},
+      scales:{
+        y:{position:'left', grid:{color:'rgba(30,80,140,0.08)'}, ticks:{callback:v=>fmtK(v)}, title:{display:true, text:'Продажі (пляшок)', color:'#3a5372'}},
+        y2:{position:'right', grid:{display:false}, ticks:{callback:v=>v.toFixed(0), color:COLORS.promo}, title:{display:true, text:'Активних акцій / день', color:COLORS.promo}},
+        x:{grid:{display:false}}
+      },
+      plugins:{
+        legend:{position:'bottom'},
+        tooltip:{callbacks:{label:c=>{
+          if(c.dataset.type==='bar') return c.dataset.label+': '+fmt(c.parsed.y)+' пляшок';
+          return c.dataset.label+': '+c.parsed.y.toFixed(1);
+        }}}
+      }
+    }
+  });
+
+  // Помісячна динаміка активних акцій
+  new Chart(document.getElementById('chartPromoWeekly'), {
+    type:'line',
+    data:{
+      labels:['Січень','Лютий','Березень','Квітень','Травень','Червень'],
+      datasets:[
+        {label:'H1 2025', data:data.promo.monthly_avg_2025, borderColor:COLORS.violet||'#6b38b8', backgroundColor:'rgba(107,56,184,0.08)', tension:0.35, borderWidth:2, pointRadius:4, fill:true},
+        {label:'H1 2026', data:data.promo.monthly_avg_2026, borderColor:COLORS.trusk, backgroundColor:"rgba(11,95,204,0.06)", tension:0.35, borderWidth:3, pointRadius:5, fill:true},
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      scales:{
+        y:{grid:{color:'rgba(30,80,140,0.08)'}, beginAtZero:true, title:{display:true, text:'Активних акцій / день', color:'#3a5372'}},
+        x:{grid:{display:false}}
+      },
+      plugins:{legend:{position:'bottom'}}
+    }
+  });
+
+
+  // === Тривалість акцій по мережах ===
+  const pd = data.promo.detail;
+  const nets = pd.networks;
+
+  // Сортуємо по кожному показнику окремо (за H1 2026 від найбільшого до найменшого)
+  const netsSortedByDur = [...nets].sort((a,b) => (pd.h1_26[b].avg_duration||0) - (pd.h1_26[a].avg_duration||0));
+  const netsSortedByDisc = [...nets].sort((a,b) => (pd.h1_26[b].avg_discount||0) - (pd.h1_26[a].avg_discount||0));
+
+  const durData = nets.map(n => pd.h1_26[n].avg_duration);
+  const discData = nets.map(n => pd.h1_26[n].avg_discount);
+  const countData26 = nets.map(n => pd.h1_26[n].count);
+
+  new Chart(document.getElementById('chartPromoDuration'), {
+    type:'bar',
+    data:{
+      labels: netsSortedByDur,
+      datasets:[
+        {label:'H1 2025', data: netsSortedByDur.map(n => (pd.h1_25[n]||{}).avg_duration||null), backgroundColor:'rgba(140,165,195,0.55)', borderRadius:4},
+        {label:'H1 2026', data: netsSortedByDur.map(n => pd.h1_26[n].avg_duration), backgroundColor: COLORS.trusk, borderRadius:4}
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false, indexAxis:'y',
+      scales:{
+        x:{grid:{color:'rgba(30,80,140,0.08)'}, beginAtZero:true, title:{display:true, text:'Днів', color:'#3a5372'}},
+        y:{grid:{display:false}, ticks:{font:{size:11}}}
+      },
+      plugins:{
+        legend:{position:'bottom'},
+        tooltip:{callbacks:{label:c=>c.dataset.label+': '+(c.parsed.x||0).toFixed(1)+' днів'}}
+      }
+    }
+  });
+
+  // === Середня глибина знижки ===
+  new Chart(document.getElementById('chartPromoDiscount'), {
+    type:'bar',
+    data:{
+      labels: netsSortedByDisc,
+      datasets:[
+        {label:'H1 2025', data: netsSortedByDisc.map(n => (pd.h1_25[n]||{}).avg_discount||null), backgroundColor:'rgba(140,165,195,0.55)', borderRadius:4},
+        {label:'H1 2026', data: netsSortedByDisc.map(n => pd.h1_26[n].avg_discount), backgroundColor: COLORS.truskNoPL, borderRadius:4}
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false, indexAxis:'y',
+      scales:{
+        x:{grid:{color:'rgba(30,80,140,0.08)'}, beginAtZero:true, ticks:{callback:v=>v+'%'}, title:{display:true, text:'Знижка, %', color:'#3a5372'}},
+        y:{grid:{display:false}, ticks:{font:{size:11}}}
+      },
+      plugins:{
+        legend:{position:'bottom'},
+        tooltip:{callbacks:{label:c=>c.dataset.label+': '+(c.parsed.x||0).toFixed(1)+'%'}}
+      }
+    }
+  });
+
+  // === Кількість акцій H1 2025 vs H1 2026 ===
+  const compareSet = data.promo.compare;
+  new Chart(document.getElementById('chartPromoCompare'), {
+    type:'bar',
+    data:{
+      labels:compareSet.map(c=>c.name),
+      datasets:[
+        {label:'H1 2025', data:compareSet.map(c=>c.c25), backgroundColor:'rgba(140,165,195,0.55)', borderRadius:4},
+        {label:'H1 2026', data:compareSet.map(c=>c.c26), backgroundColor:COLORS.promo, borderRadius:4}
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false, indexAxis:'y',
+      scales:{
+        x:{grid:{color:'rgba(30,80,140,0.08)'}, beginAtZero:true},
+        y:{grid:{display:false}, ticks:{font:{size:11}}}
+      },
+      plugins:{
+        legend:{position:'bottom'},
+        tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.parsed.x+' акцій'}}
+      }
+    }
+  });
+
+  // === Бульбашкова: кількість акцій vs тривалість, розмір = знижка ===
+  new Chart(document.getElementById('chartPromoBubble'), {
+    type:'bubble',
+    data:{
+      datasets:[{
+        label:'Мережі',
+        data: nets.filter(n => durData[nets.indexOf(n)] !== null).map(n => ({
+          x: countData26[nets.indexOf(n)],
+          y: durData[nets.indexOf(n)],
+          r: Math.max(6, (discData[nets.indexOf(n)] || 15) * 0.6),
+          name: n,
+          discount: discData[nets.indexOf(n)],
+        })),
+        backgroundColor: 'rgba(11,95,204,0.45)',
+        borderColor: COLORS.trusk,
+        borderWidth: 1.5,
+      }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      scales:{
+        x:{grid:{color:'rgba(30,80,140,0.08)'}, title:{display:true, text:'К-сть акцій', color:'#3a5372'}},
+        y:{grid:{color:'rgba(30,80,140,0.08)'}, title:{display:true, text:'Сер. тривалість, днів', color:'#3a5372'}},
+      },
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{
+          label: c => [
+            c.raw.name,
+            'Акцій: '+c.raw.x,
+            'Тривалість: '+c.raw.y.toFixed(1)+' днів',
+            'Знижка: '+(c.raw.discount||0).toFixed(1)+'%',
+          ]
+        }}
+      }
+    }
+  });
+}
+
+// ===== MEDIA =====
+function initMedia(){
+  // Full overlay
+  // Period definitions overlaid as boxes
+  const camp1Plugin = {
+    id:'campaignBoxes',
+    beforeDatasetsDraw: (chart) => {
+      const {ctx, chartArea:{top, bottom, left, right}, scales:{x}} = chart;
+      if(!x || !chart.data.labels) return;
+
+      const barWidth = (right - left) / chart.data.labels.length;
+
+      // Індекси: 0-5 = Січ–Чер 2025, 6=Січ'26, 7=Лют, 8=Бер, 9=Кві, 10=Тра, 11=Чер
+      // Кампанія 1: 23.12.2025 – 22.02.2026
+      const c1x1 = x.getPixelForValue(6) - barWidth * 0.5;
+      const c1x2 = x.getPixelForValue(7) - barWidth * 0.5 + barWidth * 0.79;
+      // Кампанія 2: 16.03.2026 – 10.05.2026
+      const c2x1 = x.getPixelForValue(8) - barWidth * 0.5 + barWidth * 0.52;
+      const c2x2 = x.getPixelForValue(10) - barWidth * 0.5 + barWidth * 0.32;
+
+      function drawZone(x1, x2, fillColor, borderColor, label){
+        if(!isFinite(x1) || !isFinite(x2) || x2 <= x1) return;
+        x1 = Math.max(x1, left); x2 = Math.min(x2, right);
+        ctx.save();
+        ctx.fillStyle = fillColor;
+        ctx.fillRect(x1, top, x2 - x1, bottom - top);
+        ctx.strokeStyle = borderColor;
+        ctx.lineWidth = 2;
+        ctx.setLineDash([]);
+        ctx.beginPath();
+        ctx.rect(x1, top, x2 - x1, bottom - top);
+        ctx.stroke();
+        ctx.font = '700 10px Manrope';
+        const cx = (x1 + x2) / 2;
+        const labelW = ctx.measureText(label).width + 16;
+        const labelH = 22;
+        const labelX = Math.min(Math.max(cx - labelW/2, left + 2), right - labelW - 2);
+        const labelY = top + 4;
+        ctx.fillStyle = borderColor;
+        ctx.beginPath();
+        if(ctx.roundRect) ctx.roundRect(labelX, labelY, labelW, labelH, 4);
+        else ctx.rect(labelX, labelY, labelW, labelH);
+        ctx.fill();
+        ctx.fillStyle = '#ffffff';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(label, labelX + labelW/2, labelY + labelH/2);
+        ctx.restore();
+      }
+
+      drawZone(c1x1, c1x2, 'rgba(107,56,184,0.10)', 'rgba(107,56,184,0.85)', '▶ Кампанія 1');
+      drawZone(c2x1, c2x2, 'rgba(192,122,0,0.12)', 'rgba(192,122,0,0.85)', '▶ Кампанія 2');
+    }
+  };
+
+  new Chart(document.getElementById('chartFullOverlay'), {
+    type:'bar',
+    plugins:[camp1Plugin],
+    data:{
+      labels:data.monthly.months,
+      datasets:[
+        {type:'bar', label:'Продажі Трускавецька без PL', data:data.monthly.truskavetska_no_pl, backgroundColor:"rgba(11,95,204,0.75)", borderRadius:4, yAxisID:'y', order:3},
+        {type:'line', label:'Активних акцій / день', data:[...data.promo.monthly_avg_2025, ...data.promo.monthly_avg_2026], borderColor:COLORS.promo, borderWidth:3, tension:0.35, pointRadius:5, pointBackgroundColor:COLORS.promo, yAxisID:'y2', order:1, fill:false},
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      interaction:{mode:'index'},
+      scales:{
+        y:{position:'left', grid:{color:'rgba(30,80,140,0.08)'}, ticks:{callback:v=>fmtK(v)}, title:{display:true, text:'Продажі (пляшок)', color:'#3a5372'}},
+        y2:{position:'right', grid:{display:false}, ticks:{color:COLORS.promo}, title:{display:true, text:'Акцій / день', color:COLORS.promo}},
+        x:{grid:{display:false}}
+      },
+      plugins:{
+        legend:{position:'bottom'},
+      }
+    }
+  });
+
+  // Render campaign metrics
+  const campMeta = {
+    '1': 'YouTube · Meta · Google Ads · ЦА: 18-54, міста 50k+ · TA Size: 8M',
+    '2': 'YouTube · Meta · Google Ads · ЦА: 18-54 (розширено) · TA Size: 8,2M (+Кропивницький)',
+  };
+
+  function renderActiveCampaign(campNum){
+    const container = document.getElementById('promoCampaignActive');
+    const metaEl = document.getElementById('campMeta');
+    container.innerHTML = '';
+    metaEl.textContent = campMeta[campNum];
+    const metrics = campNum === '1' ? data.promodo.campaign1.metrics : data.promodo.campaign2.metrics;
+    metrics.forEach(m => {
+      const el = document.createElement('div');
+      el.className = 'metric';
+      const factDisplay = m.unit ? (m.fact + ' ' + m.unit) : (m.fact >= 1e6 ? fmtM(m.fact) : (m.fact >= 1e3 ? fmtK(m.fact) : m.fact));
+      const planDisplay = m.unit ? (m.plan + ' ' + m.unit) : (m.plan >= 1e6 ? fmtM(m.plan) : (m.plan >= 1e3 ? fmtK(m.plan) : m.plan));
+      const sign = m.diff.startsWith('+') ? 'up' : (m.diff.startsWith('-') ? 'down' : 'flat');
+      const costMetrics = ['CPM','CPC'];
+      const goodForCost = costMetrics.includes(m.name) && m.diff.startsWith('-');
+      const finalSign = goodForCost ? 'up' : sign;
+      el.innerHTML = `
+        <div class="name">${m.name}</div>
+        <div class="fact">${factDisplay}</div>
+        <div class="plan-fact"><span>план: ${planDisplay}</span></div>
+        <span class="delta ${finalSign}">${m.diff}</span>
+      `;
+      container.appendChild(el);
+    });
+  }
+
+  renderActiveCampaign('1');
+
+  document.querySelectorAll('#campToggle button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#campToggle button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderActiveCampaign(btn.dataset.camp);
+    });
+  });
+
+  // Brand Lift chart
+  new Chart(document.getElementById('chartBrandLift'), {
+    type:'line',
+    data:{
+      labels:data.promodo.brand_lift.periods,
+      datasets:[
+        {label:'Контрольна група (без реклами)', data:data.promodo.brand_lift.control, borderColor:COLORS.neutral, backgroundColor:'rgba(100,115,148,0.05)', tension:0.3, borderWidth:2, pointRadius:4, borderDash:[5,5]},
+        {label:'Експериментальна група (бачила рекламу)', data:data.promodo.brand_lift.experimental, borderColor:COLORS.truskNoPL, backgroundColor:'rgba(34,211,164,0.1)', tension:0.3, borderWidth:3, pointRadius:5, fill:'-1'},
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      scales:{
+        y:{grid:{color:'rgba(30,80,140,0.08)'}, ticks:{callback:v=>v+'%'}, suggestedMin:48, suggestedMax:64, title:{display:true, text:'Впізнаваність бренду, %', color:'#3a5372'}},
+        x:{grid:{display:false}, ticks:{font:{size:10}, maxRotation:30, minRotation:30}}
+      },
+      plugins:{
+        legend:{position:'bottom'},
+        tooltip:{callbacks:{
+          label:c=>c.dataset.label+': '+c.parsed.y.toFixed(2)+'%',
+          afterBody:(items)=>{
+            if(items.length<2) return '';
+            const change = data.promodo.brand_lift.change[items[0].dataIndex];
+            return 'Δ: '+(change>=0?'+':'')+change.toFixed(2)+' в.п.';
+          }
+        }}
+      }
+    }
+  });
+}
+
+// ===== CONCLUSIONS =====
+function initConclusions(){
+  // Matrix bubble: brands x size x growth
+  const SHORT2 = {'Карпатська Джерельна':'Карпатська Дж.','Трускавецька з PL':'Трускавецька','Трускавецька без PL':'Власний бренд'};
+  const competitors = data.competitors.map(c => ({
+    label: SHORT2[c.label] || c.label,
+    size: c.d26,
+    growth: c.d25 ? (c.d26/c.d25-1)*100 : 0,
+    is: !!c.highlight
+  })).sort((a,b) => b.size - a.size);
+
+  new Chart(document.getElementById('chartMatrix'), {
+    type:'bubble',
+    data:{
+      datasets:competitors.map(c => ({
+        label:c.label,
+        data:[{
+          x:c.size,
+          y:c.growth,
+          r:Math.max(8, Math.sqrt(c.size)/200)
+        }],
+        backgroundColor:c.is ? "rgba(11,95,204,0.7)" : (c.growth<0 ? "rgba(192,35,26,0.40)" : "rgba(10,158,122,0.45)"),
+        borderColor:c.is ? COLORS.trusk : (c.growth<0 ? COLORS.neg : COLORS.pos),
+        borderWidth:2
+      }))
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      scales:{
+        x:{type:'logarithmic', grid:{color:'rgba(30,80,140,0.08)'}, title:{display:true, text:'Обсяг H1 2026 (лог. шкала)', color:'#3a5372'}, ticks:{callback:v=>v>=1e6?fmtM(v):fmtK(v)}},
+        y:{grid:{color:'rgba(30,80,140,0.08)'}, title:{display:true, text:'Темп зростання H1 2026 vs H1 2025, %', color:'#3a5372'}, ticks:{callback:v=>v.toFixed(0)+'%'}}
+      },
+      plugins:{
+        legend:{position:'bottom', labels:{boxWidth:8, padding:10}},
+        tooltip:{callbacks:{label:c=>c.dataset.label+': '+fmtM(c.parsed.x)+' пляш., '+fmtPct(c.parsed.y)}}
+      }
+    }
+  });
+}
+
+// ===== Init first section =====
+initChartsForSection('overview');
+
+
+</script>
+
+</body>
+</html>
