@@ -4,6 +4,7 @@ import type { Block } from '@/types/content'
 import { renderRich } from '@/lib/rich'
 import { WIDGETS } from '@/features/widgets'
 import { DriveImage } from '@/components/DriveImage'
+import { driveDownload } from '@/lib/drive'
 
 /**
  * Рендерить дерево блоків розділу.
@@ -53,6 +54,22 @@ function GalleryItem({
         )}
       </span>
       {item.caption && <figcaption>{renderRich(item.caption)}</figcaption>}
+
+      {item.files && item.files.length > 0 && (
+        <div className="gallery__files">
+          {item.files.map((f) => (
+            <a
+              className="filechip"
+              href={driveDownload(f.driveId)}
+              key={f.format}
+              title={`Завантажити ${f.format}${f.size ? `, ${f.size}` : ''}`}
+            >
+              <b>{f.format}</b>
+              {f.size && <i>{f.size}</i>}
+            </a>
+          ))}
+        </div>
+      )}
     </figure>
   )
 }

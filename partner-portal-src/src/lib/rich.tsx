@@ -136,7 +136,8 @@ export function blocksToText(blocks: Block[]): string {
             block.items
               .map(
                 (item) =>
-                  `${item.alt} ${item.caption ? plainRich(item.caption) : ''}`,
+                  `${item.alt} ${item.caption ? plainRich(item.caption) : ''} ` +
+                  (item.files ?? []).map((f) => f.format).join(' '),
               )
               .join(' '),
           )
