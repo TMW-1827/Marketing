@@ -28,11 +28,14 @@ export interface Equipment {
   note?: string
   /** Документ із повною специфікацією */
   specUrl?: string
+  /** id зображення на Google Drive — рендер без фону або фото */
+  photoId?: string
 }
 
 export const EQUIPMENT: Equipment[] = [
   {
     id: 'shelf-423',
+    photoId: '1qn8nSG7N8jFlqw7tTGCUvwdxsmkkKhKs',
     name: 'Полиця вузька 423',
     kind: 'Полиці',
     widthMm: 311,
@@ -44,6 +47,7 @@ export const EQUIPMENT: Equipment[] = [
   },
   {
     id: 'shelf-444',
+    photoId: '1wcihmQEWkm18-TdHrW8Ng-S-1cIaInRz',
     name: 'Полиця широка 444',
     kind: 'Полиці',
     widthMm: 414,
@@ -55,6 +59,7 @@ export const EQUIPMENT: Equipment[] = [
   },
   {
     id: 'rack-euro',
+    photoId: '1GEwdpVs5kz9PcCMG105pz9Kc6rrzrEDN',
     name: 'Стійка Єврорек ½ палети',
     kind: 'Стійки',
     widthMm: 800,
@@ -66,6 +71,7 @@ export const EQUIPMENT: Equipment[] = [
   },
   {
     id: 'rack-400',
+    photoId: '1695PqVNReTuTPcCcjvryXMc77gdlHVyB',
     name: 'Стійка металева 400×400',
     kind: 'Стійки',
     widthMm: 400,
@@ -76,6 +82,7 @@ export const EQUIPMENT: Equipment[] = [
   },
   {
     id: 'rack-cityart',
+    photoId: '1ZX-Xz6taRCS4cIVgpHvyEC3CpIxVTGe9',
     name: 'Стійка металева CityArt 840×642',
     kind: 'Стійки',
     widthMm: 840,
@@ -86,6 +93,7 @@ export const EQUIPMENT: Equipment[] = [
   },
   {
     id: 'rack-p2',
+    photoId: '1X4PQ-9Azy-PUwAqcVxUK6ha6alLu3vOF',
     name: 'Стійка П2',
     kind: 'Стійки',
     widthMm: 550,
@@ -96,6 +104,7 @@ export const EQUIPMENT: Equipment[] = [
   },
   {
     id: 'floor-stand',
+    photoId: '1gug7w_neTax1Xdz3qbKCRsA1U0qDkpq7',
     name: 'Підставка на підлогу',
     kind: 'Підставки',
     widthMm: 700,
@@ -106,6 +115,7 @@ export const EQUIPMENT: Equipment[] = [
   },
   {
     id: 'fridge-power-250',
+    photoId: '1UTLTswYc9eP_QSvfbvlwVjd2LT_0ZGRu',
     name: 'Холодильник Ice Stream Power 250',
     kind: 'Холодильники',
     widthMm: 435,
@@ -116,6 +126,7 @@ export const EQUIPMENT: Equipment[] = [
   },
   {
     id: 'fridge-force',
+    photoId: '1KwTOUzcqCbdfzVrmtstYQc3UE9q402rZ',
     name: 'Холодильник Ice Stream Force',
     kind: 'Холодильники',
     widthMm: 455,
@@ -126,6 +137,7 @@ export const EQUIPMENT: Equipment[] = [
   },
   {
     id: 'fridge-dynamic',
+    photoId: '1JcZFgbH0nhv9MZqE2dNxrXvG9e2UlOsM',
     name: 'Холодильник Ice Stream Dynamic',
     kind: 'Холодильники',
     widthMm: 680,
@@ -136,6 +148,7 @@ export const EQUIPMENT: Equipment[] = [
   },
   {
     id: 'fridge-leader',
+    photoId: '1i5z2L7weRkZPZ0TCv4WrGWirwrqVrE7X',
     name: 'Холодильник Ice Stream Leader',
     kind: 'Холодильники',
     widthMm: 765,

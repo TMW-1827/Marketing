@@ -113,10 +113,20 @@ export type Block =
         note?: Rich
       }>
     }
-  /** Зображення з бандла: прев'ю логотипів і подібне */
+  /**
+   * Прев'ю зображень. `src` — файл із бандла, `driveId` — файл на Drive.
+   * `tone: 'dark'` дає темну підкладку: без неї білі версії логотипа на
+   * білій картці не видно взагалі.
+   */
   | {
       kind: 'gallery'
-      items: Array<{ src: string; alt: string; caption?: Rich }>
+      items: Array<{
+        src?: string
+        driveId?: string
+        alt: string
+        caption?: Rich
+        tone?: 'light' | 'dark'
+      }>
     }
   /** Контакти з клікабельними адресами: пошта, телефон, сайт */
   | {

@@ -300,6 +300,24 @@
   box-shadow: 0 5px 16px rgba(11, 33, 55, 0.09);
 }
 
+/* Фото позиції: прозорий PNG на світлій підкладці, щоб пляшка не «висіла» */
+.sku__photo {
+  display: block;
+  background: var(--card-soft);
+  border-radius: var(--r-sm);
+  margin-bottom: 10px;
+  padding: 8px;
+  text-align: center;
+}
+
+.sku__photo img {
+  display: block;
+  width: auto;
+  height: 104px;
+  margin: 0 auto;
+  object-fit: contain;
+}
+
 .sku__top {
   display: flex;
   gap: 11px;
@@ -375,6 +393,25 @@
   -webkit-overflow-scrolling: touch;
   padding: 14px 18px calc(26px + var(--sa-bottom));
   animation: slide-up 0.24s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.sheet__photo {
+  display: block;
+  background: var(--card-soft);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 14px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.sheet__photo img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: 220px;
+  margin: 0 auto;
+  object-fit: contain;
 }
 
 .sheet__grip {
@@ -663,7 +700,26 @@
     animation: fade-in 0.15s ease;
   }
 
-  .sheet__grip {
+  .sheet__photo {
+  display: block;
+  background: var(--card-soft);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 14px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.sheet__photo img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: 220px;
+  margin: 0 auto;
+  object-fit: contain;
+}
+
+.sheet__grip {
     display: none;
   }
 }

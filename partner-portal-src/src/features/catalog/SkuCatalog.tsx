@@ -1,5 +1,7 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { skus } from '@/lib/catalog'
+import { SKU_PHOTOS } from '@/data/photos'
+import { DriveImage } from '@/components/DriveImage'
 import {
   CARBONATION_FILL,
   CARBONATION_STROKE,
@@ -73,6 +75,7 @@ export function SkuCatalog() {
             key={sku.id}
             onClick={() => openSku(sku.id)}
           >
+            <SkuPhoto id={sku.id} name={sku.name} />
             <span className="sku__top">
               <span
                 className="sku__dot"
@@ -110,6 +113,27 @@ export function SkuCatalog() {
         габарити, вагу, УКТЗЕД, термін придатності.
       </p>
     </>
+  )
+}
+
+/**
+ * Фото позиції. Якщо його немає або воно не завантажилось, місце під нього
+ * не резервується: картка просто лишається текстовою, як була раніше.
+ */
+function SkuPhoto({ id, name }: { id: number; name: string }) {
+  const [failed, setFailed] = useState(false)
+  const photoId = SKU_PHOTOS[id]
+  if (!photoId || failed) return null
+
+  return (
+    <span className="sku__photo">
+      <DriveImage
+        id={photoId}
+        width={260}
+        alt={`«Трускавецька» ${name}`}
+        onGiveUp={() => setFailed(true)}
+      />
+    </span>
   )
 }
 

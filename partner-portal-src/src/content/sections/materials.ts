@@ -30,7 +30,7 @@ export const materials: Section = {
       blocks: [
         {
           kind: 'paragraph',
-          text: 'Основна версія — знак із горами та червоним написом. Саме її беруть за замовчуванням: зовнішні комунікації, POS-матеріали, партнерські макети на світлому фоні.',
+          text: 'Шість офіційних варіантів знака. За замовчуванням беруть перший — з горами, кольоровий; решта потрібні там, де він не читається: на темному фоні, у малому розмірі, у лінійці SPORT.',
         },
         {
           kind: 'gallery',
@@ -39,7 +39,38 @@ export const materials: Section = {
               src: 'brand/truskavetska-logo-mountains-crop.svg',
               alt: 'Логотип «Трускавецька»: гори з ялинами та червоний напис',
               caption:
-                'Основний логотип, кольоровий. Векторний файл — масштабується без втрати якості на будь-який розмір, від етикетки до банера.',
+                '**З горами, кольоровий.** Основна версія — для світлих фонів: етикетки, POS, партнерські макети.',
+            },
+            {
+              driveId: '1HW7kahVY3TSaDHL-EpBSP3f4mWrzsIzz',
+              tone: 'dark',
+              alt: 'Біло-срібна версія логотипа з горами',
+              caption:
+                '**З горами, біло-срібний.** Для кольорових, темних і фотографічних фонів.',
+            },
+            {
+              src: 'brand/truskavetska-logo-text.svg',
+              alt: 'Текстовий логотип «Трускавецька», червоний',
+              caption:
+                '**Текстовий червоний.** Коли знак із горами в малому розмірі стає нерозбірливим: документи, монохромні макети.',
+            },
+            {
+              driveId: '1lXb3d4kuIzmBIU7yNvRWWHg_auXyb9dG',
+              tone: 'dark',
+              alt: 'Текстовий логотип «Трускавецька», білий',
+              caption: '**Текстовий білий.** Той самий напис на кольоровому чи фотофоні.',
+            },
+            {
+              src: 'brand/truskavetska-logo-sport.svg',
+              alt: 'Логотип «Трускавецька SPORT», червоний',
+              caption:
+                '**SPORT, кольоровий.** Тільки для лінійки SPORT і спортивних проєктів — із класичним знаком не змішується.',
+            },
+            {
+              driveId: '1RpQl79ac6Vy0ks8klLHqVCzv3TfllCyQ',
+              tone: 'dark',
+              alt: 'Логотип «Трускавецька SPORT», білий',
+              caption: '**SPORT, білий.** Для темних фонів і фото з подій.',
             },
           ],
         },
@@ -94,12 +125,15 @@ export const materials: Section = {
           level: 4,
         },
         {
-          kind: 'paragraph',
-          text: 'Для кольорових, темних і фотографічних фонів, де основна версія недоречна.',
-        },
-        {
           kind: 'assets',
           items: [
+            {
+              title: 'Логотип біло-срібний',
+              href: LOGO.whiteSilverSvg,
+              format: 'SVG',
+              size: '17 КБ',
+              note: 'Вектор для цифрових макетів',
+            },
             {
               title: 'Логотип біло-срібний',
               href: LOGO.whiteSilverPdf,
@@ -113,6 +147,68 @@ export const materials: Section = {
               format: 'AI',
               size: '2,1 МБ',
               note: 'Вихідник Adobe Illustrator',
+            },
+          ],
+        },
+        {
+          kind: 'heading',
+          text: 'Текстовий логотип',
+          level: 4,
+        },
+        {
+          kind: 'assets',
+          items: [
+            {
+              title: 'Текстовий, червоний',
+              href: LOGO.textSvg,
+              format: 'SVG',
+              size: '5 КБ',
+              note: 'Вектор; є також PDF за посиланням у теці',
+            },
+            {
+              title: 'Текстовий, білий',
+              href: LOGO.textWhiteSvg,
+              format: 'SVG',
+              size: '5 КБ',
+              note: 'Для темних і кольорових фонів',
+            },
+            {
+              title: 'Текстовий, англійською',
+              href: LOGO.textEnPdf,
+              format: 'PDF',
+              size: '351 КБ',
+              note: 'Для експортних та англомовних матеріалів',
+            },
+          ],
+        },
+        {
+          kind: 'heading',
+          text: 'Лінійка SPORT',
+          level: 4,
+        },
+        {
+          kind: 'assets',
+          items: [
+            {
+              title: 'SPORT, кольоровий',
+              href: LOGO.sportSvg,
+              format: 'SVG',
+              size: '8 КБ',
+              note: 'Основна версія знака SPORT',
+            },
+            {
+              title: 'SPORT, білий',
+              href: LOGO.sportWhiteSvg,
+              format: 'SVG',
+              size: '8 КБ',
+              note: 'Для темних фонів і фото з подій',
+            },
+            {
+              title: 'SPORT, кольоровий',
+              href: LOGO.sportPdf,
+              format: 'PDF',
+              size: '93 КБ',
+              note: 'Вектор для друку',
             },
           ],
         },
