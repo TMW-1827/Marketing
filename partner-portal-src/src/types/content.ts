@@ -33,6 +33,7 @@ export type WidgetName =
   | 'format-table'
   | 'ean-table'
   | 'glossary'
+  | 'equipment-catalog'
 
 export type Block =
   | { kind: 'paragraph'; text: Rich }
@@ -95,6 +96,27 @@ export type Block =
   | {
       kind: 'links'
       items: Array<{ to: string; title: string; text: Rich; tone?: 'blue' | 'green' | 'red' }>
+    }
+  /**
+   * Файли для завантаження чи перегляду. Самі файли живуть на Google Drive:
+   * портал на них лише посилається, тому оновлення файлу не потребує
+   * перезбірки, а важкі макети не потрапляють у бандл.
+   */
+  | {
+      kind: 'assets'
+      items: Array<{
+        title: string
+        href: string
+        /** SVG, PDF, EPS, AI, PNG — або «тека» для каталогу файлів */
+        format?: string
+        size?: string
+        note?: Rich
+      }>
+    }
+  /** Зображення з бандла: прев'ю логотипів і подібне */
+  | {
+      kind: 'gallery'
+      items: Array<{ src: string; alt: string; caption?: Rich }>
     }
   /** Контакти з клікабельними адресами: пошта, телефон, сайт */
   | {

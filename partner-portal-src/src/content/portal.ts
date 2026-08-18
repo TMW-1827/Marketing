@@ -10,6 +10,7 @@ import { distributors } from './sections/distributors'
 import { retail } from './sections/retail'
 import { horeca } from './sections/horeca'
 import { logistics } from './sections/logistics'
+import { equipment } from './sections/equipment'
 import { quality } from './sections/quality'
 import { sponsorship } from './sections/sponsorship'
 import { consumers } from './sections/consumers'
@@ -43,6 +44,7 @@ export const truskavetskaPortal: Portal = {
     retail,
     horeca,
     logistics,
+    equipment,
     quality,
     sponsorship,
     consumers,

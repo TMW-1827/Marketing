@@ -6,6 +6,7 @@ import { SkuCatalog } from '@/features/catalog/SkuCatalog'
 import { PalletCalculator } from '@/features/calculators/PalletCalculator'
 import { EanTable, FormatTable, PalletTable } from '@/features/calculators/Tables'
 import { Glossary } from '@/features/reference/Glossary'
+import { EquipmentCatalog } from '@/features/equipment/EquipmentCatalog'
 
 /**
  * Реєстр інтерактивних модулів.
@@ -22,4 +23,5 @@ export const WIDGETS: Record<WidgetName, ComponentType> = {
   'format-table': FormatTable,
   'ean-table': EanTable,
   glossary: Glossary,
+  'equipment-catalog': EquipmentCatalog,
 }

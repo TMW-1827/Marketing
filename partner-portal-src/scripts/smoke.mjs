@@ -29,7 +29,7 @@ check('слоган на головній', /ІЗ САМОГО СЕРЦЯ КАР
 // Другий слоган навчального порталу в зовнішній комунікації не вживається
 check('на порталі один слоган', !/енергія природи/i.test(home))
 const tiles = await page.locator('.linkcard').count()
-check('плитка переходів для аудиторій', tiles >= 6, `${tiles} плиток`)
+check('плитка переходів для аудиторій', tiles >= 7, `${tiles} плиток`)
 await page.locator('.linkcard').first().click()
 await page.waitForTimeout(400)
 check('перехід із плитки працює', page.url().includes('#/water'), page.url())
@@ -136,6 +136,75 @@ check(
   await page.locator('.faq details[open]').count() === 1,
 )
 
+// --- Логотипи: вигляд і посилання на формати ---
+await page.goto(base + '#/materials', { waitUntil: 'networkidle' })
+await page.waitForTimeout(400)
+const logoImg = page.locator('.gallery img').first()
+check('логотип показаний на сторінці', await logoImg.count() === 1)
+const logoBox = await logoImg.boundingBox()
+check(
+  'логотип реально відмалювався',
+  Boolean(logoBox && logoBox.width > 80 && logoBox.height > 30),
+  logoBox ? `${Math.round(logoBox.width)}×${Math.round(logoBox.height)} px` : 'немає',
+)
+const formats = await page.locator('.asset__format').allInnerTexts()
+for (const want of ['SVG', 'PDF', 'EPS', 'AI', 'PNG']) {
+  check(`є посилання на формат ${want}`, formats.includes(want))
+}
+const assetLinks = await page.locator('.asset').count()
+check('картки файлів логотипів', assetLinks >= 10, `${assetLinks} карток`)
+const driveLinks = await page.evaluate(() =>
+  [...document.querySelectorAll('.asset')].every((a) =>
+    a.getAttribute('href').startsWith('https://drive.google.com/'),
+  ),
+)
+check('усі файли ведуть на Google Drive', driveLinks)
+
+// --- Обладнання: каталог ---
+await page.goto(base + '#/equipment', { waitUntil: 'networkidle' })
+await page.waitForTimeout(400)
+const equipCards = await page.locator('.equip').count()
+check('каталог обладнання', equipCards === 11, `${equipCards} позицій`)
+// Розряди відокремлені вузьким нерозривним пробілом — нормалізуємо перед звіркою
+const equipText = (await page.locator('.content').innerText()).replace(/\u202f/g, ' ')
+for (const want of ['Полиця вузька 423', 'Стійка П2', 'Ice Stream Leader', '2 145 мм']) {
+  check(`каталог містить «${want}»`, equipText.includes(want))
+}
+// Фільтр за типом лишає тільки холодильники
+await page.getByRole('button', { name: 'Холодильники', exact: true }).click()
+await page.waitForTimeout(300)
+const fridges = await page.locator('.equip').count()
+check('фільтр «Холодильники» → 4 позиції', fridges === 4, `${fridges} позицій`)
+// Силуети — в одному масштабі: найвища позиція вища за найнижчу
+await page.getByRole('button', { name: 'всі', exact: true }).click()
+await page.waitForTimeout(300)
+const shapes = await page.evaluate(() =>
+  [...document.querySelectorAll('.equip__shape')].map((s) => s.getBoundingClientRect().height),
+)
+check(
+  'силуети масштабовані за висотою',
+  Math.max(...shapes) > Math.min(...shapes) * 5,
+  `${Math.round(Math.min(...shapes))}…${Math.round(Math.max(...shapes))} px`,
+)
+
+// --- Нові матеріали: завод, історія, дозвільні документи ---
+await page.goto(base + '#/source', { waitUntil: 'networkidle' })
+await page.waitForTimeout(300)
+const sourceText = await page.locator('.content').innerText()
+check('розділ про третій завод', /Третій завод/i.test(sourceText))
+check(
+  'третій завод більший за перші два',
+  /перевищить перші два/i.test(sourceText),
+)
+check('архів історичних фото', /Історичні фото продукції/i.test(sourceText))
+
+await page.goto(base + '#/quality', { waitUntil: 'networkidle' })
+await page.waitForTimeout(300)
+check(
+  'дозвільні документи',
+  /Дозвільні документи/i.test(await page.locator('.content').innerText()),
+)
+
 // --- Спонсорство і контакти ---
 await page.goto(base + '#/sponsorship', { waitUntil: 'networkidle' })
 await page.waitForTimeout(300)
@@ -155,7 +224,7 @@ check('контакти показані картками', contacts >= 3, `${co
 const ids = await page.evaluate(() =>
   [...document.querySelectorAll('.tabs a')].map((a) => a.getAttribute('href')),
 )
-check('меню містить усі розділи', ids.length === 15, `${ids.length} пунктів`)
+check('меню містить усі розділи', ids.length === 16, `${ids.length} пунктів`)
 for (const href of ids) {
   await page.goto(base + href.replace(/^#?/, '#'), { waitUntil: 'networkidle' })
   await page.waitForTimeout(150)

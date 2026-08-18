@@ -237,6 +237,44 @@ function BlockView({ block }: { block: Block }) {
         </div>
       )
 
+    case 'assets':
+      return (
+        <div className="assets">
+          {block.items.map((item, i) => (
+            <a
+              className="asset"
+              href={item.href}
+              target="_blank"
+              rel="noreferrer"
+              key={i}
+            >
+              <span className="asset__head">
+                <b>{item.title}</b>
+                {item.format && <i className="asset__format">{item.format}</i>}
+              </span>
+              {item.note && (
+                <span className="asset__note">{renderRich(item.note)}</span>
+              )}
+              {item.size && <span className="asset__size">{item.size}</span>}
+            </a>
+          ))}
+        </div>
+      )
+
+    case 'gallery':
+      return (
+        <div className="gallery">
+          {block.items.map((item, i) => (
+            <figure key={i}>
+              <img src={item.src} alt={item.alt} loading="lazy" />
+              {item.caption && (
+                <figcaption>{renderRich(item.caption)}</figcaption>
+              )}
+            </figure>
+          ))}
+        </div>
+      )
+
     case 'contacts':
       return (
         <div className="contacts">

@@ -121,6 +121,26 @@ export function blocksToText(blocks: Block[]): string {
               .join(' '),
           )
           break
+        case 'assets':
+          out.push(
+            block.items
+              .map(
+                (item) =>
+                  `${item.title} ${item.format ?? ''} ${item.note ? plainRich(item.note) : ''}`,
+              )
+              .join(' '),
+          )
+          break
+        case 'gallery':
+          out.push(
+            block.items
+              .map(
+                (item) =>
+                  `${item.alt} ${item.caption ? plainRich(item.caption) : ''}`,
+              )
+              .join(' '),
+          )
+          break
         case 'contacts':
           out.push(
             block.items
