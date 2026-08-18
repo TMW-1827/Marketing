@@ -26,3 +26,11 @@ export function driveImageCandidates(id: string, width = 600): string[] {
 export function driveFile(id: string): string {
   return `https://drive.google.com/file/d/${id}/view`
 }
+
+/**
+ * Пряме завантаження файлу. На відміну від сторінки перегляду, браузер
+ * одразу зберігає файл — партнеру потрібен саме файл, а не вкладка Drive.
+ */
+export function driveDownload(id: string): string {
+  return `https://drive.google.com/uc?export=download&id=${id}`
+}

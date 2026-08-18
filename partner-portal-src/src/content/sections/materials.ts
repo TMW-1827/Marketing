@@ -1,6 +1,6 @@
 import type { Section } from '@/types/content'
 import { SLOGAN } from '@/content/brand'
-import { BRAND_GUIDE, LOGO } from '@/content/assets'
+import { BRAND_GUIDE, LOGO_FOLDER, LOGO_ID } from '@/content/assets'
 
 export const materials: Section = {
   id: 'materials',
@@ -30,7 +30,7 @@ export const materials: Section = {
       blocks: [
         {
           kind: 'paragraph',
-          text: 'Шість офіційних варіантів знака. За замовчуванням беруть перший — з горами, кольоровий; решта потрібні там, де він не читається: на темному фоні, у малому розмірі, у лінійці SPORT.',
+          text: 'Шість офіційних варіантів знака. За замовчуванням беруть перший — з горами, кольоровий; решта потрібні там, де він не читається: на темному фоні, у малому розмірі, у лінійці SPORT. **Файли — просто під кожним знаком**: натискання одразу завантажує.',
         },
         {
           kind: 'gallery',
@@ -40,222 +40,75 @@ export const materials: Section = {
               alt: 'Логотип «Трускавецька»: гори з ялинами та червоний напис',
               caption:
                 '**З горами, кольоровий.** Основна версія — для світлих фонів: етикетки, POS, партнерські макети.',
+              files: [
+                { format: 'SVG', driveId: LOGO_ID.mountains.svg, size: '17 КБ' },
+                { format: 'PDF', driveId: LOGO_ID.mountains.pdf, size: '371 КБ' },
+                { format: 'EPS', driveId: LOGO_ID.mountains.eps, size: '818 КБ' },
+                { format: 'AI', driveId: LOGO_ID.mountains.ai, size: '2,0 МБ' },
+                { format: 'PNG', driveId: LOGO_ID.mountains.png, size: '267 КБ' },
+                { format: 'PNG 1080', driveId: LOGO_ID.mountains.png1080, size: '90 КБ' },
+              ],
             },
             {
-              driveId: '1HW7kahVY3TSaDHL-EpBSP3f4mWrzsIzz',
+              driveId: LOGO_ID.whiteSilver.png,
               tone: 'dark',
               alt: 'Біло-срібна версія логотипа з горами',
               caption:
                 '**З горами, біло-срібний.** Для кольорових, темних і фотографічних фонів.',
+              files: [
+                { format: 'SVG', driveId: LOGO_ID.whiteSilver.svg, size: '17 КБ' },
+                { format: 'PDF', driveId: LOGO_ID.whiteSilver.pdf, size: '359 КБ' },
+                { format: 'AI', driveId: LOGO_ID.whiteSilver.ai, size: '2,1 МБ' },
+                { format: 'PNG', driveId: LOGO_ID.whiteSilver.png, size: '220 КБ' },
+              ],
             },
             {
               src: 'brand/truskavetska-logo-text.svg',
               alt: 'Текстовий логотип «Трускавецька», червоний',
               caption:
                 '**Текстовий червоний.** Коли знак із горами в малому розмірі стає нерозбірливим: документи, монохромні макети.',
+              files: [
+                { format: 'SVG', driveId: LOGO_ID.text.svg, size: '5 КБ' },
+                { format: 'PDF', driveId: LOGO_ID.text.pdf, size: '3 КБ' },
+                { format: 'PNG', driveId: LOGO_ID.text.png, size: '55 КБ' },
+                { format: 'PNG 1080', driveId: LOGO_ID.text.png1080, size: '28 КБ' },
+                { format: 'PDF EN', driveId: LOGO_ID.text.pdfEn, size: '351 КБ' },
+              ],
             },
             {
-              driveId: '1lXb3d4kuIzmBIU7yNvRWWHg_auXyb9dG',
+              driveId: LOGO_ID.textWhite.png,
               tone: 'dark',
               alt: 'Текстовий логотип «Трускавецька», білий',
               caption: '**Текстовий білий.** Той самий напис на кольоровому чи фотофоні.',
+              files: [
+                { format: 'SVG', driveId: LOGO_ID.textWhite.svg, size: '5 КБ' },
+                { format: 'PDF', driveId: LOGO_ID.textWhite.pdf, size: '331 КБ' },
+                { format: 'PNG', driveId: LOGO_ID.textWhite.png, size: '55 КБ' },
+              ],
             },
             {
               src: 'brand/truskavetska-logo-sport.svg',
               alt: 'Логотип «Трускавецька SPORT», червоний',
               caption:
                 '**SPORT, кольоровий.** Тільки для лінійки SPORT і спортивних проєктів — із класичним знаком не змішується.',
+              files: [
+                { format: 'SVG', driveId: LOGO_ID.sport.svg, size: '8 КБ' },
+                { format: 'PDF', driveId: LOGO_ID.sport.pdf, size: '93 КБ' },
+                { format: 'PNG', driveId: LOGO_ID.sport.png, size: '86 КБ' },
+                { format: 'PNG 1080', driveId: LOGO_ID.sport.png1080, size: '35 КБ' },
+              ],
             },
             {
-              driveId: '1RpQl79ac6Vy0ks8klLHqVCzv3TfllCyQ',
+              driveId: LOGO_ID.sportWhite.png,
               tone: 'dark',
               alt: 'Логотип «Трускавецька SPORT», білий',
               caption: '**SPORT, білий.** Для темних фонів і фото з подій.',
-            },
-          ],
-        },
-        {
-          kind: 'heading',
-          text: 'Файли основного логотипа',
-          level: 4,
-        },
-        {
-          kind: 'assets',
-          items: [
-            {
-              title: 'Логотип з горами',
-              href: LOGO.svg,
-              format: 'SVG',
-              size: '17 КБ',
-              note: 'Вектор для сайтів і цифрових макетів. Найлегший файл, масштабується без втрати якості',
-            },
-            {
-              title: 'Логотип з горами',
-              href: LOGO.pdf,
-              format: 'PDF',
-              size: '371 КБ',
-              note: 'Вектор для друку — універсальний формат, відкривається без Illustrator',
-            },
-            {
-              title: 'Логотип з горами',
-              href: LOGO.eps,
-              format: 'EPS',
-              size: '818 КБ',
-              note: 'Вектор для друкарень і широкоформатного друку',
-            },
-            {
-              title: 'Логотип з горами, 3 кольори',
-              href: LOGO.ai,
-              format: 'AI',
-              size: '2,0 МБ',
-              note: 'Вихідник Adobe Illustrator — для дизайнерів, які готують макет',
-            },
-            {
-              title: 'Логотип з горами, RGB',
-              href: LOGO.png,
-              format: 'PNG',
-              size: '267 КБ',
-              note: 'Растр із прозорим фоном — коли вектор підставити нікуди',
-            },
-          ],
-        },
-        {
-          kind: 'heading',
-          text: 'Біло-срібна версія',
-          level: 4,
-        },
-        {
-          kind: 'assets',
-          items: [
-            {
-              title: 'Логотип біло-срібний',
-              href: LOGO.whiteSilverSvg,
-              format: 'SVG',
-              size: '17 КБ',
-              note: 'Вектор для цифрових макетів',
-            },
-            {
-              title: 'Логотип біло-срібний',
-              href: LOGO.whiteSilverPdf,
-              format: 'PDF',
-              size: '359 КБ',
-              note: 'Вектор для друку',
-            },
-            {
-              title: 'Логотип біло-срібний, 2 кольори',
-              href: LOGO.whiteSilverAi,
-              format: 'AI',
-              size: '2,1 МБ',
-              note: 'Вихідник Adobe Illustrator',
-            },
-          ],
-        },
-        {
-          kind: 'heading',
-          text: 'Текстовий логотип',
-          level: 4,
-        },
-        {
-          kind: 'assets',
-          items: [
-            {
-              title: 'Текстовий, червоний',
-              href: LOGO.textSvg,
-              format: 'SVG',
-              size: '5 КБ',
-              note: 'Вектор; є також PDF за посиланням у теці',
-            },
-            {
-              title: 'Текстовий, білий',
-              href: LOGO.textWhiteSvg,
-              format: 'SVG',
-              size: '5 КБ',
-              note: 'Для темних і кольорових фонів',
-            },
-            {
-              title: 'Текстовий, англійською',
-              href: LOGO.textEnPdf,
-              format: 'PDF',
-              size: '351 КБ',
-              note: 'Для експортних та англомовних матеріалів',
-            },
-          ],
-        },
-        {
-          kind: 'heading',
-          text: 'Лінійка SPORT',
-          level: 4,
-        },
-        {
-          kind: 'assets',
-          items: [
-            {
-              title: 'SPORT, кольоровий',
-              href: LOGO.sportSvg,
-              format: 'SVG',
-              size: '8 КБ',
-              note: 'Основна версія знака SPORT',
-            },
-            {
-              title: 'SPORT, білий',
-              href: LOGO.sportWhiteSvg,
-              format: 'SVG',
-              size: '8 КБ',
-              note: 'Для темних фонів і фото з подій',
-            },
-            {
-              title: 'SPORT, кольоровий',
-              href: LOGO.sportPdf,
-              format: 'PDF',
-              size: '93 КБ',
-              note: 'Вектор для друку',
-            },
-          ],
-        },
-        {
-          kind: 'heading',
-          text: 'Квадратні версії для соцмереж',
-          level: 4,
-        },
-        {
-          kind: 'assets',
-          items: [
-            {
-              title: 'Логотип з горами, 1080 × 1080',
-              href: LOGO.socialMountains,
-              format: 'PNG',
-              size: '90 КБ',
-              note: 'Аватар і публікації: готовий квадрат, нічого не треба кадрувати',
-            },
-            {
-              title: 'Текстовий логотип, 1080 × 1080',
-              href: LOGO.socialText,
-              format: 'PNG',
-              size: '28 КБ',
-              note: 'Коли знак із горами в малому розмірі стає нерозбірливим',
-            },
-          ],
-        },
-        {
-          kind: 'heading',
-          text: 'Уся бібліотека',
-          level: 4,
-        },
-        {
-          kind: 'assets',
-          items: [
-            {
-              title: 'Тека «Логотипи»',
-              href: LOGO.all,
-              format: 'тека',
-              note: 'Усі варіанти й формати, включно з тими, яких немає в переліку вище',
-            },
-            {
-              title: 'Бренд-гайд логотипів та айдентики',
-              href: BRAND_GUIDE,
-              format: 'PDF',
-              size: '11 МБ',
-              note: 'Повні правила: побудова, охоронне поле, мінімальні розміри, заборонені варіанти',
+              files: [
+                { format: 'SVG', driveId: LOGO_ID.sportWhite.svg, size: '8 КБ' },
+                { format: 'PDF', driveId: LOGO_ID.sportWhite.pdf, size: '81 КБ' },
+                { format: 'PNG', driveId: LOGO_ID.sportWhite.png, size: '77 КБ' },
+                { format: 'PNG 1080', driveId: LOGO_ID.sportWhite.png1080, size: '26 КБ' },
+              ],
             },
           ],
         },
@@ -278,6 +131,28 @@ export const materials: Section = {
               '**PNG**',
               'Коли вектор не підтримується: месенджери, прості редактори, растрові шаблони',
             ],
+            [
+              '**PNG 1080**',
+              'Готовий квадрат 1080 × 1080 для соцмереж — кадрувати не треба',
+            ],
+          ],
+        },
+        {
+          kind: 'assets',
+          items: [
+            {
+              title: 'Тека «Логотипи»',
+              href: LOGO_FOLDER,
+              format: 'тека',
+              note: 'Усі варіанти й формати, включно з тими, яких немає вище',
+            },
+            {
+              title: 'Бренд-гайд логотипів та айдентики',
+              href: BRAND_GUIDE,
+              format: 'PDF',
+              size: '11 МБ',
+              note: 'Повні правила: побудова, охоронне поле, мінімальні розміри, заборонені варіанти',
+            },
           ],
         },
         {

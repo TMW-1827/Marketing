@@ -188,18 +188,31 @@ const drawn = await page.evaluate(
 check('усі шість знаків відмалювались', drawn === 6, `${drawn} із 6`)
 const darkPlates = await page.locator('.gallery--dark').count()
 check('білі версії — на темній підкладці', darkPlates === 3, `${darkPlates}`)
-const formats = await page.locator('.asset__format').allInnerTexts()
-for (const want of ['SVG', 'PDF', 'EPS', 'AI', 'PNG']) {
-  check(`є посилання на формат ${want}`, formats.includes(want))
+// Файли мають стояти під самим знаком, а не спільним переліком унизу
+const withFiles = await page.locator('.gallery figure .gallery__files').count()
+check('у кожного знака є свої файли', withFiles === 6, `${withFiles} із 6`)
+const formats = await page.locator('.filechip b').allInnerTexts()
+for (const want of ['SVG', 'PDF', 'EPS', 'AI', 'PNG', 'PNG 1080']) {
+  check(`є формат ${want}`, formats.includes(want))
 }
-const assetLinks = await page.locator('.asset').count()
-check('картки файлів логотипів', assetLinks >= 16, `${assetLinks} карток`)
-const driveLinks = await page.evaluate(() =>
-  [...document.querySelectorAll('.asset')].every((a) =>
-    a.getAttribute('href').startsWith('https://drive.google.com/'),
+check('кнопок завантаження', formats.length >= 26, `${formats.length}`)
+const downloads = await page.evaluate(() =>
+  [...document.querySelectorAll('.filechip')].every((a) =>
+    a.getAttribute('href').startsWith('https://drive.google.com/uc?export=download'),
   ),
 )
-check('усі файли ведуть на Google Drive', driveLinks)
+check('кнопки ведуть на пряме завантаження', downloads)
+// Кожен знак віддає власні файли, а не ті самі
+const perVariant = await page.evaluate(() =>
+  [...document.querySelectorAll('.gallery figure')].map(
+    (f) => f.querySelectorAll('.filechip').length,
+  ),
+)
+check(
+  'файли розподілені по знаках',
+  perVariant.length === 6 && perVariant.every((n) => n >= 3),
+  perVariant.join(' / '),
+)
 
 // --- Фото продукції ---
 // Перезавантаження скидає фільтри каталогу, виставлені попереднім сценарієм:
