@@ -1,5 +1,8 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { skuById } from '@/lib/catalog'
+import { SKU_PHOTOS } from '@/data/photos'
+import { driveFile } from '@/lib/drive'
+import { DriveImage } from '@/components/DriveImage'
 import { dec } from '@/lib/format'
 import { closeSku, useSelectedSkuId } from './store'
 
@@ -64,6 +67,8 @@ export function SkuSheet() {
         </button>
         <div className="sheet__grip" aria-hidden="true" />
 
+        <SheetPhoto id={sku.id} name={sku.name} />
+
         <div className="eyebrow">{sku.category}</div>
         <h3 style={{ fontSize: 28, marginBottom: 4 }}>
           {sku.line === 'Особлива' && 'Особлива '}
@@ -123,6 +128,29 @@ export function SkuSheet() {
         )}
       </div>
     </div>
+  )
+}
+
+function SheetPhoto({ id, name }: { id: number; name: string }) {
+  const [failed, setFailed] = useState(false)
+  const photoId = SKU_PHOTOS[id]
+  if (!photoId || failed) return null
+
+  return (
+    <a
+      className="sheet__photo"
+      href={driveFile(photoId)}
+      target="_blank"
+      rel="noreferrer"
+      title="Відкрити оригінал на Google Drive"
+    >
+      <DriveImage
+        id={photoId}
+        width={700}
+        alt={`«Трускавецька» ${name}`}
+        onGiveUp={() => setFailed(true)}
+      />
+    </a>
   )
 }
 

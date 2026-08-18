@@ -822,3 +822,298 @@ a.contact__value:hover {
     margin-bottom: 0;
   }
 }
+
+/* ---------- Файли для завантаження ---------- */
+
+.assets {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.asset {
+  display: block;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 12px 14px;
+  text-decoration: none;
+  color: var(--ink);
+  box-shadow: var(--shadow-card);
+  transition:
+    transform 0.14s ease,
+    border-color 0.14s ease;
+}
+
+.asset:hover {
+  transform: translateY(-2px);
+  border-color: var(--blue);
+}
+
+.asset__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.asset__head b {
+  font-size: 14.5px;
+  font-weight: 600;
+}
+
+/* Ярлик формату: моноширинний, щоб SVG / EPS / PDF читались як коди */
+.asset__format {
+  flex: 0 0 auto;
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  color: var(--blue);
+  background: var(--info-bg);
+  border: 1px solid var(--info-line);
+  border-radius: 5px;
+  padding: 2px 7px;
+}
+
+.asset__note {
+  display: block;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  margin-top: 4px;
+  line-height: 1.55;
+}
+
+.asset__size {
+  display: block;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-faint);
+  margin-top: 4px;
+}
+
+/* ---------- Галерея зображень ---------- */
+
+.gallery {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.gallery figure {
+  margin: 0;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 20px 18px 14px;
+  text-align: center;
+  box-shadow: var(--shadow-card);
+}
+
+/* Підкладка вирівнює прев'ю по висоті: знаки мають різні пропорції */
+.gallery__plate {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 120px;
+}
+
+.gallery img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 130px;
+  object-fit: contain;
+  margin: 0 auto;
+}
+
+/* Білі версії знака на світлій картці не видно — даємо темне поле */
+.gallery--dark .gallery__plate {
+  background: var(--ink);
+  border-radius: var(--r-sm);
+  padding: 18px 16px;
+}
+
+.gallery__missing {
+  font-size: 12px;
+  color: var(--ink-faint);
+}
+
+.gallery--dark .gallery__missing {
+  color: #7b8ea1;
+}
+
+.gallery figcaption {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  line-height: 1.55;
+}
+
+/* ---------- Каталог обладнання ---------- */
+
+.equip-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.equip {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 14px 16px 16px;
+  box-shadow: var(--shadow-card);
+}
+
+/* Сцена: фіксована висота, щоб картки не «стрибали» */
+.equip__stage {
+  height: 186px;
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+/* Шкала висоти: смужка від найвищої позиції каталогу */
+.equip__scale {
+  flex: 0 0 4px;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  border-left: 1px dotted var(--line);
+  padding-left: 3px;
+}
+
+.equip__scale span {
+  display: block;
+  width: 4px;
+  border-radius: 2px;
+  background: var(--ink-faint);
+}
+
+.equip__visual {
+  flex: 1 1 auto;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-width: 0;
+}
+
+.equip__visual img {
+  max-width: 100%;
+  max-height: 178px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.equip__shape {
+  border-radius: 3px;
+  position: relative;
+}
+
+/* Стулка дверей холодильника — щоб силует читався як холодильник */
+.equip__door {
+  position: absolute;
+  inset: 8% 12% 14% 12%;
+  border: 1px dashed;
+  border-radius: 2px;
+  opacity: 0.5;
+}
+
+.equip__name {
+  font-size: 15px;
+  line-height: 1.25;
+}
+
+.equip__kind {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin: 3px 0 10px;
+}
+
+.equip__dims {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin: 0 0 10px;
+}
+
+.equip__dims > div {
+  background: var(--card-soft);
+  border-radius: var(--r-sm);
+  padding: 7px 8px;
+}
+
+.equip__dims dt {
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  font-weight: 700;
+}
+
+.equip__dims dd {
+  margin: 2px 0 0;
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.equip__use {
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin-bottom: 8px;
+}
+
+.equip__note {
+  font-size: 12px;
+  color: var(--ink-soft);
+  background: var(--info-bg);
+  border-left: 3px solid var(--info-line);
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+}
+
+.equip__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.equip__links a {
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.equip__links a:hover {
+  text-decoration: underline;
+}
+
+@media (min-width: 641px) {
+  .assets {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+
+  .gallery {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+
+  .equip-grid {
+    grid-template-columns: repeat(auto-fill, minmax(268px, 1fr));
+    gap: 14px;
+  }
+}

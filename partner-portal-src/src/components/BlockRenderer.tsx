@@ -1,7 +1,9 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import type { Block } from '@/types/content'
 import { renderRich } from '@/lib/rich'
 import { WIDGETS } from '@/features/widgets'
+import { DriveImage } from '@/components/DriveImage'
 
 /**
  * Рендерить дерево блоків розділу.
@@ -17,6 +19,41 @@ export function Blocks({ blocks }: { blocks: Block[] }) {
         <BlockView block={block} key={i} />
       ))}
     </>
+  )
+}
+
+/**
+ * Плитка галереї. Зображення з Drive може не завантажитись — тоді замість
+ * порожньої плашки лишається підпис: файл усе одно доступний за посиланням
+ * у переліку нижче.
+ */
+function GalleryItem({
+  item,
+}: {
+  item: Extract<Block, { kind: 'gallery' }>['items'][number]
+}) {
+  const [failed, setFailed] = useState(false)
+
+  return (
+    <figure className={item.tone === 'dark' ? 'gallery--dark' : undefined}>
+      <span className="gallery__plate">
+        {item.driveId ? (
+          failed ? (
+            <span className="gallery__missing">Прев’ю недоступне</span>
+          ) : (
+            <DriveImage
+              id={item.driveId}
+              width={600}
+              alt={item.alt}
+              onGiveUp={() => setFailed(true)}
+            />
+          )
+        ) : (
+          <img src={item.src} alt={item.alt} loading="lazy" />
+        )}
+      </span>
+      {item.caption && <figcaption>{renderRich(item.caption)}</figcaption>}
+    </figure>
   )
 }
 
@@ -233,6 +270,39 @@ function BlockView({ block }: { block: Block }) {
               <span>{renderRich(item.text)}</span>
               <i aria-hidden="true">→</i>
             </Link>
+          ))}
+        </div>
+      )
+
+    case 'assets':
+      return (
+        <div className="assets">
+          {block.items.map((item, i) => (
+            <a
+              className="asset"
+              href={item.href}
+              target="_blank"
+              rel="noreferrer"
+              key={i}
+            >
+              <span className="asset__head">
+                <b>{item.title}</b>
+                {item.format && <i className="asset__format">{item.format}</i>}
+              </span>
+              {item.note && (
+                <span className="asset__note">{renderRich(item.note)}</span>
+              )}
+              {item.size && <span className="asset__size">{item.size}</span>}
+            </a>
+          ))}
+        </div>
+      )
+
+    case 'gallery':
+      return (
+        <div className="gallery">
+          {block.items.map((item, i) => (
+            <GalleryItem item={item} key={i} />
           ))}
         </div>
       )
