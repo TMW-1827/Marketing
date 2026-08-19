@@ -192,10 +192,14 @@ check('білі версії — на темній підкладці', darkPlat
 const withFiles = await page.locator('.gallery figure .gallery__files').count()
 check('у кожного знака є свої файли', withFiles === 6, `${withFiles} із 6`)
 const formats = await page.locator('.filechip b').allInnerTexts()
-for (const want of ['SVG', 'PDF', 'EPS', 'AI', 'PNG', 'PNG 1080']) {
+for (const want of ['SVG', 'PDF', 'EPS', 'AI', 'PNG']) {
   check(`є формат ${want}`, formats.includes(want))
 }
-check('кнопок завантаження', formats.length >= 26, `${formats.length}`)
+// Бренд-гайд перелічує 5 форматів для двох знаків із горами і 4 для решти
+check('кнопок завантаження рівно за бренд-гайдом', formats.length === 26, `${formats.length}`)
+for (const extra of ['PNG 1080', 'PDF EN']) {
+  check(`формату «${extra}» немає — його немає в бренд-гайді`, !formats.includes(extra))
+}
 const downloads = await page.evaluate(() =>
   [...document.querySelectorAll('.filechip')].every((a) =>
     a.getAttribute('href').startsWith('https://drive.google.com/uc?export=download'),
@@ -210,9 +214,39 @@ const perVariant = await page.evaluate(() =>
 )
 check(
   'файли розподілені по знаках',
-  perVariant.length === 6 && perVariant.every((n) => n >= 3),
+  perVariant.join(' ') === '5 5 4 4 4 4',
   perVariant.join(' / '),
 )
+
+// --- Шрифти: п'ять файлів із бренд-гайду ---
+const fontsCard = await page.evaluate(() => {
+  const card = [...document.querySelectorAll('.card')].find((c) =>
+    c.querySelector('h3')?.textContent?.match(/ШРИФТИ/i),
+  )
+  if (!card) return null
+  return {
+    assets: [...card.querySelectorAll('.asset')].map((a) => ({
+      title: a.querySelector('b')?.textContent ?? '',
+      href: a.getAttribute('href') ?? '',
+      format: a.querySelector('.asset__format')?.textContent ?? '',
+    })),
+  }
+})
+check('розділ шрифтів знайдено', Boolean(fontsCard))
+const fontFiles = (fontsCard?.assets ?? []).filter((a) => a.format !== 'тека')
+check('п’ять шрифтів із бренд-гайду', fontFiles.length === 5, `${fontFiles.length}`)
+for (const want of ['Gilroy Bold', 'Core Sans', 'Sofia Sans', 'Montserrat', 'Heading Now']) {
+  check(
+    `шрифт ${want} є`,
+    fontFiles.some((a) => a.title.includes(want)),
+  )
+}
+check(
+  'шрифти завантажуються напряму',
+  fontFiles.every((a) => a.href.startsWith('https://drive.google.com/uc?export=download')),
+)
+const families = (fontsCard?.assets ?? []).filter((a) => a.format === 'тека')
+check('теки повних сімейств', families.length === 3, `${families.length}`)
 
 // --- Фото продукції ---
 // Перезавантаження скидає фільтри каталогу, виставлені попереднім сценарієм:
