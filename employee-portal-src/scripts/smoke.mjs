@@ -220,6 +220,57 @@ await page.reload({ waitUntil: 'networkidle' })
 await page.waitForTimeout(600)
 const skuCount = await page.locator('.sku').count()
 check('каталог показує всі позиції', skuCount === 18, `${skuCount} позицій`)
+
+// Мітка газації — кружечок одного кольору скрізь: під пляшкою на полиці,
+// у картці позиції й у таблиці форматів. Кольори беремо з реального DOM.
+const FILL = {
+  негазована: 'rgb(255, 255, 255)',
+  слабогазована: 'rgb(0, 150, 108)',
+  сильногазована: 'rgb(0, 94, 184)',
+}
+const dots = await page.evaluate(() => {
+  const read = (sel) =>
+    [...document.querySelectorAll(sel)].map((el) => ({
+      label: el.getAttribute('aria-label') ?? '',
+      fills: [...el.querySelectorAll('.gasdot')].map(
+        (d) => getComputedStyle(d).backgroundColor,
+      ),
+    }))
+  return {
+    shelf: read('.bottle__label .gasdots'),
+    table: read('.card .gasdots'),
+    sku: [...document.querySelectorAll('.sku .gasdot')].map((d) =>
+      getComputedStyle(d).backgroundColor,
+    ),
+  }
+})
+check('під кожною пляшкою є кружечки газації', dots.shelf.length === 8, `${dots.shelf.length} із 8`)
+check(
+  '0,5 л ПЕТ — три газації трьома кольорами',
+  dots.shelf[2]?.fills.join(' ') ===
+    [FILL.негазована, FILL.слабогазована, FILL.сильногазована].join(' '),
+  dots.shelf[2]?.fills.join(' '),
+)
+check(
+  'SPORT — одна газація, один кружечок',
+  dots.shelf[4]?.fills.length === 1 && dots.shelf[4].fills[0] === FILL.негазована,
+  dots.shelf[4]?.fills.join(' '),
+)
+check(
+  'кружечки підписані словами для читача з екрана',
+  /Газації: негазована · слабогазована · сильногазована/.test(dots.shelf[2]?.label ?? ''),
+  dots.shelf[2]?.label,
+)
+check(
+  'у таблиці форматів газації теж кружечками',
+  dots.table.length === 8 && dots.table[2]?.fills.length === 3,
+  `${dots.table.length} рядків`,
+)
+check(
+  'картка позиції має кружечок того самого кольору',
+  dots.sku.length === 18 && dots.sku.every((c) => Object.values(FILL).includes(c)),
+  `${dots.sku.length} із 18`,
+)
 await page.locator('.bottle').nth(2).click() // 0,5 л ПЕТ
 await page.waitForTimeout(400)
 check(

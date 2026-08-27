@@ -3,6 +3,7 @@ import { PRICE_ZONE_LABEL } from '@/types/catalog'
 import { PRICE_REVISION } from '@/content/brand'
 import { dec, money } from '@/lib/format'
 import { openSku } from '@/features/catalog/store'
+import { CarbonationDots } from '@/features/catalog/CarbonationDot'
 
 /** Палетизація по форматах. Усередині формату однакова для всіх газацій. */
 export function PalletTable() {
@@ -68,7 +69,9 @@ export function FormatTable() {
                   {dec(f.source.bottleHeightCm, 1)}
                 </td>
                 <td className="num">{dec(f.source.weightBottleKg, 3)}</td>
-                <td className="num">{f.carbonations.length}</td>
+                <td className="num">
+                  <CarbonationDots carbonations={f.carbonations} />
+                </td>
                 <td className="num">{months}</td>
               </tr>
             )

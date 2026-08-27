@@ -21,6 +21,34 @@
   margin-top: 8px;
 }
 
+/* ---------- Мітка газації ---------- */
+
+/*
+ * Кружечок кольору газації: білий — негазована, зелений — слабогазована,
+ * синій — сильногазована. Одна мітка на весь портал — на полиці, у картках
+ * позицій і в таблиці форматів, — інакше однаковий кружечок у двох місцях
+ * почав би означати різне.
+ *
+ * Розмір задається змінною --dot у місці використання: під пляшкою на полиці
+ * місця мало, у картці позиції — багато.
+ */
+.gasdots {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  /* Три кружечки не мають розсувати вузьку колонку чи вузьку пляшку */
+  line-height: 1;
+}
+
+.gasdot {
+  flex: 0 0 auto;
+  width: var(--dot, 10px);
+  height: var(--dot, 10px);
+  border-radius: 50%;
+  border: 1.5px solid;
+}
+
 /* ---------- Полиця ---------- */
 
 .shelf {
@@ -124,11 +152,10 @@
   min-height: 25px;
 }
 
-.bottle__label u {
-  text-decoration: none;
-  color: var(--ink-faint);
-  font-size: 8.5px;
-  letter-spacing: 0.06em;
+/* Найвужча пляшка на полиці — 0,5 л ПЕТ; три кружечки мають стати під нею */
+.bottle__label .gasdots {
+  --dot: 7px;
+  margin-top: 3px;
 }
 
 .bottle__label em {
@@ -167,6 +194,10 @@
   height: 13px;
   border-radius: 3px;
   display: inline-block;
+}
+
+.legend .gasdot {
+  --dot: 12px;
 }
 
 /* ---------- Підказка ---------- */
@@ -326,11 +357,9 @@
 }
 
 .sku__dot {
+  --dot: 14px;
   flex: 0 0 14px;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  border: 2px solid;
+  border-width: 2px;
   margin-top: 4px;
 }
 
