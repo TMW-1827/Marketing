@@ -26,9 +26,6 @@ export const PARTNER_PORTAL = '../partner-portal/'
 /** Навчальний портал із тестом і сертифікатом. */
 export const TRAINING_PORTAL = '../training-portal/'
 
-/** Портал обліку торговельного обладнання. */
-export const EQUIPMENT_PORTAL = '../equipment-portal/'
-
 /**
  * Форма запиту на торговельне обладнання.
  *

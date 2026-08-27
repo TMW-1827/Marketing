@@ -90,6 +90,46 @@ await page.waitForTimeout(250)
 const eastOut = flat(await page.locator('.out').first().innerText())
 check('зміна зони змінює ціну', eastOut !== out, eastOut)
 
+// База закупівлі: платник ПДВ рахує від ціни без податку, неплатник — від
+// повної. Націнка від меншої бази більша, і саме це має бути видно.
+await page.locator('#price-zone').selectOption('west')
+await page.locator('#price-base').selectOption('gross')
+await page.waitForTimeout(250)
+const grossPct = Number(
+  (await page.locator('.out div').nth(3).innerText()).match(/(\d+)/)?.[1],
+)
+const grossBuy = flat(await page.locator('.out div').first().innerText())
+await page.locator('#price-base').selectOption('net')
+await page.waitForTimeout(250)
+const netPct = Number(
+  (await page.locator('.out div').nth(3).innerText()).match(/(\d+)/)?.[1],
+)
+const netBuy = flat(await page.locator('.out div').first().innerText())
+check('база «з ПДВ» — 23,40 грн', /23,40/.test(grossBuy), grossBuy)
+check('база «без ПДВ» — 19,50 грн', /19,50/.test(netBuy), netBuy)
+check(
+  'від бази без ПДВ націнка вища',
+  netPct > grossPct,
+  `без ПДВ ${netPct}% проти ${grossPct}% з ПДВ`,
+)
+check(
+  'підпис бази змінюється разом із нею',
+  /без ПДВ/i.test(netBuy) && /з ПДВ/i.test(grossBuy),
+  netBuy,
+)
+check(
+  'сказано, чому база важлива',
+  /платник ПДВ/i.test(priceText),
+)
+check(
+  'ціна одна для всіх дистриб’юторів',
+  /Ціна одна/i.test(priceText) && /не змінюють у перемовинах/i.test(priceText),
+)
+check(
+  'предмет перемовин — ретробонус і знижка, не ціна',
+  /Ретробонус/i.test(priceText) && /Що не обговорюється/i.test(priceText),
+)
+
 // --- Калькулятор палети (розділ комплектації) ---
 await page.goto(base + '#/picking', { waitUntil: 'networkidle' })
 await page.waitForTimeout(400)
@@ -112,18 +152,20 @@ check('1 палета 1,5 л = 504 пляшки, 756 л', /504/.test(out) && /75
 // --- Калькулятор терміну придатності ---
 await page.goto(base + '#/storage', { waitUntil: 'networkidle' })
 await page.waitForTimeout(400)
-// 0,3 л скло негазована — 12 місяців: рівно рік від дати розливу
+// 0,3 л скло негазована — 12 місяців. Останній придатний день на добу
+// раніше за річницю розливу: 15.01.2026 → придатна до 14.01.2027
 await page.locator('#life-date').fill('2026-01-15')
 await page.waitForTimeout(300)
 let life = flat(await page.locator('.out').first().innerText())
-check('12 місяців від 15.01.2026 → 15.01.2027', /15\.01\.2027/.test(life), life)
+check('12 місяців від 15.01.2026 → 14.01.2027', /14\.01\.2027/.test(life), life)
+check('придатна не до самої річниці розливу', !/15\.01\.2027/.test(life), life)
 
 // Газований ПЕТ — 9 місяців, і це має бути видно
 await page.locator('#life-format').selectOption('g05')
 await page.locator('#life-gas').selectOption('сильногазована')
 await page.waitForTimeout(300)
 life = flat(await page.locator('.out').first().innerText())
-check('газований ПЕТ — 9 місяців', /9\b/.test(life) && /15\.10\.2026/.test(life), life)
+check('газований ПЕТ — 9 місяців', /9\b/.test(life) && /14\.10\.2026/.test(life), life)
 
 // Прострочена партія — окремий вердикт
 await page.locator('#life-date').fill('2020-01-15')
@@ -149,27 +191,63 @@ check(
   /Обмежує.*вага/i.test(await page.locator('.out-gap').first().innerText()),
 )
 
-// --- Збірка змішаного замовлення ---
+// --- Збірка збірного замовлення ---
 await page.goto(base + '#/visit', { waitUntil: 'networkidle' })
 await page.waitForTimeout(400)
 const rows = await page.locator('.mix__row').count()
-check('у збірці замовлення є рядки', rows === 2, `${rows} рядків`)
+check('у збірці замовлення є рядки', rows === 3, `${rows} рядків`)
+
+// Рядок — позиція, а не формат: у кожного своя газація й свій кружечок
+check(
+  'кожен рядок має мітку газації',
+  (await page.locator('.mix__row .gasdot').count()) === rows,
+)
+const lineSums = await page.locator('.mix__bottles').allInnerTexts()
+check(
+  '1,5 л · 4 палети = 2016 пляшок',
+  /2\s?016/.test(lineSums[0].replace(/ /g, ' ')),
+  lineSums[0],
+)
+check(
+  '0,3 скло · 30 упаковок = 360 пляшок',
+  /360/.test(lineSums[2]),
+  lineSums[2],
+)
+
+// Кількість вказують і в упаковках: 1 палета 1,5 л = 84 упаковки
+await page.locator('.mix__row').first().locator('.mix__unit').selectOption('case')
+await page.locator('.mix__row').first().locator('.mix__qty').fill('84')
+await page.waitForTimeout(300)
+check(
+  '84 упаковки 1,5 л = 504 пляшки, як одна палета',
+  /504/.test((await page.locator('.mix__bottles').first().innerText())),
+  await page.locator('.mix__bottles').first().innerText(),
+)
+await page.locator('.mix__row').first().locator('.mix__unit').selectOption('pallet')
+await page.locator('.mix__row').first().locator('.mix__qty').fill('4')
+await page.waitForTimeout(300)
+
+// Машина возить кількох клієнтів: розклад по кожному плюс загальний підсумок
+const clientRows = await page.locator('.tablewrap tbody tr').count()
+check('розклад по клієнтах', clientRows === 2, `${clientRows} клієнтів`)
 let mix = flat(await page.locator('.out').first().innerText())
 check(
-  'підсумок рахує палетомісця й суму',
-  /палетомісць/i.test(mix) && /сума з ПДВ/i.test(mix),
+  'підсумок рахує клієнтів, палетомісця й суму',
+  /клієнтів/i.test(mix) && /палетомісць/i.test(mix) && /сума з ПДВ/i.test(mix),
   mix,
 )
 check('суми згруповані по розрядах', /\d \d{3},\d{2}/.test(mix), mix)
 
-// Дробова палета займає ціле палетомісце
-await page.locator('.mix__row input').first().fill('0.5')
-await page.waitForTimeout(300)
-mix = flat(await page.locator('.out').first().innerText())
-check('0,5 + 2 палети = 3 палетомісця', /\| 3 \|/.test(` | ${mix} | `), mix)
+// 6 палет одного клієнта + 0,28 палети другого = 6,28 палети, але 7 місць:
+// чужий товар на одну палету не домішують
+check(
+  '6,28 палети двох клієнтів = 7 палетомісць',
+  /6,28/.test(mix) && /\| 7 \|/.test(` | ${mix} | `),
+  mix,
+)
 
 // Перевантаження видно одразу
-await page.locator('.mix__row input').first().fill('40')
+await page.locator('.mix__row').first().locator('.mix__qty').fill('40')
 await page.waitForTimeout(300)
 check(
   'перевантаження авто помічене',
