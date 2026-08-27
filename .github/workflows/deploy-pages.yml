@@ -5,9 +5,9 @@ name: Публікація сайту
 # Вимагає Settings → Pages → Source: GitHub Actions.
 #
 # Публікує ВЕСЬ сайт — звіти й портали з кореня репозиторію, свіжозібраний
-# навчальний портал у /training-portal/ і зовнішній портал для партнерів
-# у /partner-portal/. Усе лишається за тими самими адресами, що й за
-# гілкової публікації.
+# навчальний портал у /training-portal/, зовнішній портал для партнерів
+# у /partner-portal/ і внутрішній портал для працівників у /employee-portal/.
+# Усе лишається за тими самими адресами, що й за гілкової публікації.
 #
 # Не запускайте цей workflow, поки Source ще «Deploy from a branch»:
 # GitHub тоді на кожен push збирає сайт сам, і дві публікації одного
@@ -42,6 +42,7 @@ jobs:
           cache-dependency-path: |
             training-portal-src/package-lock.json
             partner-portal-src/package-lock.json
+            employee-portal-src/package-lock.json
 
       - name: Встановити залежності навчального порталу
         working-directory: training-portal-src
@@ -62,18 +63,28 @@ jobs:
         working-directory: partner-portal-src
         run: npm run build
 
+      - name: Встановити залежності порталу для працівників
+        working-directory: employee-portal-src
+        run: npm ci
+
+      - name: Зібрати портал для працівників
+        working-directory: employee-portal-src
+        run: npm run build
+
       - name: Зібрати сайт докупи
         run: |
           mkdir -p _site
           # Звіти та решта статики з кореня — без вихідних файлів порталу
           rsync -a --exclude '_site' --exclude 'training-portal-src' \
                    --exclude 'training-portal' --exclude 'partner-portal-src' \
-                   --exclude 'partner-portal' --exclude '.git' \
+                   --exclude 'partner-portal' --exclude 'employee-portal-src' \
+                   --exclude 'employee-portal' --exclude '.git' \
                    --exclude '.github' ./ _site/
           # Свіжозібрані портали кладемо поверх того, що лежить у репозиторії
-          mkdir -p _site/training-portal _site/partner-portal
+          mkdir -p _site/training-portal _site/partner-portal _site/employee-portal
           cp -r training-portal-src/dist/. _site/training-portal/
           cp -r partner-portal-src/dist/. _site/partner-portal/
+          cp -r employee-portal-src/dist/. _site/employee-portal/
 
       - uses: actions/upload-pages-artifact@v3
         with:

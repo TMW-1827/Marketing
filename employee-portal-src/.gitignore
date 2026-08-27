@@ -1,0 +1,13 @@
+node_modules/
+dist/
+dist-ssr/
+
+# Самодостатня збірка одним файлом — для показу за посиланням
+dist-demo/
+*.local
+.env
+.env.*
+
+.DS_Store
+*.log
+.vite/

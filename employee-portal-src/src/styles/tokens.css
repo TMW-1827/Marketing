@@ -1,0 +1,66 @@
+/**
+ * Дизайн-токени бренду «Трускавецька».
+ * Кольори — з бренд-гайду 2025 (Pantone 300 C, 7724 C, 1935 C, 877 C).
+ *
+ * Розміри задані в rem від 16px кореня: у мобільному WebView користувач може
+ * збільшити системний шрифт, і верстка має підлаштуватись, а не поламатись.
+ */
+:root {
+  /* Бренд */
+  --blue: #005eb8; /* Pantone 300 C */
+  --green: #00966c; /* Pantone 7724 C */
+  --red: #c5003e; /* Pantone 1935 C */
+  --silver: #8a8d8f; /* Pantone 877 C */
+  --blue-deep: #003c77;
+  --green-deep: #00734f;
+
+  /* Нейтральні */
+  --ink: #0b2137;
+  --ink-soft: #4a5f73;
+  --ink-faint: #93a7b9;
+  --line: #d9e2eb;
+  --paper: #f2f6fa;
+  --card: #ffffff;
+  --card-soft: #f7fafc;
+
+  /* Статуси */
+  --warn: #b3261e;
+  --warn-bg: #fceeed;
+  --warn-line: #f0c4c0;
+  --ok: #00694c;
+  --ok-bg: #e9f5f0;
+  --ok-line: #b7e0d0;
+  --amber: #9a6700;
+  --amber-bg: #fff7e0;
+  --amber-line: #ebd9a0;
+  --info-bg: #eaf2fb;
+  --info-line: #c2d9f0;
+
+  /* Типографіка */
+  --disp: 'Sofia Sans Extra Condensed', 'Arial Narrow', Impact, sans-serif;
+  --body: 'Montserrat', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  /* Радіуси й тіні */
+  --r-sm: 8px;
+  --r-md: 11px;
+  --r-lg: 14px;
+  --shadow-card: 0 1px 2px rgba(11, 33, 55, 0.04);
+  --shadow-pop: 0 12px 34px rgba(11, 33, 55, 0.16);
+  --shadow-sheet: 0 -8px 40px rgba(11, 33, 55, 0.22);
+
+  /* Розкладка */
+  --header-h: 56px;
+  --tabbar-h: 58px;
+  --content-max: 1060px;
+  --shell-max: 1400px;
+
+  /* Безпечні зони iOS / Android (у вебі дорівнюють 0) */
+  --sa-top: env(safe-area-inset-top, 0px);
+  --sa-bottom: env(safe-area-inset-bottom, 0px);
+  --sa-left: env(safe-area-inset-left, 0px);
+  --sa-right: env(safe-area-inset-right, 0px);
+
+  /* Мінімальна площа дотику за рекомендаціями Apple HIG / Material */
+  --tap: 44px;
+}
