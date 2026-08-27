@@ -14,6 +14,7 @@ import { compliance } from './sections/compliance'
 import { clients } from './sections/clients'
 import { merchandising } from './sections/merchandising'
 import { visit } from './sections/visit'
+import { partnership } from './sections/partnership'
 
 import { receiving } from './sections/receiving'
 import { storage } from './sections/storage'
@@ -67,6 +68,7 @@ export const truskavetskaPortal: Portal = {
     clients,
     merchandising,
     visit,
+    partnership,
     // Склад і логістика
     receiving,
     storage,

@@ -112,6 +112,7 @@ export function formatByKey(key: string): Format | undefined {
 /* ---------- Розрахунки ---------- */
 
 export interface PalletBreakdown {
+  /** Пляшок — завжди ціле: половини пляшки не буває */
   bottles: number
   cases: number
   pallets: number
@@ -128,6 +129,22 @@ export interface PalletBreakdown {
   casesToFullPallet: number
   /** Упаковок у повній палеті */
   casesPerPallet: number
+  /** Повних упаковок */
+  fullCases: number
+  /** Пляшок у неповній упаковці, 0 — залишків немає */
+  remainderBottles: number
+  /** Пляшок, яких бракує до повної упаковки */
+  bottlesToFullCase: number
+  /** Пляшок у повній упаковці */
+  bottlesPerCase: number
+  /**
+   * Заданий об'єм не поділився на цілі пляшки, і його округлили вгору.
+   * Разом із `litres` це дає повну відповідь: скільки просили й скільки
+   * насправді поїде.
+   */
+  litresRounded: boolean
+  /** Заданий об'єм, л — має сенс лише коли рахували з літрів */
+  requestedLitres: number
 }
 
 export type PalletUnit = 'bottle' | 'case' | 'pallet' | 'litre'
@@ -149,23 +166,26 @@ export function calcPallet(
   const casesPerPallet = bottlesPerPallet / bottlesPerCase
 
   const qty = Math.max(0, quantity || 0)
-  let bottles: number
+  let raw: number
   switch (unit) {
     case 'bottle':
-      bottles = qty
+      raw = qty
       break
     case 'case':
-      bottles = qty * bottlesPerCase
+      raw = qty * bottlesPerCase
       break
     case 'pallet':
-      bottles = qty * bottlesPerPallet
+      raw = qty * bottlesPerPallet
       break
     case 'litre':
-      // Пів пляшки не відвантажують: округлюємо вгору до цілої пляшки,
-      // тому фактичний об'єм може трохи перевищити заданий.
-      bottles = Math.ceil(qty / format.litres - EPS)
+      raw = qty / format.litres
       break
   }
+
+  // Половини пляшки не буває: скільки б не задали — літрами, дробовими
+  // палетами чи дробовими упаковками, — округлюємо вгору до цілої пляшки.
+  const bottles = Math.ceil(raw - EPS)
+  const litresRounded = unit === 'litre' && bottles > raw + EPS
 
   const cases = bottles / bottlesPerCase
   const pallets = bottles / bottlesPerPallet
@@ -174,12 +194,13 @@ export function calcPallet(
   // Залишок рахуємо в цілих упаковках: неповну упаковку не відвантажують.
   const wholeCases = Math.ceil(cases - EPS)
   const remainderCases = wholeCases % casesPerPallet
+  const remainderBottles = bottles % bottlesPerCase
 
   return {
     bottles,
     cases,
     // Неповний шар усе одно займає цілий шар на палеті: 5,2 → 6, 4,8 → 5
-    layers: Math.ceil(cases / format.source.casesPerLayer - EPS),
+    layers: Math.ceil(wholeCases / format.source.casesPerLayer - EPS),
     pallets,
     litres: bottles * format.litres,
     weightKg,
@@ -187,13 +208,35 @@ export function calcPallet(
     remainderCases,
     casesToFullPallet: remainderCases === 0 ? 0 : casesPerPallet - remainderCases,
     casesPerPallet,
+    fullCases: Math.floor(bottles / bottlesPerCase),
+    remainderBottles,
+    bottlesToFullCase:
+      remainderBottles === 0 ? 0 : bottlesPerCase - remainderBottles,
+    bottlesPerCase,
+    litresRounded,
+    requestedLitres: unit === 'litre' ? qty : bottles * format.litres,
   }
+}
+
+/** Вартість партії за прайсом обраної зони. */
+export interface PalletCost {
+  net: number
+  gross: number
+}
+
+export function costOf(
+  format: Format,
+  bottles: number,
+  zone: PriceZone,
+): PalletCost {
+  const price = format.source.price[zone]
+  return { net: bottles * price.net, gross: bottles * price.gross }
 }
 
 /* ---------- Гроші ---------- */
 
 export interface MarginBreakdown {
-  /** Закупівельна ціна точки з ПДВ */
+  /** Закупівельна ціна в обраній базі */
   purchase: number
   /** Рекомендована роздрібна ціна */
   rrp: number
@@ -208,38 +251,89 @@ export interface MarginBreakdown {
 }
 
 /**
+ * База, від якої рахують закупівлю: з ПДВ чи без.
+ *
+ * Платник ПДВ рахує від ціни без ПДВ — податок він відносить у кредит.
+ * Неплатник (а це більшість малих точок) платить усю суму й рахує від
+ * ціни з ПДВ. Одна й та сама пляшка дає їм різну націнку, тому база —
+ * не деталь, а перше, що треба з'ясувати в розмові про гроші.
+ */
+export type PriceBase = 'gross' | 'net'
+
+export const PRICE_BASE_LABEL: Record<PriceBase, string> = {
+  gross: 'з ПДВ',
+  net: 'без ПДВ',
+}
+
+/**
  * Скільки заробляє точка, якщо тримає рекомендовану ціну.
  *
  * Націнка й маржа — різні числа, і плутають їх постійно: націнка рахується
  * від закупівлі, маржа — від ціни продажу. Тому повертаємо обидві.
+ *
+ * РРЦ завжди з ПДВ — це ціна на полиці. Тому при базі «без ПДВ» націнка
+ * виходить вищою: у ній сидить іще й сам податок, а не тільки заробіток
+ * точки. Саме на цьому місці розмова з клієнтом найчастіше й розходиться.
  */
-export function calcMargin(format: Format, zone: PriceZone): MarginBreakdown {
-  const { gross, rrp } = format.source.price[zone]
-  const profit = rrp - gross
+export function calcMargin(
+  format: Format,
+  zone: PriceZone,
+  base: PriceBase = 'gross',
+): MarginBreakdown {
+  const price = format.source.price[zone]
+  const purchase = price[base]
+  const profit = price.rrp - purchase
   return {
-    purchase: gross,
-    rrp,
+    purchase,
+    rrp: price.rrp,
     profit,
-    markupPct: (profit / gross) * 100,
-    marginPct: (profit / rrp) * 100,
+    markupPct: (profit / purchase) * 100,
+    marginPct: (profit / price.rrp) * 100,
     profitPerPallet: profit * format.source.bottlesPerPallet,
   }
 }
 
-/* ---------- Змішане замовлення ---------- */
+/* ---------- Збірне замовлення ---------- */
 
-/** Рядок замовлення: формат і кількість палет (можна дробову). */
+/** У чому вказана кількість у рядку замовлення. */
+export type OrderUnit = 'pallet' | 'case'
+
+export const ORDER_UNIT_LABEL: Record<OrderUnit, string> = {
+  pallet: 'палет',
+  case: 'упаковок',
+}
+
+/**
+ * Рядок замовлення.
+ *
+ * Позиція, а не формат: у замовленні негазована й сильногазована 0,5 л —
+ * це два різні рядки з різними штрих-кодами, і склад збирає саме їх.
+ * Формат тут не годиться — за ним не видно, що саме класти на палету.
+ */
 export interface OrderLine {
-  formatKey: string
+  skuId: number
+  qty: number
+  unit: OrderUnit
+  /** Кому їде рядок. Машина одна, клієнтів у ній кілька. */
+  client: string
+}
+
+/** Порахований рядок — те, що показується поруч із полями введення. */
+export interface OrderLineView {
+  bottles: number
+  cases: number
   pallets: number
+  weightKg: number
+  net: number
+  gross: number
 }
 
 export interface OrderTotals {
-  pallets: number
-  /** Палетомісць у кузові — неповна палета займає ціле місце */
-  places: number
-  cases: number
   bottles: number
+  cases: number
+  pallets: number
+  /** Палетомісць у кузові */
+  places: number
   litres: number
   weightKg: number
   /** Сума закупівлі без ПДВ, грн */
@@ -248,47 +342,120 @@ export interface OrderTotals {
   gross: number
 }
 
+export interface ClientTotals extends OrderTotals {
+  client: string
+  /** Скільки різних позицій у замовленні цього клієнта */
+  positions: number
+}
+
+export interface OrderSummary {
+  /** Розклад по клієнтах — у порядку появи в замовленні */
+  clients: ClientTotals[]
+  total: OrderTotals
+}
+
+const emptyTotals = (): OrderTotals => ({
+  bottles: 0,
+  cases: 0,
+  pallets: 0,
+  places: 0,
+  litres: 0,
+  weightKg: 0,
+  net: 0,
+  gross: 0,
+})
+
+/** Скільки пляшок дає рядок. */
+export function lineBottles(sku: SkuView, qty: number, unit: OrderUnit): number {
+  const n = Math.max(0, qty || 0)
+  return unit === 'pallet' ? n * sku.bottlesPerPallet : n * sku.bottlesPerCase
+}
+
+/** Повний розклад одного рядка. */
+export function viewLine(
+  sku: SkuView,
+  qty: number,
+  unit: OrderUnit,
+  zone: PriceZone,
+): OrderLineView {
+  const bottles = lineBottles(sku, qty, unit)
+  const cases = bottles / sku.bottlesPerCase
+  const casesPerPallet = sku.bottlesPerPallet / sku.bottlesPerCase
+  const price = sku.price[zone]
+
+  return {
+    bottles,
+    cases,
+    pallets: bottles / sku.bottlesPerPallet,
+    weightKg: (cases / casesPerPallet) * sku.weightPalletKg,
+    net: bottles * price.net,
+    gross: bottles * price.gross,
+  }
+}
+
 /**
- * Підсумок змішаного замовлення.
+ * Підсумок збірного замовлення — по клієнтах і загалом.
  *
- * Ключове число тут — не палети, а **палетомісця**: 0,4 палети води займає
- * в кузові стільки ж підлоги, скільки повна. Саме через цю різницю
- * замовлення «на дві палети» несподівано не влазить у машину.
+ * Машина возить не одного клієнта: у кузові кілька замовлень одразу. Тому
+ * палетомісця рахуються **по клієнтах**, а не по рядках і не з загальної
+ * суми палет: позиції одного клієнта можна скласти на спільну мікс-палету,
+ * позиції двох клієнтів — ні, їх на прийманні доведеться розбирати.
+ *
+ * Через це в замовленні на 2,4 палети трьох клієнтів займе не три місця,
+ * а стільки, скільки вийде після округлення в кожного окремо. Саме тут
+ * найчастіше й не сходиться те, що порахували продажі, з тим, що поставив
+ * у машину склад.
  */
-export function sumOrder(
+export function summarizeOrder(
   lines: OrderLine[],
   zone: PriceZone,
-  formatsList: Format[] = formats,
-): OrderTotals {
-  const totals: OrderTotals = {
-    pallets: 0,
-    places: 0,
-    cases: 0,
-    bottles: 0,
-    litres: 0,
-    weightKg: 0,
-    net: 0,
-    gross: 0,
-  }
+  catalog: SkuView[] = skus,
+): OrderSummary {
+  const byClient = new Map<string, ClientTotals>()
 
   for (const line of lines) {
-    const format = formatsList.find((f) => f.key === line.formatKey)
-    if (!format || line.pallets <= 0) continue
+    const sku = catalog.find((s) => s.id === line.skuId)
+    if (!sku || line.qty <= 0) continue
 
-    const breakdown = calcPallet(format, line.pallets, 'pallet')
-    const price = format.source.price[zone]
+    const view = viewLine(sku, line.qty, line.unit, zone)
+    const key = line.client.trim() || 'Без клієнта'
 
-    totals.pallets += line.pallets
-    totals.places += Math.ceil(line.pallets - EPS)
-    totals.cases += breakdown.cases
-    totals.bottles += breakdown.bottles
-    totals.litres += breakdown.litres
-    totals.weightKg += breakdown.weightKg
-    totals.net += breakdown.bottles * price.net
-    totals.gross += breakdown.bottles * price.gross
+    let acc = byClient.get(key)
+    if (!acc) {
+      acc = { ...emptyTotals(), client: key, positions: 0 }
+      byClient.set(key, acc)
+    }
+
+    acc.positions += 1
+    acc.bottles += view.bottles
+    acc.cases += view.cases
+    acc.pallets += view.pallets
+    acc.litres += view.bottles * sku.litres
+    acc.weightKg += view.weightKg
+    acc.net += view.net
+    acc.gross += view.gross
   }
 
-  return totals
+  const clients = [...byClient.values()]
+  for (const client of clients) {
+    // Палети клієнта складаються на його власні місця; чужий товар до них
+    // не домішують, тому неповна палета клієнта займає ціле місце.
+    client.places = Math.ceil(client.pallets - EPS)
+  }
+
+  const total = clients.reduce((sum, client) => {
+    sum.bottles += client.bottles
+    sum.cases += client.cases
+    sum.pallets += client.pallets
+    sum.places += client.places
+    sum.litres += client.litres
+    sum.weightKg += client.weightKg
+    sum.net += client.net
+    sum.gross += client.gross
+    return sum
+  }, emptyTotals())
+
+  return { clients, total }
 }
 
 /* ---------- Термін придатності ---------- */
@@ -314,6 +481,11 @@ const DAY_MS = 24 * 60 * 60 * 1000
  * саме так її наносять на етикетку. Кінець місяця з коротшою кількістю
  * днів зсуваємо на останній день (31 серпня + 6 місяців = 28/29 лютого),
  * інакше 31-ше число «перестрибувало» б на початок наступного місяця.
+ *
+ * Останній придатний день — на добу раніше за ту саму дату: розлив
+ * 15.01.2026 плюс 12 місяців дає придатність **до 14.01.2027**, а не до
+ * 15-го. Дванадцять місяців зберігання закінчуються напередодні річниці
+ * розливу, і саме цю дату друкують на пляшці.
  */
 export function checkShelfLife(
   bottledAt: Date,
@@ -326,6 +498,7 @@ export function checkShelfLife(
   useBy.setMonth(useBy.getMonth() + shelfLifeMonths)
   const lastDay = new Date(useBy.getFullYear(), useBy.getMonth() + 1, 0).getDate()
   useBy.setDate(Math.min(day, lastDay))
+  useBy.setDate(useBy.getDate() - 1)
 
   const total = Math.round((useBy.getTime() - bottledAt.getTime()) / DAY_MS)
   const daysPassed = Math.round((today.getTime() - bottledAt.getTime()) / DAY_MS)

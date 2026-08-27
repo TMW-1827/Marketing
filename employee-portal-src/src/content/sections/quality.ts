@@ -99,7 +99,7 @@ export const quality: Section = {
           kind: 'definitions',
           items: [
             {
-              term: 'Класична «Трускавецька» та SPORT',
+              term: '«Трускавецька» та SPORT',
               value: 'Вода мінеральна природна столова, ДСТУ 878-93',
             },
             {

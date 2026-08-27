@@ -2,13 +2,9 @@ import { useMemo, useState } from 'react'
 import { skus } from '@/lib/catalog'
 import { SKU_PHOTOS } from '@/data/photos'
 import { DriveImage } from '@/components/DriveImage'
-import {
-  CARBONATION_FILL,
-  CARBONATION_STROKE,
-  type Carbonation,
-  type Packaging,
-} from '@/types/catalog'
+import type { Carbonation, Packaging } from '@/types/catalog'
 import { openSku, resetFilters, setFilter, useCatalogFilters } from './store'
+import { CarbonationDot } from './CarbonationDot'
 
 const VOLUMES = ['всі', '0,3 л', '0,5 л', '0,75 л', '1,5 л', '2,0 л', '7,0 л']
 const CARBONATIONS: Array<Carbonation | 'всі'> = [
@@ -77,13 +73,9 @@ export function SkuCatalog() {
           >
             <SkuPhoto id={sku.id} name={sku.name} />
             <span className="sku__top">
-              <span
+              <CarbonationDot
+                carbonation={sku.carbonation}
                 className="sku__dot"
-                style={{
-                  background: CARBONATION_FILL[sku.carbonation],
-                  borderColor: CARBONATION_STROKE[sku.carbonation],
-                }}
-                aria-hidden="true"
               />
               <span>
                 <span className="sku__name">

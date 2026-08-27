@@ -26,8 +26,14 @@ export const PARTNER_PORTAL = '../partner-portal/'
 /** Навчальний портал із тестом і сертифікатом. */
 export const TRAINING_PORTAL = '../training-portal/'
 
-/** Портал обліку торговельного обладнання. */
-export const EQUIPMENT_PORTAL = '../equipment-portal/'
+/**
+ * Форма запиту на торговельне обладнання.
+ *
+ * Зовнішня форма, а не сторінка порталу: її заповнюють із телефона просто
+ * в точці, і саме вона робить із розмови заявку. Адреса тут одна на весь
+ * портал — щоб замінити форму можна було в одному місці.
+ */
+export const EQUIPMENT_FORM = 'https://forms.gle/aKFx1e4AxEpu8dELA'
 
 /**
  * Редакція прайсу, за якою зібрані ціни в `data/skus.ts`.

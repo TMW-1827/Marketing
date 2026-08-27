@@ -21,6 +21,34 @@
   margin-top: 8px;
 }
 
+/* ---------- Мітка газації ---------- */
+
+/*
+ * Кружечок кольору газації: білий — негазована, зелений — слабогазована,
+ * синій — сильногазована. Одна мітка на весь портал — на полиці, у картках
+ * позицій і в таблиці форматів, — інакше однаковий кружечок у двох місцях
+ * почав би означати різне.
+ *
+ * Розмір задається змінною --dot у місці використання: під пляшкою на полиці
+ * місця мало, у картці позиції — багато.
+ */
+.gasdots {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  /* Три кружечки не мають розсувати вузьку колонку чи вузьку пляшку */
+  line-height: 1;
+}
+
+.gasdot {
+  flex: 0 0 auto;
+  width: var(--dot, 10px);
+  height: var(--dot, 10px);
+  border-radius: 50%;
+  border: 1.5px solid;
+}
+
 /* ---------- Полиця ---------- */
 
 .shelf {
@@ -124,11 +152,10 @@
   min-height: 25px;
 }
 
-.bottle__label u {
-  text-decoration: none;
-  color: var(--ink-faint);
-  font-size: 8.5px;
-  letter-spacing: 0.06em;
+/* Найвужча пляшка на полиці — 0,5 л ПЕТ; три кружечки мають стати під нею */
+.bottle__label .gasdots {
+  --dot: 7px;
+  margin-top: 3px;
 }
 
 .bottle__label em {
@@ -167,6 +194,10 @@
   height: 13px;
   border-radius: 3px;
   display: inline-block;
+}
+
+.legend .gasdot {
+  --dot: 12px;
 }
 
 /* ---------- Підказка ---------- */
@@ -326,11 +357,9 @@
 }
 
 .sku__dot {
+  --dot: 14px;
   flex: 0 0 14px;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  border: 2px solid;
+  border-width: 2px;
   margin-top: 4px;
 }
 
@@ -496,6 +525,16 @@
   color: #fff;
 }
 
+/*
+ * Залишки — окремими рядками, а не одним абзацом: палета, упаковка й
+ * округлення літрів це три різні речі, і кожну читають окремо.
+ */
+.out-gap__line + .out-gap__line {
+  margin-top: 9px;
+  padding-top: 9px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 /* ---------- Шкала залишкового терміну ---------- */
 
 /*
@@ -551,28 +590,65 @@
   margin-bottom: 12px;
 }
 
+/*
+ * Рядок замовлення: мітка газації, позиція, клієнт, кількість, одиниця,
+ * порахований підсумок і кнопка «прибрати».
+ *
+ * Сім елементів у ряд поміщаються тільки на широкому екрані. На вужчому
+ * рядок стає карткою у два яруси — позиція зверху, решта знизу, — бо
+ * стискати сім полів в один рядок означає не показати жодного.
+ */
 .mix__row {
   display: grid;
-  /* формат тягнеться, решта — за вмістом; кнопка завжди останньою */
-  grid-template-columns: minmax(0, 1fr) 92px auto auto var(--tap);
   align-items: center;
   gap: 8px;
+  grid-template-areas: 'dot sku client qty unit sum remove';
+  grid-template-columns:
+    auto
+    minmax(0, 1.7fr)
+    minmax(0, 1fr)
+    84px
+    112px
+    auto
+    var(--tap);
+}
+
+.mix__dot {
+  --dot: 12px;
+  grid-area: dot;
+}
+
+.mix__sku {
+  grid-area: sku;
+}
+
+.mix__client {
+  grid-area: client;
+}
+
+.mix__qty {
+  grid-area: qty;
 }
 
 .mix__unit {
-  font-size: 12px;
-  color: var(--ink-soft);
+  grid-area: unit;
 }
 
-.mix__weight {
+.mix__bottles {
+  grid-area: sum;
   font-family: var(--mono);
-  font-size: 12px;
+  font-size: 11.5px;
   color: var(--ink-soft);
   text-align: right;
   white-space: nowrap;
 }
 
+.mix__bottles b {
+  color: var(--ink);
+}
+
 .mix__remove {
+  grid-area: remove;
   width: var(--tap);
   height: var(--tap);
   border: 1px solid var(--line);
@@ -589,14 +665,67 @@
   color: var(--red);
 }
 
-/* На телефоні вага не поміщається в рядок — ховаємо її, підсумок нижче */
-@media (max-width: 520px) {
+/*
+ * Вужчий екран: рядок стає карткою з трьох ярусів — позиція, клієнт,
+ * кількість. Сітка тут не годиться: колонки спільні для всіх ярусів, і
+ * довгий підсумок «2 016 пляшок · 3 217,6 кг» розсував колонку, у якій
+ * ярусом вище стояв вибір позиції. Флекс із повношириним полем клієнта
+ * розриває рядок там, де треба, і нічого нікуди не тисне.
+ */
+@media (max-width: 980px) {
   .mix__row {
-    grid-template-columns: minmax(0, 1fr) 78px auto var(--tap);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-sm);
+    background: var(--card-soft);
   }
 
-  .mix__weight {
-    display: none;
+  .mix__dot {
+    order: 1;
+    flex: 0 0 auto;
+  }
+
+  /*
+   * Мала база навмисно: у списку є «0,75 л ПЕТ, слабогазована SPORT», і за
+   * базою auto селект просить під неї всю ширину — кнопка «прибрати» тоді
+   * зривається на власний рядок. З малою базою селект спершу вміщається
+   * поруч із нею, а потім доростає до вільного місця.
+   */
+  .mix__sku {
+    order: 2;
+    flex: 1 1 140px;
+    min-width: 0;
+  }
+
+  .mix__remove {
+    order: 3;
+    flex: 0 0 auto;
+  }
+
+  /* Повна ширина розриває рядок після позиції — без порожніх елементів */
+  .mix__client {
+    order: 4;
+    flex: 1 1 100%;
+  }
+
+  .mix__qty {
+    order: 5;
+    flex: 0 1 96px;
+  }
+
+  .mix__unit {
+    order: 6;
+    flex: 0 1 128px;
+  }
+
+  .mix__bottles {
+    order: 7;
+    flex: 1 1 auto;
+    text-align: right;
   }
 }
 

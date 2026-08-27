@@ -90,6 +90,46 @@ await page.waitForTimeout(250)
 const eastOut = flat(await page.locator('.out').first().innerText())
 check('зміна зони змінює ціну', eastOut !== out, eastOut)
 
+// База закупівлі: платник ПДВ рахує від ціни без податку, неплатник — від
+// повної. Націнка від меншої бази більша, і саме це має бути видно.
+await page.locator('#price-zone').selectOption('west')
+await page.locator('#price-base').selectOption('gross')
+await page.waitForTimeout(250)
+const grossPct = Number(
+  (await page.locator('.out div').nth(3).innerText()).match(/(\d+)/)?.[1],
+)
+const grossBuy = flat(await page.locator('.out div').first().innerText())
+await page.locator('#price-base').selectOption('net')
+await page.waitForTimeout(250)
+const netPct = Number(
+  (await page.locator('.out div').nth(3).innerText()).match(/(\d+)/)?.[1],
+)
+const netBuy = flat(await page.locator('.out div').first().innerText())
+check('база «з ПДВ» — 23,40 грн', /23,40/.test(grossBuy), grossBuy)
+check('база «без ПДВ» — 19,50 грн', /19,50/.test(netBuy), netBuy)
+check(
+  'від бази без ПДВ націнка вища',
+  netPct > grossPct,
+  `без ПДВ ${netPct}% проти ${grossPct}% з ПДВ`,
+)
+check(
+  'підпис бази змінюється разом із нею',
+  /без ПДВ/i.test(netBuy) && /з ПДВ/i.test(grossBuy),
+  netBuy,
+)
+check(
+  'сказано, чому база важлива',
+  /платник ПДВ/i.test(priceText),
+)
+check(
+  'ціна одна для всіх дистриб’юторів',
+  /Ціна одна/i.test(priceText) && /не змінюють у перемовинах/i.test(priceText),
+)
+check(
+  'предмет перемовин — ретробонус і знижка, не ціна',
+  /Ретробонус/i.test(priceText) && /Що не обговорюється/i.test(priceText),
+)
+
 // --- Калькулятор палети (розділ комплектації) ---
 await page.goto(base + '#/picking', { waitUntil: 'networkidle' })
 await page.waitForTimeout(400)
@@ -99,8 +139,24 @@ check(
   /100/.test(out) && /1 200/.test(out),
   out,
 )
-let gap = await page.locator('.out-gap').first().innerText()
+let gap = flat(await page.locator('.out-gap').first().innerText())
 check('неповна палета показує, скільки бракує', /не вистачає/.test(gap), gap)
+check('1200 пляшок 0,3 скла — рівно 100 упаковок', /Рівно 100 повних упаковок/.test(gap), gap)
+
+// Неповна упаковка: 1195 пляшок по 12 — це 99 упаковок і 7 пляшок
+await page.locator('#pallet-qty').fill('1195')
+await page.waitForTimeout(250)
+gap = flat(await page.locator('.out-gap').first().innerText())
+check(
+  'неповна упаковка: 7 пляшок із 12',
+  /Неповна упаковка/.test(gap) && /7 пляшок з 12/.test(gap),
+  gap,
+)
+check(
+  'сказано, скільки бракує до повної упаковки',
+  /доберіть 5 пляшок/.test(gap),
+  gap,
+)
 
 await page.locator('#pallet-format').selectOption('g15')
 await page.locator('#pallet-unit').selectOption('pallet')
@@ -109,21 +165,43 @@ await page.waitForTimeout(250)
 out = flat(await page.locator('.out').first().innerText())
 check('1 палета 1,5 л = 504 пляшки, 756 л', /504/.test(out) && /756/.test(out), out)
 
+// Літри, які не діляться на цілі пляшки, округлюються вгору — і про це кажуть
+await page.locator('#pallet-unit').selectOption('litre')
+await page.locator('#pallet-qty').fill('100')
+await page.waitForTimeout(250)
+out = flat(await page.locator('.out').first().innerText())
+gap = flat(await page.locator('.out-gap').first().innerText())
+check('100 л формату 1,5 л = 67 пляшок', /\b67\b/.test(out), out)
+check(
+  'сказано, що об’єм округлено вгору до цілої пляшки',
+  /не діляться на пляшки/.test(gap) && /100,5/.test(gap),
+  gap,
+)
+check('сказано, на скільки більше за заданий об’єм', /на 0,5 л більше/.test(gap), gap)
+
+// Об'єм, що ділиться рівно, окремо про це й каже
+await page.locator('#pallet-qty').fill('150')
+await page.waitForTimeout(250)
+gap = flat(await page.locator('.out-gap').first().innerText())
+check('рівний об’єм — округлювати нічого', /діляться.*рівно/.test(gap), gap)
+
 // --- Калькулятор терміну придатності ---
 await page.goto(base + '#/storage', { waitUntil: 'networkidle' })
 await page.waitForTimeout(400)
-// 0,3 л скло негазована — 12 місяців: рівно рік від дати розливу
+// 0,3 л скло негазована — 12 місяців. Останній придатний день на добу
+// раніше за річницю розливу: 15.01.2026 → придатна до 14.01.2027
 await page.locator('#life-date').fill('2026-01-15')
 await page.waitForTimeout(300)
 let life = flat(await page.locator('.out').first().innerText())
-check('12 місяців від 15.01.2026 → 15.01.2027', /15\.01\.2027/.test(life), life)
+check('12 місяців від 15.01.2026 → 14.01.2027', /14\.01\.2027/.test(life), life)
+check('придатна не до самої річниці розливу', !/15\.01\.2027/.test(life), life)
 
 // Газований ПЕТ — 9 місяців, і це має бути видно
 await page.locator('#life-format').selectOption('g05')
 await page.locator('#life-gas').selectOption('сильногазована')
 await page.waitForTimeout(300)
 life = flat(await page.locator('.out').first().innerText())
-check('газований ПЕТ — 9 місяців', /9\b/.test(life) && /15\.10\.2026/.test(life), life)
+check('газований ПЕТ — 9 місяців', /9\b/.test(life) && /14\.10\.2026/.test(life), life)
 
 // Прострочена партія — окремий вердикт
 await page.locator('#life-date').fill('2020-01-15')
@@ -149,31 +227,127 @@ check(
   /Обмежує.*вага/i.test(await page.locator('.out-gap').first().innerText()),
 )
 
-// --- Збірка змішаного замовлення ---
+// --- Збірка збірного замовлення ---
 await page.goto(base + '#/visit', { waitUntil: 'networkidle' })
 await page.waitForTimeout(400)
 const rows = await page.locator('.mix__row').count()
-check('у збірці замовлення є рядки', rows === 2, `${rows} рядків`)
+check('у збірці замовлення є рядки', rows === 3, `${rows} рядків`)
+
+// Рядок — позиція, а не формат: у кожного своя газація й свій кружечок
+check(
+  'кожен рядок має мітку газації',
+  (await page.locator('.mix__row .gasdot').count()) === rows,
+)
+const lineSums = await page.locator('.mix__bottles').allInnerTexts()
+check(
+  '1,5 л · 4 палети = 2016 пляшок',
+  /2\s?016/.test(lineSums[0].replace(/ /g, ' ')),
+  lineSums[0],
+)
+check(
+  '0,3 скло · 30 упаковок = 360 пляшок',
+  /360/.test(lineSums[2]),
+  lineSums[2],
+)
+
+// Кількість вказують і в упаковках: 1 палета 1,5 л = 84 упаковки
+await page.locator('.mix__row').first().locator('.mix__unit').selectOption('case')
+await page.locator('.mix__row').first().locator('.mix__qty').fill('84')
+await page.waitForTimeout(300)
+check(
+  '84 упаковки 1,5 л = 504 пляшки, як одна палета',
+  /504/.test((await page.locator('.mix__bottles').first().innerText())),
+  await page.locator('.mix__bottles').first().innerText(),
+)
+await page.locator('.mix__row').first().locator('.mix__unit').selectOption('pallet')
+await page.locator('.mix__row').first().locator('.mix__qty').fill('4')
+await page.waitForTimeout(300)
+
+// Машина возить кількох клієнтів: розклад по кожному плюс загальний підсумок
+const clientRows = await page.locator('.tablewrap tbody tr').count()
+check('розклад по клієнтах', clientRows === 2, `${clientRows} клієнтів`)
 let mix = flat(await page.locator('.out').first().innerText())
 check(
-  'підсумок рахує палетомісця й суму',
-  /палетомісць/i.test(mix) && /сума з ПДВ/i.test(mix),
+  'підсумок рахує клієнтів, палетомісця й суму',
+  /клієнтів/i.test(mix) && /палетомісць/i.test(mix) && /сума з ПДВ/i.test(mix),
   mix,
 )
 check('суми згруповані по розрядах', /\d \d{3},\d{2}/.test(mix), mix)
 
-// Дробова палета займає ціле палетомісце
-await page.locator('.mix__row input').first().fill('0.5')
-await page.waitForTimeout(300)
-mix = flat(await page.locator('.out').first().innerText())
-check('0,5 + 2 палети = 3 палетомісця', /\| 3 \|/.test(` | ${mix} | `), mix)
+// 6 палет одного клієнта + 0,28 палети другого = 6,28 палети, але 7 місць:
+// чужий товар на одну палету не домішують
+check(
+  '6,28 палети двох клієнтів = 7 палетомісць',
+  /6,28/.test(mix) && /\| 7 \|/.test(` | ${mix} | `),
+  mix,
+)
 
 // Перевантаження видно одразу
-await page.locator('.mix__row input').first().fill('40')
+await page.locator('.mix__row').first().locator('.mix__qty').fill('40')
 await page.waitForTimeout(300)
 check(
   'перевантаження авто помічене',
   /Не влізе/i.test(await page.locator('.out-gap').first().innerText()),
+)
+
+// --- Партнерство та спонсорство ---
+await page.goto(base + '#/partnership', { waitUntil: 'networkidle' })
+await page.waitForTimeout(500)
+const part = flat(await page.locator('.content').innerText())
+check(
+  'дві обов’язкові умови названі',
+  /Єдина вода партнерства/i.test(part) && /мінімум 5 фото/i.test(part),
+)
+check(
+  'сказано, що умови проговорюють на першій зустрічі',
+  /на першій же зустрічі/i.test(part),
+)
+check('є готові тексти для представлення води', (await page.locator('.codeblock').count()) === 4)
+check(
+  'у текстах немає медичних обіцянок',
+  !/лікує|показана при|виводить токсини|схуднути/i.test(
+    (await page.locator('.codeblock').allInnerTexts()).join(' '),
+  ),
+)
+const logoFiles = await page.locator('.gallery .filechip').count()
+check('логотипи для партнера з файлами', logoFiles === 14, `${logoFiles} кнопок`)
+
+// Калькулятор води на захід: ті самі одиниці плюс витрати
+const eventCard = page.locator('.card', { hasText: 'Скільки води й скільки це коштує' })
+await page.locator('#event-format').selectOption('g05')
+await page.locator('#event-unit').selectOption('bottle')
+await page.locator('#event-qty').fill('600')
+await page.locator('#event-zone').selectOption('west')
+await page.waitForTimeout(300)
+const ev = flat(await eventCard.locator('.out').innerText())
+check('600 пляшок 0,5 л: витрати з ПДВ 5 940,00 грн', /5 940,00/.test(ev), ev)
+check('витрати без ПДВ — 4 950,00 грн', /4 950,00/.test(ev), ev)
+
+await page.locator('#event-zone').selectOption('east')
+await page.waitForTimeout(300)
+check(
+  'зона змінює витрати',
+  /6 120,00/.test(flat(await eventCard.locator('.out').innerText())),
+  flat(await eventCard.locator('.out').innerText()),
+)
+
+check(
+  'калькулятор заходу теж пояснює залишки',
+  /Рівно 75 повних упаковок/.test(flat(await eventCard.locator('.out-gap').innerText())),
+  flat(await eventCard.locator('.out-gap').innerText()),
+)
+
+// Ті самі три повідомлення працюють і тут. 100 л формату 0,75 л не
+// діляться на цілі пляшки: 133,3 → 134 пляшки, тобто 100,5 л.
+await page.locator('#event-format').selectOption('g075')
+await page.locator('#event-unit').selectOption('litre')
+await page.locator('#event-qty').fill('100')
+await page.waitForTimeout(300)
+const evGap = flat(await eventCard.locator('.out-gap').innerText())
+check(
+  'у калькуляторі заходу літри теж округлюються вгору',
+  /не діляться на пляшки/.test(evGap) && /134 пляшки/.test(evGap),
+  evGap,
 )
 
 // --- Заперечення: акордеон ---
@@ -220,6 +394,57 @@ await page.reload({ waitUntil: 'networkidle' })
 await page.waitForTimeout(600)
 const skuCount = await page.locator('.sku').count()
 check('каталог показує всі позиції', skuCount === 18, `${skuCount} позицій`)
+
+// Мітка газації — кружечок одного кольору скрізь: під пляшкою на полиці,
+// у картці позиції й у таблиці форматів. Кольори беремо з реального DOM.
+const FILL = {
+  негазована: 'rgb(255, 255, 255)',
+  слабогазована: 'rgb(0, 150, 108)',
+  сильногазована: 'rgb(0, 94, 184)',
+}
+const dots = await page.evaluate(() => {
+  const read = (sel) =>
+    [...document.querySelectorAll(sel)].map((el) => ({
+      label: el.getAttribute('aria-label') ?? '',
+      fills: [...el.querySelectorAll('.gasdot')].map(
+        (d) => getComputedStyle(d).backgroundColor,
+      ),
+    }))
+  return {
+    shelf: read('.bottle__label .gasdots'),
+    table: read('.card .gasdots'),
+    sku: [...document.querySelectorAll('.sku .gasdot')].map((d) =>
+      getComputedStyle(d).backgroundColor,
+    ),
+  }
+})
+check('під кожною пляшкою є кружечки газації', dots.shelf.length === 8, `${dots.shelf.length} із 8`)
+check(
+  '0,5 л ПЕТ — три газації трьома кольорами',
+  dots.shelf[2]?.fills.join(' ') ===
+    [FILL.негазована, FILL.слабогазована, FILL.сильногазована].join(' '),
+  dots.shelf[2]?.fills.join(' '),
+)
+check(
+  'SPORT — одна газація, один кружечок',
+  dots.shelf[4]?.fills.length === 1 && dots.shelf[4].fills[0] === FILL.негазована,
+  dots.shelf[4]?.fills.join(' '),
+)
+check(
+  'кружечки підписані словами для читача з екрана',
+  /Газації: негазована · слабогазована · сильногазована/.test(dots.shelf[2]?.label ?? ''),
+  dots.shelf[2]?.label,
+)
+check(
+  'у таблиці форматів газації теж кружечками',
+  dots.table.length === 8 && dots.table[2]?.fills.length === 3,
+  `${dots.table.length} рядків`,
+)
+check(
+  'картка позиції має кружечок того самого кольору',
+  dots.sku.length === 18 && dots.sku.every((c) => Object.values(FILL).includes(c)),
+  `${dots.sku.length} із 18`,
+)
 await page.locator('.bottle').nth(2).click() // 0,5 л ПЕТ
 await page.waitForTimeout(400)
 check(
@@ -231,6 +456,25 @@ check(
 await page.goto(base + '#/equipment', { waitUntil: 'networkidle' })
 await page.waitForTimeout(400)
 check('каталог обладнання', (await page.locator('.equip').count()) === 11)
+
+// Заявку подають формою, тож адреса має бути саме та й відкриватись окремою
+// вкладкою: працівник заповнює її в точці, не втрачаючи сторінку порталу.
+const form = await page.evaluate(() => {
+  const card = [...document.querySelectorAll('.card')].find((c) =>
+    /Як отримати обладнання/i.test(c.querySelector('h3')?.textContent ?? ''),
+  )
+  const link = card?.querySelector('.asset')
+  return link
+    ? { href: link.getAttribute('href'), target: link.getAttribute('target') }
+    : null
+})
+check('у «Як отримати обладнання» є посилання на форму', Boolean(form))
+check(
+  'форма веде на потрібну адресу',
+  form?.href === 'https://forms.gle/aKFx1e4AxEpu8dELA',
+  form?.href,
+)
+check('форма відкривається окремою вкладкою', form?.target === '_blank', form?.target)
 
 // --- Довідник: скорочення й глосарій ---
 await page.goto(base + '#/reference', { waitUntil: 'networkidle' })
@@ -262,7 +506,7 @@ await page.waitForTimeout(300)
 const ids = await page.evaluate(() =>
   [...document.querySelectorAll('.tabs a')].map((a) => a.getAttribute('href')),
 )
-check('меню містить усі розділи', ids.length === 23, `${ids.length} пунктів`)
+check('меню містить усі розділи', ids.length === 24, `${ids.length} пунктів`)
 for (const href of ids) {
   await page.goto(base + href.replace(/^#?/, '#'), { waitUntil: 'networkidle' })
   await page.waitForTimeout(150)

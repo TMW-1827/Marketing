@@ -1,8 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
 import { formats } from '@/lib/catalog'
-import { CARBONATION_SHORT } from '@/types/catalog'
+import type { Carbonation } from '@/types/catalog'
 import { setFilters } from './store'
 import { BottleTooltip, useTooltip } from './BottleTooltip'
+import { CarbonationDot, CarbonationDots } from './CarbonationDot'
+
+/** Порядок газацій у легенді — від найлегшої до найгазованішої. */
+const CARBONATIONS: Carbonation[] = [
+  'негазована',
+  'слабогазована',
+  'сильногазована',
+]
 
 /**
  * Полиця з форматами в реальному масштабі.
@@ -132,11 +140,7 @@ export function Shelf() {
                   {sku.volume.replace(' л', '')}
                   {format.key === 'g075s' && <em> S</em>}
                   <br />
-                  <u>
-                    {format.carbonations
-                      .map((c) => CARBONATION_SHORT[c])
-                      .join('·')}
-                  </u>
+                  <CarbonationDots carbonations={format.carbonations} />
                 </span>
               </button>
             </div>
@@ -155,10 +159,12 @@ export function Shelf() {
           <i style={{ background: '#FFFFFF', border: '1.5px solid #9DB1C4' }} />{' '}
           ПЕТ
         </span>
-        <span>
-          <b>н</b> — негазована · <b>сл</b> — слабогазована · <b>сил</b> —
-          сильногазована
-        </span>
+        {/* Ті самі кольори, що й на картках позицій нижче по сторінці */}
+        {CARBONATIONS.map((carbonation) => (
+          <span key={carbonation}>
+            <CarbonationDot carbonation={carbonation} /> {carbonation}
+          </span>
+        ))}
         <span>
           <b style={{ color: 'var(--red)' }}>S</b> — лінійка SPORT
         </span>
@@ -166,8 +172,8 @@ export function Shelf() {
 
       <p className="shelf__note">
         Один силует на кожен формат — усі газації одного об’єму розливаються в
-        однакову пляшку. Під об’ємом позначено, які газації бувають у цьому
-        форматі. Торкніться пляшки, щоб побачити розміри й палетні дані.
+        однакову пляшку. Кружечки під об’ємом показують, які газації бувають
+        у цьому форматі. Торкніться пляшки, щоб побачити розміри й палетні дані.
       </p>
 
       <BottleTooltip state={tooltip.state} />
