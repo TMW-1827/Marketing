@@ -1,0 +1,885 @@
+/* Стилі інтерактивних модулів: полиця, каталог, картка товару,
+   калькулятор палети, пошук. */
+
+.hint {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  margin: 12px 0 0;
+  line-height: 1.5;
+}
+
+.empty {
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  padding: 18px 0;
+}
+
+.button-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+/* ---------- Полиця ---------- */
+
+.shelf {
+  background: linear-gradient(180deg, #fff 0%, #e8eff6 100%);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 20px 14px 0;
+  margin-bottom: 16px;
+}
+
+.shelf__header {
+  display: flex;
+  margin-bottom: 7px;
+}
+
+.shelf__header i {
+  flex: 0 0 auto;
+}
+
+.shelf__header span {
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #9db1c4;
+  font-weight: 700;
+  padding-bottom: 5px;
+  border-bottom: 1px solid var(--line);
+}
+
+.shelf__row {
+  display: flex;
+  align-items: flex-end;
+}
+
+.shelf__separator {
+  flex: 0 0 1px;
+  align-self: stretch;
+  background: var(--line);
+  margin-bottom: 26px;
+}
+
+.shelf__base {
+  height: 9px;
+  background: var(--ink);
+  border-radius: 2px;
+  margin-top: 2px;
+}
+
+.shelf__note {
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  padding: 10px 0 14px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.bottle {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  background: none;
+  border: 0;
+  padding: 0;
+}
+
+.bottle__cap,
+.bottle__neck,
+.bottle__body {
+  display: block;
+}
+
+.bottle__cap {
+  width: 46%;
+  height: 7px;
+  border-radius: 2px 2px 0 0;
+}
+
+.bottle__neck {
+  width: 38%;
+  height: 9px;
+}
+
+.bottle__body {
+  width: 100%;
+  border-radius: 4px 4px 3px 3px;
+  transition:
+    transform 0.16s,
+    box-shadow 0.16s;
+}
+
+.bottle__label {
+  font-size: 9.5px;
+  color: var(--ink-soft);
+  margin-top: 5px;
+  text-align: center;
+  line-height: 1.3;
+  font-weight: 600;
+  font-family: var(--mono);
+  min-height: 25px;
+}
+
+.bottle__label u {
+  text-decoration: none;
+  color: var(--ink-faint);
+  font-size: 8.5px;
+  letter-spacing: 0.06em;
+}
+
+.bottle__label em {
+  font-style: normal;
+  color: var(--red);
+}
+
+@media (hover: hover) {
+  .bottle:hover .bottle__body {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 18px rgba(11, 33, 55, 0.22);
+  }
+}
+
+.bottle:active .bottle__body {
+  transform: translateY(-4px);
+}
+
+.legend {
+  display: flex;
+  gap: 9px 14px;
+  flex-wrap: wrap;
+  font-size: 11px;
+  color: var(--ink-soft);
+  margin-top: 12px;
+}
+
+.legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend i {
+  width: 13px;
+  height: 13px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+/* ---------- Підказка ---------- */
+
+.tooltip {
+  position: fixed;
+  z-index: 80;
+  background: var(--ink);
+  color: #fff;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 12px;
+  line-height: 1.5;
+  pointer-events: none;
+  width: min(232px, calc(100vw - 24px));
+  box-shadow: 0 12px 32px rgba(11, 33, 55, 0.3);
+  animation: fade-in 0.12s ease;
+}
+
+.tooltip__title {
+  display: block;
+  font-family: var(--disp);
+  font-size: 19px;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  line-height: 1.05;
+  margin-bottom: 2px;
+}
+
+.tooltip__sub {
+  color: #9db4ca;
+  font-size: 11px;
+  margin-bottom: 8px;
+}
+
+.tooltip__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.13);
+  padding-top: 4px;
+  margin-top: 4px;
+}
+
+.tooltip__row span {
+  color: #9db4ca;
+}
+
+.tooltip__row i {
+  font-style: normal;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Фільтри й картки товарів ---------- */
+
+.filters {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.filter-row {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.filter-row__label {
+  font-size: 10.5px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  font-weight: 700;
+  flex: 0 0 100%;
+}
+
+.chip {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 8px 14px;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--ink-soft);
+  transition: 0.15s;
+  min-height: 36px;
+}
+
+.chip:hover {
+  border-color: var(--blue);
+  color: var(--blue);
+}
+
+.chip--on {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: #fff;
+}
+
+.chip--reset {
+  border-style: dashed;
+}
+
+.sku-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 11px;
+  scroll-margin-top: calc(var(--header-h) + 16px);
+}
+
+.sku {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 14px 15px;
+  cursor: pointer;
+  transition: 0.15s;
+  text-align: left;
+  display: block;
+  width: 100%;
+  font-family: var(--body);
+}
+
+.sku:hover {
+  border-color: var(--blue);
+  box-shadow: 0 5px 16px rgba(11, 33, 55, 0.09);
+}
+
+/* Фото позиції: прозорий PNG на світлій підкладці, щоб пляшка не «висіла» */
+.sku__photo {
+  display: block;
+  background: var(--card-soft);
+  border-radius: var(--r-sm);
+  margin-bottom: 10px;
+  padding: 8px;
+  text-align: center;
+}
+
+.sku__photo img {
+  display: block;
+  width: auto;
+  height: 104px;
+  margin: 0 auto;
+  object-fit: contain;
+}
+
+.sku__top {
+  display: flex;
+  gap: 11px;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.sku__dot {
+  flex: 0 0 14px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid;
+  margin-top: 4px;
+}
+
+.sku__name {
+  display: block;
+  font-family: var(--disp);
+  font-size: 22px;
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 0.98;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+}
+
+.sku__gas {
+  display: block;
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  margin-top: 3px;
+}
+
+.sku__ean {
+  display: block;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-soft);
+  border-top: 1px solid var(--line);
+  padding-top: 9px;
+}
+
+.row-clickable {
+  cursor: pointer;
+}
+
+.row-clickable:hover {
+  background: var(--card-soft);
+}
+
+/* ---------- Картка товару (шторка / діалог) ---------- */
+
+.sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(11, 33, 55, 0.55);
+  z-index: 70;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  animation: fade-in 0.15s ease;
+}
+
+.sheet {
+  position: relative;
+  background: #fff;
+  border-radius: var(--r-lg) var(--r-lg) 0 0;
+  width: 100%;
+  max-width: 640px;
+  max-height: 92dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 14px 18px calc(26px + var(--sa-bottom));
+  animation: slide-up 0.24s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.sheet__photo {
+  display: block;
+  background: var(--card-soft);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 14px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.sheet__photo img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: 220px;
+  margin: 0 auto;
+  object-fit: contain;
+}
+
+.sheet__grip {
+  width: 38px;
+  height: 4px;
+  border-radius: 3px;
+  background: var(--line);
+  margin: 0 auto 14px;
+}
+
+.sheet__close {
+  position: absolute;
+  right: 10px;
+  top: 8px;
+  border: 0;
+  background: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: var(--ink-soft);
+  line-height: 1;
+  padding: 4px 10px;
+  min-height: var(--tap);
+}
+
+/* ---------- Калькулятори ---------- */
+
+.calc-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  margin-bottom: 16px;
+}
+
+.calc-row > div {
+  flex: 1 1 100%;
+}
+
+.out {
+  background: var(--ink);
+  color: #fff;
+  border-radius: var(--r-md);
+  padding: 16px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.out span {
+  display: block;
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #8fa6bc;
+  margin-bottom: 5px;
+}
+
+.out b {
+  font-family: var(--disp);
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.out b small {
+  font-size: 13px;
+  font-weight: 700;
+  color: #b9cbdb;
+}
+
+.out-gap {
+  background: #122e49;
+  color: #dce7f1;
+  border-radius: 0 0 var(--r-md) var(--r-md);
+  margin-top: -11px;
+  padding: 13px 16px;
+  font-size: 12.5px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.out-gap b {
+  color: #fff;
+}
+
+/* ---------- Шкала залишкового терміну ---------- */
+
+/*
+ * Смуга під показниками терміну придатності. Дві риски на ній — 1/2 і 2/3
+ * терміну: саме ці межі вирішують, візьме мережа партію чи ні, і бачити їх
+ * треба одночасно з відсотком, а не тримати в голові.
+ */
+.life-meter {
+  position: relative;
+  height: 12px;
+  margin-top: 12px;
+  border-radius: 999px;
+  background: var(--line);
+  overflow: hidden;
+}
+
+.life-meter__fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.2s ease;
+}
+
+.life-meter__fill--ok {
+  background: var(--green);
+}
+
+.life-meter__fill--warn {
+  background: #e0a300;
+}
+
+.life-meter__fill--bad,
+.life-meter__fill--expired {
+  background: var(--red);
+}
+
+.life-meter__mark {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: rgba(11, 33, 55, 0.28);
+}
+
+.life-meter__mark--strong {
+  background: rgba(11, 33, 55, 0.55);
+}
+
+/* ---------- Збірка замовлення ---------- */
+
+.mix {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.mix__row {
+  display: grid;
+  /* формат тягнеться, решта — за вмістом; кнопка завжди останньою */
+  grid-template-columns: minmax(0, 1fr) 92px auto auto var(--tap);
+  align-items: center;
+  gap: 8px;
+}
+
+.mix__unit {
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+.mix__weight {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-soft);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.mix__remove {
+  width: var(--tap);
+  height: var(--tap);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--paper);
+  color: var(--ink-soft);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.mix__remove:hover {
+  border-color: var(--red);
+  color: var(--red);
+}
+
+/* На телефоні вага не поміщається в рядок — ховаємо її, підсумок нижче */
+@media (max-width: 520px) {
+  .mix__row {
+    grid-template-columns: minmax(0, 1fr) 78px auto var(--tap);
+  }
+
+  .mix__weight {
+    display: none;
+  }
+}
+
+/* ---------- Акордеон ---------- */
+
+.accordion {
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  overflow: hidden;
+}
+
+.accordion__item + .accordion__item {
+  border-top: 1px solid var(--line);
+}
+
+.accordion__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: var(--tap);
+  padding: 13px 14px;
+  background: #fff;
+  border: 0;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.accordion__head[aria-expanded='true'] {
+  background: var(--info-bg);
+  color: var(--blue-deep);
+}
+
+.accordion__chevron {
+  font-size: 20px;
+  color: var(--ink-faint);
+  line-height: 1;
+}
+
+.accordion__body {
+  padding: 12px 14px 16px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  background: var(--card-soft);
+}
+
+/* ---------- Пошук ---------- */
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--tap);
+  height: var(--tap);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--paper);
+  color: var(--ink-soft);
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+.icon-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.searchbox {
+  position: relative;
+  flex: 1;
+}
+
+.searchbox--inline {
+  display: none;
+  max-width: 430px;
+}
+
+.searchbox input {
+  padding-left: 40px;
+  font-size: 16px;
+  background: var(--paper);
+}
+
+.searchbox input:focus {
+  background: #fff;
+}
+
+.searchbox__icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 17px;
+  height: 17px;
+  color: var(--ink-faint);
+  pointer-events: none;
+}
+
+.searchbox__clear {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 0;
+  background: none;
+  color: var(--ink-faint);
+  font-size: 22px;
+  line-height: 1;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.searchres {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  box-shadow: var(--shadow-pop);
+  max-height: 62vh;
+  overflow-y: auto;
+  z-index: 50;
+}
+
+.searchres button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  padding: 12px 14px;
+  font-size: 13.5px;
+  cursor: pointer;
+  color: var(--ink);
+}
+
+.searchres button:last-child {
+  border-bottom: 0;
+}
+
+.searchres button.is-active,
+.searchres button:hover {
+  background: var(--info-bg);
+}
+
+.searchres__hint {
+  font-size: 11px;
+  color: var(--ink-soft);
+  display: block;
+  margin-top: 2px;
+}
+
+.searchres__empty {
+  padding: 16px;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+.search-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: var(--paper);
+  padding-top: var(--sa-top);
+}
+
+.search-overlay__bar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 10px max(14px, var(--sa-right)) 10px max(14px, var(--sa-left));
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+}
+
+.search-overlay .searchres {
+  position: static;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  max-height: none;
+  margin-top: 10px;
+  background: transparent;
+}
+
+.search-overlay .searchres button {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  margin-bottom: 8px;
+}
+
+/* ---------- Десктоп ---------- */
+
+@media (min-width: 641px) {
+  .sku-grid {
+    grid-template-columns: repeat(auto-fill, minmax(262px, 1fr));
+    gap: 14px;
+  }
+
+  .calc-row > div {
+    flex: 1 1 165px;
+  }
+
+  .out {
+    grid-template-columns: repeat(auto-fit, minmax(104px, 1fr));
+    gap: 16px;
+    padding: 18px 20px;
+  }
+
+  /*
+   * Підсумок із сумами. «45 907,20 грн» у 104 px не поміщається — колонка
+   * ширша, тому число не переноситься посеред розрядів і не обрізається.
+   */
+  .out--money {
+    grid-template-columns: repeat(auto-fit, minmax(146px, 1fr));
+  }
+
+  .out b {
+    font-size: 28px;
+  }
+
+  .shelf {
+    padding: 26px 20px 0;
+  }
+
+  .filters {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 9px;
+  }
+
+  .filter-row__label {
+    flex: 0 0 auto;
+  }
+}
+
+@media (min-width: 901px) {
+  .searchbox--inline {
+    display: block;
+  }
+
+  .sheet-backdrop {
+    align-items: flex-start;
+    padding: 34px 18px;
+    overflow-y: auto;
+  }
+
+  .sheet {
+    border-radius: var(--r-lg);
+    padding: 26px 28px 30px;
+    animation: fade-in 0.15s ease;
+  }
+
+  .sheet__photo {
+  display: block;
+  background: var(--card-soft);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 14px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.sheet__photo img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: 220px;
+  margin: 0 auto;
+  object-fit: contain;
+}
+
+.sheet__grip {
+    display: none;
+  }
+}

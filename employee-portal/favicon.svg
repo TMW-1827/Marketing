@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Трускавецька">
+  <rect width="64" height="64" rx="14" fill="#005EB8"/>
+  <path d="M26 46 44 18l18 28z" fill="#00966C"/>
+  <path d="M2 46 24 12l22 34z" fill="#fff"/>
+  <rect x="6" y="49" width="52" height="7" rx="3" fill="#fff"/>
+</svg>
