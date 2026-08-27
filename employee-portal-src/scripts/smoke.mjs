@@ -283,6 +283,25 @@ await page.goto(base + '#/equipment', { waitUntil: 'networkidle' })
 await page.waitForTimeout(400)
 check('каталог обладнання', (await page.locator('.equip').count()) === 11)
 
+// Заявку подають формою, тож адреса має бути саме та й відкриватись окремою
+// вкладкою: працівник заповнює її в точці, не втрачаючи сторінку порталу.
+const form = await page.evaluate(() => {
+  const card = [...document.querySelectorAll('.card')].find((c) =>
+    /Як отримати обладнання/i.test(c.querySelector('h3')?.textContent ?? ''),
+  )
+  const link = card?.querySelector('.asset')
+  return link
+    ? { href: link.getAttribute('href'), target: link.getAttribute('target') }
+    : null
+})
+check('у «Як отримати обладнання» є посилання на форму', Boolean(form))
+check(
+  'форма веде на потрібну адресу',
+  form?.href === 'https://forms.gle/aKFx1e4AxEpu8dELA',
+  form?.href,
+)
+check('форма відкривається окремою вкладкою', form?.target === '_blank', form?.target)
+
 // --- Довідник: скорочення й глосарій ---
 await page.goto(base + '#/reference', { waitUntil: 'networkidle' })
 await page.waitForTimeout(400)
