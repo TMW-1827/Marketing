@@ -139,8 +139,24 @@ check(
   /100/.test(out) && /1 200/.test(out),
   out,
 )
-let gap = await page.locator('.out-gap').first().innerText()
+let gap = flat(await page.locator('.out-gap').first().innerText())
 check('неповна палета показує, скільки бракує', /не вистачає/.test(gap), gap)
+check('1200 пляшок 0,3 скла — рівно 100 упаковок', /Рівно 100 повних упаковок/.test(gap), gap)
+
+// Неповна упаковка: 1195 пляшок по 12 — це 99 упаковок і 7 пляшок
+await page.locator('#pallet-qty').fill('1195')
+await page.waitForTimeout(250)
+gap = flat(await page.locator('.out-gap').first().innerText())
+check(
+  'неповна упаковка: 7 пляшок із 12',
+  /Неповна упаковка/.test(gap) && /7 пляшок з 12/.test(gap),
+  gap,
+)
+check(
+  'сказано, скільки бракує до повної упаковки',
+  /доберіть 5 пляшок/.test(gap),
+  gap,
+)
 
 await page.locator('#pallet-format').selectOption('g15')
 await page.locator('#pallet-unit').selectOption('pallet')
@@ -148,6 +164,26 @@ await page.locator('#pallet-qty').fill('1')
 await page.waitForTimeout(250)
 out = flat(await page.locator('.out').first().innerText())
 check('1 палета 1,5 л = 504 пляшки, 756 л', /504/.test(out) && /756/.test(out), out)
+
+// Літри, які не діляться на цілі пляшки, округлюються вгору — і про це кажуть
+await page.locator('#pallet-unit').selectOption('litre')
+await page.locator('#pallet-qty').fill('100')
+await page.waitForTimeout(250)
+out = flat(await page.locator('.out').first().innerText())
+gap = flat(await page.locator('.out-gap').first().innerText())
+check('100 л формату 1,5 л = 67 пляшок', /\b67\b/.test(out), out)
+check(
+  'сказано, що об’єм округлено вгору до цілої пляшки',
+  /не діляться на пляшки/.test(gap) && /100,5/.test(gap),
+  gap,
+)
+check('сказано, на скільки більше за заданий об’єм', /на 0,5 л більше/.test(gap), gap)
+
+// Об'єм, що ділиться рівно, окремо про це й каже
+await page.locator('#pallet-qty').fill('150')
+await page.waitForTimeout(250)
+gap = flat(await page.locator('.out-gap').first().innerText())
+check('рівний об’єм — округлювати нічого', /діляться.*рівно/.test(gap), gap)
 
 // --- Калькулятор терміну придатності ---
 await page.goto(base + '#/storage', { waitUntil: 'networkidle' })
@@ -252,6 +288,66 @@ await page.waitForTimeout(300)
 check(
   'перевантаження авто помічене',
   /Не влізе/i.test(await page.locator('.out-gap').first().innerText()),
+)
+
+// --- Партнерство та спонсорство ---
+await page.goto(base + '#/partnership', { waitUntil: 'networkidle' })
+await page.waitForTimeout(500)
+const part = flat(await page.locator('.content').innerText())
+check(
+  'дві обов’язкові умови названі',
+  /Єдина вода партнерства/i.test(part) && /мінімум 5 фото/i.test(part),
+)
+check(
+  'сказано, що умови проговорюють на першій зустрічі',
+  /на першій же зустрічі/i.test(part),
+)
+check('є готові тексти для представлення води', (await page.locator('.codeblock').count()) === 4)
+check(
+  'у текстах немає медичних обіцянок',
+  !/лікує|показана при|виводить токсини|схуднути/i.test(
+    (await page.locator('.codeblock').allInnerTexts()).join(' '),
+  ),
+)
+const logoFiles = await page.locator('.gallery .filechip').count()
+check('логотипи для партнера з файлами', logoFiles === 14, `${logoFiles} кнопок`)
+
+// Калькулятор води на захід: ті самі одиниці плюс витрати
+const eventCard = page.locator('.card', { hasText: 'Скільки води й скільки це коштує' })
+await page.locator('#event-format').selectOption('g05')
+await page.locator('#event-unit').selectOption('bottle')
+await page.locator('#event-qty').fill('600')
+await page.locator('#event-zone').selectOption('west')
+await page.waitForTimeout(300)
+const ev = flat(await eventCard.locator('.out').innerText())
+check('600 пляшок 0,5 л: витрати з ПДВ 5 940,00 грн', /5 940,00/.test(ev), ev)
+check('витрати без ПДВ — 4 950,00 грн', /4 950,00/.test(ev), ev)
+
+await page.locator('#event-zone').selectOption('east')
+await page.waitForTimeout(300)
+check(
+  'зона змінює витрати',
+  /6 120,00/.test(flat(await eventCard.locator('.out').innerText())),
+  flat(await eventCard.locator('.out').innerText()),
+)
+
+check(
+  'калькулятор заходу теж пояснює залишки',
+  /Рівно 75 повних упаковок/.test(flat(await eventCard.locator('.out-gap').innerText())),
+  flat(await eventCard.locator('.out-gap').innerText()),
+)
+
+// Ті самі три повідомлення працюють і тут. 100 л формату 0,75 л не
+// діляться на цілі пляшки: 133,3 → 134 пляшки, тобто 100,5 л.
+await page.locator('#event-format').selectOption('g075')
+await page.locator('#event-unit').selectOption('litre')
+await page.locator('#event-qty').fill('100')
+await page.waitForTimeout(300)
+const evGap = flat(await eventCard.locator('.out-gap').innerText())
+check(
+  'у калькуляторі заходу літри теж округлюються вгору',
+  /не діляться на пляшки/.test(evGap) && /134 пляшки/.test(evGap),
+  evGap,
 )
 
 // --- Заперечення: акордеон ---
@@ -410,7 +506,7 @@ await page.waitForTimeout(300)
 const ids = await page.evaluate(() =>
   [...document.querySelectorAll('.tabs a')].map((a) => a.getAttribute('href')),
 )
-check('меню містить усі розділи', ids.length === 23, `${ids.length} пунктів`)
+check('меню містить усі розділи', ids.length === 24, `${ids.length} пунктів`)
 for (const href of ids) {
   await page.goto(base + href.replace(/^#?/, '#'), { waitUntil: 'networkidle' })
   await page.waitForTimeout(150)

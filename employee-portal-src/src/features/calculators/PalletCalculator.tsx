@@ -1,18 +1,13 @@
 import { useMemo, useState } from 'react'
 import { calcPallet, formats, type PalletUnit } from '@/lib/catalog'
-import { BOTTLE_FORMS, CASE_FORMS, grouped, int, plural } from '@/lib/format'
+import { grouped, int } from '@/lib/format'
+import { PalletGap } from './PalletGap'
 
 const UNITS: Array<{ value: PalletUnit; label: string }> = [
   { value: 'bottle', label: 'пляшок' },
   { value: 'case', label: 'упаковок' },
   { value: 'pallet', label: 'палет' },
   { value: 'litre', label: 'літрів' },
-]
-
-const PALLET_FULL_FORMS: [string, string, string] = [
-  'повна палета',
-  'повні палети',
-  'повних палет',
 ]
 
 /** Рахує в обидва боки: пляшки ↔ упаковки ↔ палети. */
@@ -89,51 +84,18 @@ export function PalletCalculator() {
         <Out label="Об’єм води" value={grouped(result.litres)} unit="л" />
       </div>
 
-      <div className="out-gap">
-        <PalletGap result={result} bottlesPerCase={format.source.bottlesPerCase} />
-      </div>
+      <PalletGap
+        result={result}
+        unit={unit}
+        formatLabel={format.label}
+        litres={format.litres}
+      />
 
       <p className="hint">
         Вага рахується від ваги брутто повної палети з піддоном; неповна палета —
         пропорційно до кількості упаковок. Шари заокруглені вгору: неповний шар
         усе одно займає на палеті цілий.
-        {unit === 'litre' &&
-          ' Пляшки рахуються цілими, тому фактичний об’єм може трохи перевищити заданий.'}
       </p>
-    </>
-  )
-}
-
-function PalletGap({
-  result,
-  bottlesPerCase,
-}: {
-  result: ReturnType<typeof calcPallet>
-  bottlesPerCase: number
-}) {
-  const { fullPallets, remainderCases, casesToFullPallet, casesPerPallet } = result
-
-  if (remainderCases === 0) {
-    return (
-      <>
-        Рівно <b>{fullPallets}</b>{' '}
-        {plural(fullPallets, PALLET_FULL_FORMS)} — залишків немає.
-      </>
-    )
-  }
-
-  const missingBottles = casesToFullPallet * bottlesPerCase
-  return (
-    <>
-      {fullPallets > 0 && (
-        <>
-          <b>{fullPallets}</b> {plural(fullPallets, PALLET_FULL_FORMS)} +{' '}
-        </>
-      )}
-      неповна палета: <b>{remainderCases}</b> {plural(remainderCases, CASE_FORMS)}{' '}
-      з {casesPerPallet}. Щоб закрити палету, не вистачає{' '}
-      <b>{casesToFullPallet}</b> {plural(casesToFullPallet, CASE_FORMS)} (
-      {int(missingBottles)} {plural(missingBottles, BOTTLE_FORMS)}).
     </>
   )
 }

@@ -7,6 +7,7 @@ import { PalletCalculator } from '@/features/calculators/PalletCalculator'
 import { PriceCalculator } from '@/features/calculators/PriceCalculator'
 import { ShelfLife } from '@/features/calculators/ShelfLife'
 import { LoadCalculator } from '@/features/calculators/LoadCalculator'
+import { EventWater } from '@/features/calculators/EventWater'
 import { OrderMix } from '@/features/calculators/OrderMix'
 import {
   EanTable,
@@ -39,5 +40,6 @@ export const WIDGETS: Record<WidgetName, ComponentType> = {
   'order-mix': OrderMix,
   'shelf-life': ShelfLife,
   'load-calculator': LoadCalculator,
+  'event-water': EventWater,
   objections: Objections,
 }

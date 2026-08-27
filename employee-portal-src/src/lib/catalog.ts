@@ -112,6 +112,7 @@ export function formatByKey(key: string): Format | undefined {
 /* ---------- Розрахунки ---------- */
 
 export interface PalletBreakdown {
+  /** Пляшок — завжди ціле: половини пляшки не буває */
   bottles: number
   cases: number
   pallets: number
@@ -128,6 +129,22 @@ export interface PalletBreakdown {
   casesToFullPallet: number
   /** Упаковок у повній палеті */
   casesPerPallet: number
+  /** Повних упаковок */
+  fullCases: number
+  /** Пляшок у неповній упаковці, 0 — залишків немає */
+  remainderBottles: number
+  /** Пляшок, яких бракує до повної упаковки */
+  bottlesToFullCase: number
+  /** Пляшок у повній упаковці */
+  bottlesPerCase: number
+  /**
+   * Заданий об'єм не поділився на цілі пляшки, і його округлили вгору.
+   * Разом із `litres` це дає повну відповідь: скільки просили й скільки
+   * насправді поїде.
+   */
+  litresRounded: boolean
+  /** Заданий об'єм, л — має сенс лише коли рахували з літрів */
+  requestedLitres: number
 }
 
 export type PalletUnit = 'bottle' | 'case' | 'pallet' | 'litre'
@@ -149,23 +166,26 @@ export function calcPallet(
   const casesPerPallet = bottlesPerPallet / bottlesPerCase
 
   const qty = Math.max(0, quantity || 0)
-  let bottles: number
+  let raw: number
   switch (unit) {
     case 'bottle':
-      bottles = qty
+      raw = qty
       break
     case 'case':
-      bottles = qty * bottlesPerCase
+      raw = qty * bottlesPerCase
       break
     case 'pallet':
-      bottles = qty * bottlesPerPallet
+      raw = qty * bottlesPerPallet
       break
     case 'litre':
-      // Пів пляшки не відвантажують: округлюємо вгору до цілої пляшки,
-      // тому фактичний об'єм може трохи перевищити заданий.
-      bottles = Math.ceil(qty / format.litres - EPS)
+      raw = qty / format.litres
       break
   }
+
+  // Половини пляшки не буває: скільки б не задали — літрами, дробовими
+  // палетами чи дробовими упаковками, — округлюємо вгору до цілої пляшки.
+  const bottles = Math.ceil(raw - EPS)
+  const litresRounded = unit === 'litre' && bottles > raw + EPS
 
   const cases = bottles / bottlesPerCase
   const pallets = bottles / bottlesPerPallet
@@ -174,12 +194,13 @@ export function calcPallet(
   // Залишок рахуємо в цілих упаковках: неповну упаковку не відвантажують.
   const wholeCases = Math.ceil(cases - EPS)
   const remainderCases = wholeCases % casesPerPallet
+  const remainderBottles = bottles % bottlesPerCase
 
   return {
     bottles,
     cases,
     // Неповний шар усе одно займає цілий шар на палеті: 5,2 → 6, 4,8 → 5
-    layers: Math.ceil(cases / format.source.casesPerLayer - EPS),
+    layers: Math.ceil(wholeCases / format.source.casesPerLayer - EPS),
     pallets,
     litres: bottles * format.litres,
     weightKg,
@@ -187,7 +208,29 @@ export function calcPallet(
     remainderCases,
     casesToFullPallet: remainderCases === 0 ? 0 : casesPerPallet - remainderCases,
     casesPerPallet,
+    fullCases: Math.floor(bottles / bottlesPerCase),
+    remainderBottles,
+    bottlesToFullCase:
+      remainderBottles === 0 ? 0 : bottlesPerCase - remainderBottles,
+    bottlesPerCase,
+    litresRounded,
+    requestedLitres: unit === 'litre' ? qty : bottles * format.litres,
   }
+}
+
+/** Вартість партії за прайсом обраної зони. */
+export interface PalletCost {
+  net: number
+  gross: number
+}
+
+export function costOf(
+  format: Format,
+  bottles: number,
+  zone: PriceZone,
+): PalletCost {
+  const price = format.source.price[zone]
+  return { net: bottles * price.net, gross: bottles * price.gross }
 }
 
 /* ---------- Гроші ---------- */

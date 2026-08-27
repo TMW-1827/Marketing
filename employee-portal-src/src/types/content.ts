@@ -40,6 +40,7 @@ export type WidgetName =
   | 'order-mix'
   | 'shelf-life'
   | 'load-calculator'
+  | 'event-water'
   | 'objections'
 
 export type Block =
