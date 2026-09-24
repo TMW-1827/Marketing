@@ -31,17 +31,25 @@ header p { color: var(--muted); font-size: .88rem; margin-top: 4px; }
 .filters h2 { font-size: .95rem; margin-bottom: 12px; color: var(--cyan); }
 .filter-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+  align-items: start;
+}
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
 }
 .filter-group label {
   display: block; font-size: .68rem; color: var(--muted);
   text-transform: uppercase; letter-spacing: .03em; margin-bottom: 4px;
+  min-height: 1.2em;
 }
 .filter-group select, .filter-group input {
   width: 100%; padding: 7px 10px; border-radius: 8px;
   background: var(--card2); border: 1px solid var(--border);
   color: var(--text); font-size: .82rem;
+  height: 36px;
 }
 .filter-group select {
   cursor: pointer; appearance: none;
@@ -51,9 +59,19 @@ header p { color: var(--muted); font-size: .88rem; margin-top: 4px; }
 }
 .filter-group select:focus, .filter-group input:focus { outline: none; border-color: var(--accent); }
 .filter-group input { font-variant-numeric: tabular-nums; }
-.filter-range { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-.filter-range input { text-align: center; }
-.filter-hint { font-size: .65rem; color: #64748b; margin-top: 2px; }
+.filter-range {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  width: 100%;
+}
+.filter-range input {
+  width: 100%;
+  min-width: 0;
+  text-align: center;
+  height: 36px;
+}
+.filter-hint { font-size: .65rem; color: #64748b; margin-top: 3px; }
 .filter-actions {
   display: flex; gap: 10px; align-items: center; margin-top: 12px; flex-wrap: wrap;
 }
@@ -71,6 +89,10 @@ header p { color: var(--muted); font-size: .88rem; margin-top: 4px; }
   grid-column: 1 / -1; font-size: .72rem; color: var(--orange);
   text-transform: uppercase; letter-spacing: .04em; margin-top: 6px;
   padding-top: 8px; border-top: 1px solid var(--border);
+}
+/* Same width for the three water-purchase filter groups */
+.filter-group.water-metric {
+  min-width: 160px;
 }
 
 .toc {
@@ -144,7 +166,7 @@ header p { color: var(--muted); font-size: .88rem; margin-top: 4px; }
 .rec-head .date { font-weight: 600; color: #fff; }
 .rec-head .store { color: var(--cyan); }
 .rec-head .cat { color: var(--muted); font-size: .78rem; }
-.rec-head .sum { margin-left: auto; font-weight: 700; color: var(--green); }
+.rec-head .sum { margin-left: auto; font-weight: 700; color: var(--muted); }
 
 .water-box {
   background: rgba(34,211,238,.08); border: 1px solid rgba(34,211,238,.2);
@@ -152,7 +174,7 @@ header p { color: var(--muted); font-size: .88rem; margin-top: 4px; }
 }
 .water-box h4 { font-size: .78rem; color: var(--cyan); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .04em; }
 .w-item {
-  display: grid; grid-template-columns: 1fr 130px 150px; gap: 8px;
+  display: grid; grid-template-columns: 1fr 130px 100px; gap: 8px;
   font-size: .84rem; padding: 4px 0;
   border-bottom: 1px solid rgba(34,211,238,.1); align-items: baseline;
 }
@@ -163,7 +185,7 @@ header p { color: var(--muted); font-size: .88rem; margin-top: 4px; }
 .other-box { margin-top: 6px; }
 .other-box h4 { font-size: .75rem; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .03em; }
 .o-header, .o-item {
-  display: grid; grid-template-columns: minmax(0, 1fr) 170px 95px; gap: 12px;
+  display: grid; grid-template-columns: minmax(0, 1fr) 170px 70px; gap: 12px;
   font-size: .8rem; padding: 4px 0; align-items: baseline;
 }
 .o-header {
@@ -252,7 +274,7 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
   .toc-table th, .toc-table td { padding: 5px 6px; }
   .w-item { grid-template-columns: 1fr; gap: 2px; }
   .w-item .nums { text-align: left; }
-  .o-header, .o-item { grid-template-columns: 1fr 110px 75px; gap: 6px; font-size: .75rem; }
+  .o-header, .o-item { grid-template-columns: 1fr 110px 55px; gap: 6px; font-size: .75rem; }
   .user-head { flex-direction: column; }
   .kpi-row { grid-template-columns: repeat(3, 1fr); }
 }
@@ -262,7 +284,7 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
 <header>
 <div class="wrap" style="padding:0">
 <h1>Профілі покупців мінеральної води</h1>
-<p>17 покупців · фільтри · інтерактивний підсумок · чеки</p>
+<p>17 покупців · акцент на кількості (шт.) · частка вартості в кошику · фільтри · інтерактивний підсумок</p>
 </div>
 </header>
 
@@ -337,27 +359,27 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
 </select>
     </div>
     <div class="filter-section-label">Покупки води</div>
-    <div class="filter-group">
+    <div class="filter-group water-metric">
       <label>Кількість чеків</label>
       <select id="f-receipts"><option value="">Усі</option>
         <option value="1">1</option><option value="2">2</option>
       </select>
     </div>
-    <div class="filter-group">
-      <label>Од. води (від — до)</label>
+    <div class="filter-group water-metric">
+      <label>Кількість води, шт. (від — до)</label>
       <div class="filter-range">
         <input type="number" id="f-qty-min" placeholder="від" min="0" step="1">
         <input type="number" id="f-qty-max" placeholder="до" min="0" step="1">
       </div>
-      <div class="filter-hint">у даних: 1–5 од.</div>
+      <div class="filter-hint">у даних: 1–5 шт.</div>
     </div>
-    <div class="filter-group">
-      <label>Витрати на воду, ₴ (від — до)</label>
+    <div class="filter-group water-metric">
+      <label>Частка води в кошику, % (від — до)</label>
       <div class="filter-range">
-        <input type="number" id="f-spend-min" placeholder="від" min="0" step="1">
-        <input type="number" id="f-spend-max" placeholder="до" min="0" step="1">
+        <input type="number" id="f-share-min" placeholder="від" min="0" max="100" step="1">
+        <input type="number" id="f-share-max" placeholder="до" min="0" max="100" step="1">
       </div>
-      <div class="filter-hint">у даних: 18–217 ₴</div>
+      <div class="filter-hint">вартість води / сума чеків</div>
     </div>
   </div>
   <div class="filter-actions">
@@ -367,357 +389,228 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
 </div>
 
 <nav class="toc">
-<h2>Зміст — покупці за сумою витрат на воду</h2>
+<h2>Зміст — покупці за кількістю купленої води</h2>
 <div style="overflow-x:auto">
 <table class="toc-table">
 <thead>
 <tr>
   <th>ID</th><th>Стать</th><th>Вік</th><th>Область</th><th>Місто</th>
   <th>Діти</th><th>Сім. стан</th><th>Дохід</th>
-  <th class="num">Чеків</th><th class="num">Од. води</th><th class="num">Вода, ₴</th>
+  <th class="num">Чеків</th><th class="num">Вода, шт.</th><th class="num">% кошика</th>
 </tr>
 </thead>
 <tbody id="toc-body">
-<tr data-uid="29176"
-  data-gender="Жінка" data-age="55+" data-region="Черкаська" data-city="Черкаси"
-  data-kids="Так" data-marital="Одружений/заміжня" data-income="Вимушений економити"
-  data-receipts="2" data-qty="4" data-spend="216.96">
-  <td><a href="#u29176">29176</a></td>
-  <td>Жінка</td><td>55+</td><td>Черкаська</td><td>Черкаси</td>
-  <td>так</td><td>одруж./зам.</td>
-  <td title="Вимушений економити">економить</td>
-  <td class="num">2</td>
-  <td class="num">4</td>
-  <td class="num"><strong>217</strong></td>
-</tr>
 <tr data-uid="175489"
   data-gender="Жінка" data-age="55+" data-region="Одеська" data-city="Одеса"
   data-kids="Так" data-marital="Відмовляюсь відповідати" data-income="Вимушений економити"
-  data-receipts="1" data-qty="5" data-spend="124.50">
+  data-receipts="1" data-qty="5" data-spend="124.50" data-share="100.0">
   <td><a href="#u175489">175489</a></td>
   <td>Жінка</td><td>55+</td><td>Одеська</td><td>Одеса</td>
   <td>так</td><td>н/д</td>
   <td title="Вимушений економити">економить</td>
   <td class="num">1</td>
-  <td class="num">5</td>
-  <td class="num"><strong>124</strong></td>
+  <td class="num"><strong>5</strong></td>
+  <td class="num">100%</td>
 </tr>
-<tr data-uid="99708"
-  data-gender="Жінка" data-age="25–34" data-region="Київська" data-city="Київ"
-  data-kids="Так" data-marital="Одружений/заміжня" data-income="Можу дозволити бажане"
-  data-receipts="1" data-qty="1" data-spend="92.30">
-  <td><a href="#u99708">99708</a></td>
-  <td>Жінка</td><td>25–34</td><td>Київська</td><td>Київ</td>
+<tr data-uid="29176"
+  data-gender="Жінка" data-age="55+" data-region="Черкаська" data-city="Черкаси"
+  data-kids="Так" data-marital="Одружений/заміжня" data-income="Вимушений економити"
+  data-receipts="2" data-qty="4" data-spend="216.96" data-share="10.4">
+  <td><a href="#u29176">29176</a></td>
+  <td>Жінка</td><td>55+</td><td>Черкаська</td><td>Черкаси</td>
   <td>так</td><td>одруж./зам.</td>
-  <td title="Можу дозволити бажане">може дозволити</td>
-  <td class="num">1</td>
-  <td class="num">1</td>
-  <td class="num"><strong>92</strong></td>
+  <td title="Вимушений економити">економить</td>
+  <td class="num">2</td>
+  <td class="num"><strong>4</strong></td>
+  <td class="num">10%</td>
 </tr>
 <tr data-uid="29348"
   data-gender="Жінка" data-age="45–54" data-region="Одеська" data-city="Нерубайське"
   data-kids="Так" data-marital="Одружений/заміжня" data-income="Можу дозволити бажане"
-  data-receipts="2" data-qty="3" data-spend="68.30">
+  data-receipts="2" data-qty="3" data-spend="68.30" data-share="76.9">
   <td><a href="#u29348">29348</a></td>
   <td>Жінка</td><td>45–54</td><td>Одеська</td><td>Нерубайське</td>
   <td>так</td><td>одруж./зам.</td>
   <td title="Можу дозволити бажане">може дозволити</td>
   <td class="num">2</td>
-  <td class="num">3</td>
-  <td class="num"><strong>68</strong></td>
-</tr>
-<tr data-uid="38515"
-  data-gender="Чоловік" data-age="55+" data-region="Рівненська" data-city="Радивилів"
-  data-kids="Так" data-marital="Одружений/заміжня" data-income="Можу дозволити бажане"
-  data-receipts="1" data-qty="1" data-spend="55.00">
-  <td><a href="#u38515">38515</a></td>
-  <td>Чоловік</td><td>55+</td><td>Рівненська</td><td>Радивилів</td>
-  <td>так</td><td>одруж./зам.</td>
-  <td title="Можу дозволити бажане">може дозволити</td>
-  <td class="num">1</td>
-  <td class="num">1</td>
-  <td class="num"><strong>55</strong></td>
-</tr>
-<tr data-uid="39673"
-  data-gender="Жінка" data-age="55+" data-region="Київська" data-city="Київ"
-  data-kids="Так" data-marital="Одружений/заміжня" data-income="Вистачає на їжу та базові потреби"
-  data-receipts="1" data-qty="1" data-spend="55.00">
-  <td><a href="#u39673">39673</a></td>
-  <td>Жінка</td><td>55+</td><td>Київська</td><td>Київ</td>
-  <td>так</td><td>одруж./зам.</td>
-  <td title="Вистачає на їжу та базові потреби">базові потреби</td>
-  <td class="num">1</td>
-  <td class="num">1</td>
-  <td class="num"><strong>55</strong></td>
+  <td class="num"><strong>3</strong></td>
+  <td class="num">77%</td>
 </tr>
 <tr data-uid="300297"
   data-gender="Жінка" data-age="35–44" data-region="Одеська" data-city="Одеса"
   data-kids="Так" data-marital="Одружений/заміжня" data-income="Можу дозволити бажане"
-  data-receipts="1" data-qty="2" data-spend="48.90">
+  data-receipts="1" data-qty="2" data-spend="48.90" data-share="5.8">
   <td><a href="#u300297">300297</a></td>
   <td>Жінка</td><td>35–44</td><td>Одеська</td><td>Одеса</td>
   <td>так</td><td>одруж./зам.</td>
   <td title="Можу дозволити бажане">може дозволити</td>
   <td class="num">1</td>
-  <td class="num">2</td>
-  <td class="num"><strong>49</strong></td>
-</tr>
-<tr data-uid="154547"
-  data-gender="Чоловік" data-age="35–44" data-region="Харківська" data-city="Харків"
-  data-kids="Так" data-marital="Одружений/заміжня" data-income="Вимушений економити"
-  data-receipts="1" data-qty="1" data-spend="44.90">
-  <td><a href="#u154547">154547</a></td>
-  <td>Чоловік</td><td>35–44</td><td>Харківська</td><td>Харків</td>
-  <td>так</td><td>одруж./зам.</td>
-  <td title="Вимушений економити">економить</td>
-  <td class="num">1</td>
-  <td class="num">1</td>
-  <td class="num"><strong>45</strong></td>
+  <td class="num"><strong>2</strong></td>
+  <td class="num">6%</td>
 </tr>
 <tr data-uid="117684"
   data-gender="—" data-age="—" data-region="Дніпропетровська" data-city="Кривий Ріг"
   data-kids="—" data-marital="—" data-income="—"
-  data-receipts="2" data-qty="2" data-spend="40.50">
+  data-receipts="2" data-qty="2" data-spend="40.50" data-share="1.4">
   <td><a href="#u117684">117684</a></td>
   <td>—</td><td>—</td><td>Дніпропетровська</td><td>Кривий Ріг</td>
   <td>—</td><td>—</td>
   <td title="—">—</td>
   <td class="num">2</td>
-  <td class="num">2</td>
-  <td class="num"><strong>40</strong></td>
+  <td class="num"><strong>2</strong></td>
+  <td class="num">1%</td>
+</tr>
+<tr data-uid="99708"
+  data-gender="Жінка" data-age="25–34" data-region="Київська" data-city="Київ"
+  data-kids="Так" data-marital="Одружений/заміжня" data-income="Можу дозволити бажане"
+  data-receipts="1" data-qty="1" data-spend="92.30" data-share="100.0">
+  <td><a href="#u99708">99708</a></td>
+  <td>Жінка</td><td>25–34</td><td>Київська</td><td>Київ</td>
+  <td>так</td><td>одруж./зам.</td>
+  <td title="Можу дозволити бажане">може дозволити</td>
+  <td class="num">1</td>
+  <td class="num"><strong>1</strong></td>
+  <td class="num">100%</td>
+</tr>
+<tr data-uid="38515"
+  data-gender="Чоловік" data-age="55+" data-region="Рівненська" data-city="Радивилів"
+  data-kids="Так" data-marital="Одружений/заміжня" data-income="Можу дозволити бажане"
+  data-receipts="1" data-qty="1" data-spend="55.00" data-share="18.8">
+  <td><a href="#u38515">38515</a></td>
+  <td>Чоловік</td><td>55+</td><td>Рівненська</td><td>Радивилів</td>
+  <td>так</td><td>одруж./зам.</td>
+  <td title="Можу дозволити бажане">може дозволити</td>
+  <td class="num">1</td>
+  <td class="num"><strong>1</strong></td>
+  <td class="num">19%</td>
+</tr>
+<tr data-uid="39673"
+  data-gender="Жінка" data-age="55+" data-region="Київська" data-city="Київ"
+  data-kids="Так" data-marital="Одружений/заміжня" data-income="Вистачає на їжу та базові потреби"
+  data-receipts="1" data-qty="1" data-spend="55.00" data-share="25.1">
+  <td><a href="#u39673">39673</a></td>
+  <td>Жінка</td><td>55+</td><td>Київська</td><td>Київ</td>
+  <td>так</td><td>одруж./зам.</td>
+  <td title="Вистачає на їжу та базові потреби">базові потреби</td>
+  <td class="num">1</td>
+  <td class="num"><strong>1</strong></td>
+  <td class="num">25%</td>
+</tr>
+<tr data-uid="154547"
+  data-gender="Чоловік" data-age="35–44" data-region="Харківська" data-city="Харків"
+  data-kids="Так" data-marital="Одружений/заміжня" data-income="Вимушений економити"
+  data-receipts="1" data-qty="1" data-spend="44.90" data-share="100.0">
+  <td><a href="#u154547">154547</a></td>
+  <td>Чоловік</td><td>35–44</td><td>Харківська</td><td>Харків</td>
+  <td>так</td><td>одруж./зам.</td>
+  <td title="Вимушений економити">економить</td>
+  <td class="num">1</td>
+  <td class="num"><strong>1</strong></td>
+  <td class="num">100%</td>
 </tr>
 <tr data-uid="269584"
   data-gender="—" data-age="—" data-region="Київська" data-city="Київ"
   data-kids="—" data-marital="—" data-income="—"
-  data-receipts="1" data-qty="1" data-spend="27.00">
+  data-receipts="1" data-qty="1" data-spend="27.00" data-share="8.4">
   <td><a href="#u269584">269584</a></td>
   <td>—</td><td>—</td><td>Київська</td><td>Київ</td>
   <td>—</td><td>—</td>
   <td title="—">—</td>
   <td class="num">1</td>
-  <td class="num">1</td>
-  <td class="num"><strong>27</strong></td>
+  <td class="num"><strong>1</strong></td>
+  <td class="num">8%</td>
 </tr>
 <tr data-uid="140642"
   data-gender="Жінка" data-age="25–34" data-region="Вінницька" data-city="Літин"
   data-kids="Так" data-marital="Одружений/заміжня" data-income="Вистачає на їжу та базові потреби"
-  data-receipts="1" data-qty="1" data-spend="24.99">
+  data-receipts="1" data-qty="1" data-spend="24.99" data-share="6.1">
   <td><a href="#u140642">140642</a></td>
   <td>Жінка</td><td>25–34</td><td>Вінницька</td><td>Літин</td>
   <td>так</td><td>одруж./зам.</td>
   <td title="Вистачає на їжу та базові потреби">базові потреби</td>
   <td class="num">1</td>
-  <td class="num">1</td>
-  <td class="num"><strong>25</strong></td>
+  <td class="num"><strong>1</strong></td>
+  <td class="num">6%</td>
 </tr>
 <tr data-uid="78117"
   data-gender="—" data-age="—" data-region="Київська" data-city="Київ"
   data-kids="—" data-marital="—" data-income="—"
-  data-receipts="1" data-qty="1" data-spend="23.30">
+  data-receipts="1" data-qty="1" data-spend="23.30" data-share="100.0">
   <td><a href="#u78117">78117</a></td>
   <td>—</td><td>—</td><td>Київська</td><td>Київ</td>
   <td>—</td><td>—</td>
   <td title="—">—</td>
   <td class="num">1</td>
-  <td class="num">1</td>
-  <td class="num"><strong>23</strong></td>
+  <td class="num"><strong>1</strong></td>
+  <td class="num">100%</td>
 </tr>
 <tr data-uid="55985"
   data-gender="Жінка" data-age="35–44" data-region="Київська" data-city="Бровари"
   data-kids="Так" data-marital="Одружений/заміжня" data-income="Вистачає на їжу та базові потреби"
-  data-receipts="1" data-qty="1" data-spend="22.90">
+  data-receipts="1" data-qty="1" data-spend="22.90" data-share="9.0">
   <td><a href="#u55985">55985</a></td>
   <td>Жінка</td><td>35–44</td><td>Київська</td><td>Бровари</td>
   <td>так</td><td>одруж./зам.</td>
   <td title="Вистачає на їжу та базові потреби">базові потреби</td>
   <td class="num">1</td>
-  <td class="num">1</td>
-  <td class="num"><strong>23</strong></td>
+  <td class="num"><strong>1</strong></td>
+  <td class="num">9%</td>
 </tr>
 <tr data-uid="87557"
   data-gender="Чоловік" data-age="25–34" data-region="Київська" data-city="Київ"
   data-kids="Ні" data-marital="Одружений/заміжня" data-income="Вистачає на їжу та базові потреби"
-  data-receipts="1" data-qty="1" data-spend="19.99">
+  data-receipts="1" data-qty="1" data-spend="19.99" data-share="100.0">
   <td><a href="#u87557">87557</a></td>
   <td>Чоловік</td><td>25–34</td><td>Київська</td><td>Київ</td>
   <td>ні</td><td>одруж./зам.</td>
   <td title="Вистачає на їжу та базові потреби">базові потреби</td>
   <td class="num">1</td>
-  <td class="num">1</td>
-  <td class="num"><strong>20</strong></td>
+  <td class="num"><strong>1</strong></td>
+  <td class="num">100%</td>
 </tr>
 <tr data-uid="305949"
   data-gender="—" data-age="—" data-region="Львівська" data-city="Львів"
   data-kids="—" data-marital="—" data-income="—"
-  data-receipts="1" data-qty="1" data-spend="19.99">
+  data-receipts="1" data-qty="1" data-spend="19.99" data-share="1.9">
   <td><a href="#u305949">305949</a></td>
   <td>—</td><td>—</td><td>Львівська</td><td>Львів</td>
   <td>—</td><td>—</td>
   <td title="—">—</td>
   <td class="num">1</td>
-  <td class="num">1</td>
-  <td class="num"><strong>20</strong></td>
+  <td class="num"><strong>1</strong></td>
+  <td class="num">2%</td>
 </tr>
 <tr data-uid="66200"
   data-gender="Жінка" data-age="25–34" data-region="Волинська" data-city="Маневичі"
   data-kids="Ні" data-marital="Сам/ а" data-income="Вистачає на їжу та базові потреби"
-  data-receipts="1" data-qty="1" data-spend="19.90">
+  data-receipts="1" data-qty="1" data-spend="19.90" data-share="6.2">
   <td><a href="#u66200">66200</a></td>
   <td>Жінка</td><td>25–34</td><td>Волинська</td><td>Маневичі</td>
   <td>ні</td><td>сам(а)</td>
   <td title="Вистачає на їжу та базові потреби">базові потреби</td>
   <td class="num">1</td>
-  <td class="num">1</td>
-  <td class="num"><strong>20</strong></td>
+  <td class="num"><strong>1</strong></td>
+  <td class="num">6%</td>
 </tr>
 <tr data-uid="145260"
   data-gender="Жінка" data-age="45–54" data-region="Сумська" data-city="Конотоп"
   data-kids="Ні" data-marital="У стосунках" data-income="Вимушений економити"
-  data-receipts="1" data-qty="1" data-spend="18.50">
+  data-receipts="1" data-qty="1" data-spend="18.50" data-share="13.8">
   <td><a href="#u145260">145260</a></td>
   <td>Жінка</td><td>45–54</td><td>Сумська</td><td>Конотоп</td>
   <td>ні</td><td>у стосунках</td>
   <td title="Вимушений економити">економить</td>
   <td class="num">1</td>
-  <td class="num">1</td>
-  <td class="num"><strong>18</strong></td>
+  <td class="num"><strong>1</strong></td>
+  <td class="num">14%</td>
 </tr>
 </tbody></table></div></nav>
 <div class="no-results" id="no-results">За обраними фільтрами покупців не знайдено</div>
 
-<article class="user" id="u29176"
-  data-gender="Жінка" data-age="55+" data-region="Черкаська" data-city="Черкаси"
-  data-kids="Так" data-marital="Одружений/заміжня" data-income="Вимушений економити"
-  data-receipts="2" data-qty="4" data-spend="216.96">
-<div class="user-head">
-  <div class="user-id">#29176<small>покупець</small></div>
-  <div class="demo-tags">
-<span class="tag g">Жінка</span>
-<span class="tag age">55+</span>
-<span class="tag city">Черкаси, Черкаська</span>
-<span class="tag city">обл. центр</span>
-<span class="tag kids">є діти</span>
-<span class="tag">Одружений/заміжня</span>
-<span class="tag inc">Вимушений економити</span>
-
-  </div>
-</div>
-<div class="kpi-row">
-  <div class="kpi cyan"><div class="v">4</div><div class="l">Од. води</div></div>
-  <div class="kpi green"><div class="v">217 ₴</div><div class="l">На воду</div></div>
-  <div class="kpi"><div class="v">2079 ₴</div><div class="l">Всього</div></div>
-  <div class="kpi orange"><div class="v">10.4%</div><div class="l">Частка води</div></div>
-  <div class="kpi"><div class="v">2</div><div class="l">Чеків</div></div>
-  <div class="kpi"><div class="v">14</div><div class="l">Позицій</div></div>
-</div>
-<div class="user-body">
-
-<div class="receipt">
-  <div class="rec-head">
-    <span class="date">11.08.2026 · 14:11:22</span>
-    <span class="store">Сільпо</span>
-    <span class="cat">Супермаркет</span>
-    
-    <span class="sum">549.77 ₴ · 5 SKU</span>
-  </div>
-<div class="water-box"><h4>Мінеральна вода</h4>
-<div class="w-item">
-  <span class="name">Вода питна Трускавецька особлива негазована 7л</span>
-  <span class="brand">Трускавецька</span>
-  <span class="nums">1 × 75.99 = <strong>75.99 ₴</strong></span>
-</div>
-</div>
-<div class="other-box"><h4>Інші товари в чеку</h4>
-<div class="o-header"><span>Назва</span><span>Категорія</span><span style="text-align:right">Сума</span></div>
-<div class="o-item">
-  <span class="n" title="Оцет яблучний Vinagro натуральний 6%">Оцет яблучний Vinagro натуральний 6%</span>
-  <span class="lvl">Бакалія</span>
-  <span class="s">1 шт · 29 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Морозиво Хрещатик Київський торт пломбір ріжок 140г">Морозиво Хрещатик Київський торт пломбір ріжок 140г</span>
-  <span class="lvl">Кондитерські вироби</span>
-  <span class="s">2 шт · 188 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Какао-порошок 10-12% зі зниженим вмістом жиру Мрія м/у 80г">Какао-порошок 10-12% зі зниженим вмістом жиру Мрія м/у 80г</span>
-  <span class="lvl">Безалкогольні напої</span>
-  <span class="s">2 шт · 173 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Сир Новгород-Сіверський Радомер 45%">Сир Новгород-Сіверський Радомер 45%</span>
-  <span class="lvl">Молочні продукти і яйця</span>
-  <span class="s">1 шт · 84 ₴</span>
-</div>
-</div>
-</div>
-
-<div class="receipt">
-  <div class="rec-head">
-    <span class="date">03.09.2026 · 18:03:28</span>
-    <span class="store">Сільпо</span>
-    <span class="cat">Супермаркет</span>
-    
-    <span class="sum">1528.77 ₴ · 9 SKU</span>
-  </div>
-<div class="water-box"><h4>Мінеральна вода</h4>
-<div class="w-item">
-  <span class="name">Вода мінеральна Миргородська сильногазована 1,5л</span>
-  <span class="brand">MYRGORODSKA</span>
-  <span class="nums">2 × 25.49 = <strong>50.98 ₴</strong></span>
-</div>
-<div class="w-item">
-  <span class="name">Вода мінеральна Моршинська негазована 6л</span>
-  <span class="brand">Моршинська</span>
-  <span class="nums">1 × 89.99 = <strong>89.99 ₴</strong></span>
-</div>
-</div>
-<div class="other-box"><h4>Інші товари в чеку</h4>
-<div class="o-header"><span>Назва</span><span>Категорія</span><span style="text-align:right">Сума</span></div>
-<div class="o-item">
-  <span class="n" title="ПакетБіороз3кг958358">ПакетБіороз3кг958358</span>
-  <span class="lvl">—</span>
-  <span class="s">4 шт · 6 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Пакет12СільпоПакЗПак">Пакет12СільпоПакЗПак</span>
-  <span class="lvl">—</span>
-  <span class="s">1 шт · 8 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Хл300ФорСмЦільнБездр">Хл300ФорСмЦільнБездр</span>
-  <span class="lvl">—</span>
-  <span class="s">1 шт · 30 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="КОТЛЕТНЕ М'ЯСО СВИН. ОХОЛ.">КОТЛЕТНЕ М'ЯСО СВИН. ОХОЛ.</span>
-  <span class="lvl">М'ясні продукти</span>
-  <span class="s">1 шт · 123 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Сушки БКК Флора малятко">Сушки БКК Флора малятко</span>
-  <span class="lvl">Хлібобулочні вироби</span>
-  <span class="s">1 шт · 30 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Свинний ошийок без кістки">Свинний ошийок без кістки</span>
-  <span class="lvl">М'ясні продукти</span>
-  <span class="s">1 шт · 1055 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="СвинКгКострОкісОхол">СвинКгКострОкісОхол</span>
-  <span class="lvl">М'ясні продукти</span>
-  <span class="s">1 шт · 136 ₴</span>
-</div>
-</div>
-</div>
-</div>
-</article>
-
 <article class="user" id="u175489"
   data-gender="Жінка" data-age="55+" data-region="Одеська" data-city="Одеса"
   data-kids="Так" data-marital="Відмовляюсь відповідати" data-income="Вимушений економити"
-  data-receipts="1" data-qty="5" data-spend="124.50">
+  data-receipts="1" data-qty="5" data-spend="124.50" data-share="100.0">
 <div class="user-head">
   <div class="user-id">#175489<small>покупець</small></div>
   <div class="demo-tags">
@@ -732,12 +625,10 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
   </div>
 </div>
 <div class="kpi-row">
-  <div class="kpi cyan"><div class="v">5</div><div class="l">Од. води</div></div>
-  <div class="kpi green"><div class="v">124 ₴</div><div class="l">На воду</div></div>
-  <div class="kpi"><div class="v">124 ₴</div><div class="l">Всього</div></div>
-  <div class="kpi orange"><div class="v">100.0%</div><div class="l">Частка води</div></div>
+  <div class="kpi cyan"><div class="v">5 шт.</div><div class="l">Вода</div></div>
+  <div class="kpi orange"><div class="v">100%</div><div class="l">Частка в кошику</div></div>
   <div class="kpi"><div class="v">1</div><div class="l">Чеків</div></div>
-  <div class="kpi"><div class="v">1</div><div class="l">Позицій</div></div>
+  <div class="kpi"><div class="v">1</div><div class="l">Позицій усього</div></div>
 </div>
 <div class="user-body">
 
@@ -747,59 +638,140 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
     <span class="store">THRASH! ТРАШ!</span>
     <span class="cat">Мережевий магазин «біля дому»</span>
     <span class='solo-badge'>тільки вода</span>
-    <span class="sum">124.50 ₴ · 1 SKU</span>
+    <span class="sum">1 SKU · вода 100% кошика</span>
   </div>
 <div class="water-box"><h4>Мінеральна вода</h4>
 <div class="w-item">
   <span class="name">Вода мінеральна Моршинська негазована 1,5л</span>
   <span class="brand">Моршинська</span>
-  <span class="nums">5 × 24.90 = <strong>124.50 ₴</strong></span>
+  <span class="nums"><strong>5 шт.</strong></span>
 </div>
 </div>
 </div>
 </div>
 </article>
 
-<article class="user" id="u99708"
-  data-gender="Жінка" data-age="25–34" data-region="Київська" data-city="Київ"
-  data-kids="Так" data-marital="Одружений/заміжня" data-income="Можу дозволити бажане"
-  data-receipts="1" data-qty="1" data-spend="92.30">
+<article class="user" id="u29176"
+  data-gender="Жінка" data-age="55+" data-region="Черкаська" data-city="Черкаси"
+  data-kids="Так" data-marital="Одружений/заміжня" data-income="Вимушений економити"
+  data-receipts="2" data-qty="4" data-spend="216.96" data-share="10.4">
 <div class="user-head">
-  <div class="user-id">#99708<small>покупець</small></div>
+  <div class="user-id">#29176<small>покупець</small></div>
   <div class="demo-tags">
 <span class="tag g">Жінка</span>
-<span class="tag age">25–34</span>
-<span class="tag city">Київ, Київська</span>
+<span class="tag age">55+</span>
+<span class="tag city">Черкаси, Черкаська</span>
 <span class="tag city">обл. центр</span>
 <span class="tag kids">є діти</span>
 <span class="tag">Одружений/заміжня</span>
-<span class="tag inc">Можу дозволити бажане</span>
+<span class="tag inc">Вимушений економити</span>
 
   </div>
 </div>
 <div class="kpi-row">
-  <div class="kpi cyan"><div class="v">1</div><div class="l">Од. води</div></div>
-  <div class="kpi green"><div class="v">92 ₴</div><div class="l">На воду</div></div>
-  <div class="kpi"><div class="v">92 ₴</div><div class="l">Всього</div></div>
-  <div class="kpi orange"><div class="v">100.0%</div><div class="l">Частка води</div></div>
-  <div class="kpi"><div class="v">1</div><div class="l">Чеків</div></div>
-  <div class="kpi"><div class="v">1</div><div class="l">Позицій</div></div>
+  <div class="kpi cyan"><div class="v">4 шт.</div><div class="l">Вода</div></div>
+  <div class="kpi orange"><div class="v">10%</div><div class="l">Частка в кошику</div></div>
+  <div class="kpi"><div class="v">2</div><div class="l">Чеків</div></div>
+  <div class="kpi"><div class="v">14</div><div class="l">Позицій усього</div></div>
 </div>
 <div class="user-body">
 
 <div class="receipt">
   <div class="rec-head">
-    <span class="date">20.08.2025 · 15:11:08</span>
-    <span class="store">Епіцентр</span>
-    <span class="cat">Будматеріали</span>
-    <span class='solo-badge'>тільки вода</span>
-    <span class="sum">92.30 ₴ · 1 SKU</span>
+    <span class="date">11.08.2026 · 14:11:22</span>
+    <span class="store">Сільпо</span>
+    <span class="cat">Супермаркет</span>
+    
+    <span class="sum">5 SKU · вода 14% кошика</span>
   </div>
 <div class="water-box"><h4>Мінеральна вода</h4>
 <div class="w-item">
-  <span class="name">Вода мінеральна Карпатська Джерельна негазована 6л</span>
-  <span class="brand">Карпатська джерельна</span>
-  <span class="nums">1 × 92.30 = <strong>92.30 ₴</strong></span>
+  <span class="name">Вода питна Трускавецька особлива негазована 7л</span>
+  <span class="brand">Трускавецька</span>
+  <span class="nums"><strong>1 шт.</strong></span>
+</div>
+</div>
+<div class="other-box"><h4>Інші товари в чеку</h4>
+<div class="o-header"><span>Назва</span><span>Категорія</span><span style="text-align:right">К-сть</span></div>
+<div class="o-item">
+  <span class="n" title="Оцет яблучний Vinagro натуральний 6%">Оцет яблучний Vinagro натуральний 6%</span>
+  <span class="lvl">Бакалія</span>
+  <span class="s">1 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Морозиво Хрещатик Київський торт пломбір ріжок 140г">Морозиво Хрещатик Київський торт пломбір ріжок 140г</span>
+  <span class="lvl">Кондитерські вироби</span>
+  <span class="s">2 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Какао-порошок 10-12% зі зниженим вмістом жиру Мрія м/у 80г">Какао-порошок 10-12% зі зниженим вмістом жиру Мрія м/у 80г</span>
+  <span class="lvl">Безалкогольні напої</span>
+  <span class="s">2 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Сир Новгород-Сіверський Радомер 45%">Сир Новгород-Сіверський Радомер 45%</span>
+  <span class="lvl">Молочні продукти і яйця</span>
+  <span class="s">1 шт.</span>
+</div>
+</div>
+</div>
+
+<div class="receipt">
+  <div class="rec-head">
+    <span class="date">03.09.2026 · 18:03:28</span>
+    <span class="store">Сільпо</span>
+    <span class="cat">Супермаркет</span>
+    
+    <span class="sum">9 SKU · вода 9% кошика</span>
+  </div>
+<div class="water-box"><h4>Мінеральна вода</h4>
+<div class="w-item">
+  <span class="name">Вода мінеральна Миргородська сильногазована 1,5л</span>
+  <span class="brand">MYRGORODSKA</span>
+  <span class="nums"><strong>2 шт.</strong></span>
+</div>
+<div class="w-item">
+  <span class="name">Вода мінеральна Моршинська негазована 6л</span>
+  <span class="brand">Моршинська</span>
+  <span class="nums"><strong>1 шт.</strong></span>
+</div>
+</div>
+<div class="other-box"><h4>Інші товари в чеку</h4>
+<div class="o-header"><span>Назва</span><span>Категорія</span><span style="text-align:right">К-сть</span></div>
+<div class="o-item">
+  <span class="n" title="ПакетБіороз3кг958358">ПакетБіороз3кг958358</span>
+  <span class="lvl">—</span>
+  <span class="s">4 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Пакет12СільпоПакЗПак">Пакет12СільпоПакЗПак</span>
+  <span class="lvl">—</span>
+  <span class="s">1 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Хл300ФорСмЦільнБездр">Хл300ФорСмЦільнБездр</span>
+  <span class="lvl">—</span>
+  <span class="s">1 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="КОТЛЕТНЕ М'ЯСО СВИН. ОХОЛ.">КОТЛЕТНЕ М'ЯСО СВИН. ОХОЛ.</span>
+  <span class="lvl">М'ясні продукти</span>
+  <span class="s">1 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Сушки БКК Флора малятко">Сушки БКК Флора малятко</span>
+  <span class="lvl">Хлібобулочні вироби</span>
+  <span class="s">1 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Свинний ошийок без кістки">Свинний ошийок без кістки</span>
+  <span class="lvl">М'ясні продукти</span>
+  <span class="s">1 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="СвинКгКострОкісОхол">СвинКгКострОкісОхол</span>
+  <span class="lvl">М'ясні продукти</span>
+  <span class="s">1 шт.</span>
 </div>
 </div>
 </div>
@@ -809,7 +781,7 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
 <article class="user" id="u29348"
   data-gender="Жінка" data-age="45–54" data-region="Одеська" data-city="Нерубайське"
   data-kids="Так" data-marital="Одружений/заміжня" data-income="Можу дозволити бажане"
-  data-receipts="2" data-qty="3" data-spend="68.30">
+  data-receipts="2" data-qty="3" data-spend="68.30" data-share="76.9">
 <div class="user-head">
   <div class="user-id">#29348<small>покупець</small></div>
   <div class="demo-tags">
@@ -824,12 +796,10 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
   </div>
 </div>
 <div class="kpi-row">
-  <div class="kpi cyan"><div class="v">3</div><div class="l">Од. води</div></div>
-  <div class="kpi green"><div class="v">68 ₴</div><div class="l">На воду</div></div>
-  <div class="kpi"><div class="v">89 ₴</div><div class="l">Всього</div></div>
-  <div class="kpi orange"><div class="v">76.9%</div><div class="l">Частка води</div></div>
+  <div class="kpi cyan"><div class="v">3 шт.</div><div class="l">Вода</div></div>
+  <div class="kpi orange"><div class="v">77%</div><div class="l">Частка в кошику</div></div>
   <div class="kpi"><div class="v">2</div><div class="l">Чеків</div></div>
-  <div class="kpi"><div class="v">4</div><div class="l">Позицій</div></div>
+  <div class="kpi"><div class="v">4</div><div class="l">Позицій усього</div></div>
 </div>
 <div class="user-body">
 
@@ -839,21 +809,21 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
     <span class="store">АТБ</span>
     <span class="cat">Супермаркет</span>
     
-    <span class="sum">37.40 ₴ · 2 SKU</span>
+    <span class="sum">2 SKU · вода 45% кошика</span>
   </div>
 <div class="water-box"><h4>Мінеральна вода</h4>
 <div class="w-item">
   <span class="name">Вода 0,5 л Своя Лінія Трускавецька сильногазована ПЕТ</span>
   <span class="brand">Своя Лінія</span>
-  <span class="nums">1 × 16.90 = <strong>16.90 ₴</strong></span>
+  <span class="nums"><strong>1 шт.</strong></span>
 </div>
 </div>
 <div class="other-box"><h4>Інші товари в чеку</h4>
-<div class="o-header"><span>Назва</span><span>Категорія</span><span style="text-align:right">Сума</span></div>
+<div class="o-header"><span>Назва</span><span>Категорія</span><span style="text-align:right">К-сть</span></div>
 <div class="o-item">
   <span class="n" title="Жувальна гумка Orbit White Малина-гранат 14г">Жувальна гумка Orbit White Малина-гранат 14г</span>
   <span class="lvl">Кондитерські вироби</span>
-  <span class="s">1 шт · 20 ₴</span>
+  <span class="s">1 шт.</span>
 </div>
 </div>
 </div>
@@ -864,131 +834,18 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
     <span class="store">АТБ</span>
     <span class="cat">Супермаркет</span>
     <span class='solo-badge'>тільки вода</span>
-    <span class="sum">51.40 ₴ · 2 SKU</span>
+    <span class="sum">2 SKU · вода 100% кошика</span>
   </div>
 <div class="water-box"><h4>Мінеральна вода</h4>
 <div class="w-item">
   <span class="name">Вода мінеральна Моршинська негазована 0,75 л</span>
   <span class="brand">Моршинська</span>
-  <span class="nums">1 × 20.80 = <strong>20.80 ₴</strong></span>
+  <span class="nums"><strong>1 шт.</strong></span>
 </div>
 <div class="w-item">
   <span class="name">Вода мінеральна Buvette №7 сильногазована 1,5л</span>
   <span class="brand">Buvette</span>
-  <span class="nums">1 × 30.60 = <strong>30.60 ₴</strong></span>
-</div>
-</div>
-</div>
-</div>
-</article>
-
-<article class="user" id="u38515"
-  data-gender="Чоловік" data-age="55+" data-region="Рівненська" data-city="Радивилів"
-  data-kids="Так" data-marital="Одружений/заміжня" data-income="Можу дозволити бажане"
-  data-receipts="1" data-qty="1" data-spend="55.00">
-<div class="user-head">
-  <div class="user-id">#38515<small>покупець</small></div>
-  <div class="demo-tags">
-<span class="tag m">Чоловік</span>
-<span class="tag age">55+</span>
-<span class="tag city">Радивилів, Рівненська</span>
-<span class="tag city"><50 тис.</span>
-<span class="tag kids">є діти</span>
-<span class="tag">Одружений/заміжня</span>
-<span class="tag inc">Можу дозволити бажане</span>
-
-  </div>
-</div>
-<div class="kpi-row">
-  <div class="kpi cyan"><div class="v">1</div><div class="l">Од. води</div></div>
-  <div class="kpi green"><div class="v">55 ₴</div><div class="l">На воду</div></div>
-  <div class="kpi"><div class="v">293 ₴</div><div class="l">Всього</div></div>
-  <div class="kpi orange"><div class="v">18.8%</div><div class="l">Частка води</div></div>
-  <div class="kpi"><div class="v">1</div><div class="l">Чеків</div></div>
-  <div class="kpi"><div class="v">2</div><div class="l">Позицій</div></div>
-</div>
-<div class="user-body">
-
-<div class="receipt">
-  <div class="rec-head">
-    <span class="date">19.08.2026 · 22:01:00</span>
-    <span class="store">WOG</span>
-    <span class="cat">АЗС</span>
-    
-    <span class="sum">293.00 ₴ · 2 SKU</span>
-  </div>
-<div class="water-box"><h4>Мінеральна вода</h4>
-<div class="w-item">
-  <span class="name">Вода мінеральна Моршинська негазована 1,5л</span>
-  <span class="brand">Моршинська</span>
-  <span class="nums">1 × 55.00 = <strong>55.00 ₴</strong></span>
-</div>
-</div>
-<div class="other-box"><h4>Інші товари в чеку</h4>
-<div class="o-header"><span>Назва</span><span>Категорія</span><span style="text-align:right">Сума</span></div>
-<div class="o-item">
-  <span class="n" title="Снеки м'ясні Дмитрук Kabanosy Original зі свинини варено-копчені 80г">Снеки м'ясні Дмитрук Kabanosy Original зі свинини варено-копчені 80г</span>
-  <span class="lvl">Снеки</span>
-  <span class="s">2 шт · 238 ₴</span>
-</div>
-</div>
-</div>
-</div>
-</article>
-
-<article class="user" id="u39673"
-  data-gender="Жінка" data-age="55+" data-region="Київська" data-city="Київ"
-  data-kids="Так" data-marital="Одружений/заміжня" data-income="Вистачає на їжу та базові потреби"
-  data-receipts="1" data-qty="1" data-spend="55.00">
-<div class="user-head">
-  <div class="user-id">#39673<small>покупець</small></div>
-  <div class="demo-tags">
-<span class="tag g">Жінка</span>
-<span class="tag age">55+</span>
-<span class="tag city">Київ, Київська</span>
-<span class="tag city">обл. центр</span>
-<span class="tag kids">є діти</span>
-<span class="tag">Одружений/заміжня</span>
-<span class="tag inc">Вистачає на їжу та базові потреби</span>
-
-  </div>
-</div>
-<div class="kpi-row">
-  <div class="kpi cyan"><div class="v">1</div><div class="l">Од. води</div></div>
-  <div class="kpi green"><div class="v">55 ₴</div><div class="l">На воду</div></div>
-  <div class="kpi"><div class="v">219 ₴</div><div class="l">Всього</div></div>
-  <div class="kpi orange"><div class="v">25.1%</div><div class="l">Частка води</div></div>
-  <div class="kpi"><div class="v">1</div><div class="l">Чеків</div></div>
-  <div class="kpi"><div class="v">3</div><div class="l">Позицій</div></div>
-</div>
-<div class="user-body">
-
-<div class="receipt">
-  <div class="rec-head">
-    <span class="date">07.08.2026 · 15:14:33</span>
-    <span class="store">WOG</span>
-    <span class="cat">АЗС</span>
-    
-    <span class="sum">219.00 ₴ · 3 SKU</span>
-  </div>
-<div class="water-box"><h4>Мінеральна вода</h4>
-<div class="w-item">
-  <span class="name">Вода мінеральна Моршинська слабогазована 1,5л</span>
-  <span class="brand">Моршинська</span>
-  <span class="nums">1 × 55.00 = <strong>55.00 ₴</strong></span>
-</div>
-</div>
-<div class="other-box"><h4>Інші товари в чеку</h4>
-<div class="o-header"><span>Назва</span><span>Категорія</span><span style="text-align:right">Сума</span></div>
-<div class="o-item">
-  <span class="n" title="Батончик зі смаженим арахісом карамеллю і нугою вкритий молочним шокол">Батончик зі смаженим арахісом карамеллю і нугою вкритий молочним шокол</span>
-  <span class="lvl">Кондитерські вироби</span>
-  <span class="s">1 шт · 105 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Батончик шок. Bounty 57 г">Батончик шок. Bounty 57 г</span>
-  <span class="lvl">Кондитерські вироби</span>
-  <span class="s">1 шт · 59 ₴</span>
+  <span class="nums"><strong>1 шт.</strong></span>
 </div>
 </div>
 </div>
@@ -998,7 +855,7 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
 <article class="user" id="u300297"
   data-gender="Жінка" data-age="35–44" data-region="Одеська" data-city="Одеса"
   data-kids="Так" data-marital="Одружений/заміжня" data-income="Можу дозволити бажане"
-  data-receipts="1" data-qty="2" data-spend="48.90">
+  data-receipts="1" data-qty="2" data-spend="48.90" data-share="5.8">
 <div class="user-head">
   <div class="user-id">#300297<small>покупець</small></div>
   <div class="demo-tags">
@@ -1013,12 +870,10 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
   </div>
 </div>
 <div class="kpi-row">
-  <div class="kpi cyan"><div class="v">2</div><div class="l">Од. води</div></div>
-  <div class="kpi green"><div class="v">49 ₴</div><div class="l">На воду</div></div>
-  <div class="kpi"><div class="v">842 ₴</div><div class="l">Всього</div></div>
-  <div class="kpi orange"><div class="v">5.8%</div><div class="l">Частка води</div></div>
+  <div class="kpi cyan"><div class="v">2 шт.</div><div class="l">Вода</div></div>
+  <div class="kpi orange"><div class="v">6%</div><div class="l">Частка в кошику</div></div>
   <div class="kpi"><div class="v">1</div><div class="l">Чеків</div></div>
-  <div class="kpi"><div class="v">18</div><div class="l">Позицій</div></div>
+  <div class="kpi"><div class="v">18</div><div class="l">Позицій усього</div></div>
 </div>
 <div class="user-body">
 
@@ -1028,101 +883,501 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
     <span class="store">VARUS</span>
     <span class="cat">Супермаркет</span>
     
-    <span class="sum">842.06 ₴ · 18 SKU</span>
+    <span class="sum">18 SKU · вода 6% кошика</span>
   </div>
 <div class="water-box"><h4>Мінеральна вода</h4>
 <div class="w-item">
   <span class="name">Вода мінеральна Миргородська Лагідна негазована 1,5л</span>
   <span class="brand">MYRGORODSKA</span>
-  <span class="nums">1 × 25.10 = <strong>25.10 ₴</strong></span>
+  <span class="nums"><strong>1 шт.</strong></span>
 </div>
 <div class="w-item">
   <span class="name">Вода мінеральна Трускавецька негазована пет</span>
   <span class="brand">Трускавецька</span>
-  <span class="nums">1 × 23.80 = <strong>23.80 ₴</strong></span>
+  <span class="nums"><strong>1 шт.</strong></span>
 </div>
 </div>
 <div class="other-box"><h4>Інші товари в чеку</h4>
-<div class="o-header"><span>Назва</span><span>Категорія</span><span style="text-align:right">Сума</span></div>
+<div class="o-header"><span>Назва</span><span>Категорія</span><span style="text-align:right">К-сть</span></div>
 <div class="o-item">
   <span class="n" title="Напій безалкогольний сильногазований на смако-ароматичних добавках Бай">Напій безалкогольний сильногазований на смако-ароматичних добавках Бай</span>
   <span class="lvl">Безалкогольні напої</span>
-  <span class="s">1 шт · 45 ₴</span>
+  <span class="s">1 шт.</span>
 </div>
 <div class="o-item">
   <span class="n" title="Цибуля Марс вагова">Цибуля Марс вагова</span>
   <span class="lvl">Овочі</span>
-  <span class="s">1 шт · 16 ₴</span>
+  <span class="s">1 шт.</span>
 </div>
 <div class="o-item">
   <span class="n" title="ПЕРСИК ІНЖИРНИЙ КГ">ПЕРСИК ІНЖИРНИЙ КГ</span>
   <span class="lvl">Фрукти</span>
-  <span class="s">1 шт · 18 ₴</span>
+  <span class="s">1 шт.</span>
 </div>
 <div class="o-item">
   <span class="n" title="Рулети Міні Latte Balconi м/у 6х37г">Рулети Міні Latte Balconi м/у 6х37г</span>
   <span class="lvl">Хлібобулочні вироби</span>
-  <span class="s">1 шт · 77 ₴</span>
+  <span class="s">1 шт.</span>
 </div>
 <div class="o-item">
   <span class="n" title="Морозиво 10% ескімо в кондитерській молочній глазурі зі смаком лимону ">Морозиво 10% ескімо в кондитерській молочній глазурі зі смаком лимону </span>
   <span class="lvl">Молочні продукти і яйця</span>
-  <span class="s">1 шт · 40 ₴</span>
+  <span class="s">1 шт.</span>
 </div>
 <div class="o-item">
   <span class="n" title="Напій безалкогольний сильногазований на ароматизаторах Indian Tonic Sc">Напій безалкогольний сильногазований на ароматизаторах Indian Tonic Sc</span>
   <span class="lvl">Безалкогольні напої</span>
-  <span class="s">1 шт · 34 ₴</span>
+  <span class="s">1 шт.</span>
 </div>
 <div class="o-item">
   <span class="n" title="Хліб пшен.-житн з нас.DOMIPAN">Хліб пшен.-житн з нас.DOMIPAN</span>
   <span class="lvl">Хлібобулочні вироби</span>
-  <span class="s">1 шт · 88 ₴</span>
+  <span class="s">1 шт.</span>
 </div>
 <div class="o-item">
   <span class="n" title="Напій безалкогольний сильногазований на ароматизаторах Indian Tonic Sc">Напій безалкогольний сильногазований на ароматизаторах Indian Tonic Sc</span>
   <span class="lvl">Безалкогольні напої</span>
-  <span class="s">1 шт · 34 ₴</span>
+  <span class="s">1 шт.</span>
 </div>
 <div class="o-item">
   <span class="n" title="ПЕРЕЦЬ ЧЕРВОНИЙ 5КГ">ПЕРЕЦЬ ЧЕРВОНИЙ 5КГ</span>
   <span class="lvl">Соуси та спеції</span>
-  <span class="s">1 шт · 23 ₴</span>
+  <span class="s">1 шт.</span>
 </div>
 <div class="o-item">
   <span class="n" title="ТортБіскЗМаскТаЛимКурд">ТортБіскЗМаскТаЛимКурд</span>
   <span class="lvl">Хлібобулочні вироби</span>
-  <span class="s">1 шт · 115 ₴</span>
+  <span class="s">1 шт.</span>
 </div>
 <div class="o-item">
   <span class="n" title="Рулети міні з горіхом Balconi м/у 6х37г">Рулети міні з горіхом Balconi м/у 6х37г</span>
   <span class="lvl">Хлібобулочні вироби</span>
-  <span class="s">1 шт · 77 ₴</span>
+  <span class="s">1 шт.</span>
 </div>
 <div class="o-item">
   <span class="n" title="Напій безалкогольний сильногазований на ароматизаторах Indian Tonic Sc">Напій безалкогольний сильногазований на ароматизаторах Indian Tonic Sc</span>
   <span class="lvl">Безалкогольні напої</span>
-  <span class="s">1 шт · 34 ₴</span>
+  <span class="s">1 шт.</span>
 </div>
 <div class="o-item">
   <span class="n" title="Рулети міні з горіхом Balconi м/у 6х37г">Рулети міні з горіхом Balconi м/у 6х37г</span>
   <span class="lvl">Хлібобулочні вироби</span>
-  <span class="s">1 шт · 77 ₴</span>
+  <span class="s">1 шт.</span>
 </div>
 <div class="o-item">
   <span class="n" title="Баклажан Графіті">Баклажан Графіті</span>
   <span class="lvl">Овочі</span>
-  <span class="s">1 шт · 38 ₴</span>
+  <span class="s">1 шт.</span>
 </div>
 <div class="o-item">
   <span class="n" title="Майонез Щедро Провансаль 67% 150г">Майонез Щедро Провансаль 67% 150г</span>
   <span class="lvl">Соуси та спеції</span>
-  <span class="s">1 шт · 36 ₴</span>
+  <span class="s">1 шт.</span>
 </div>
 <div class="o-item">
   <span class="n" title="Молоко Ферма безлактозне ультрапастеризоване 2,5% 900г">Молоко Ферма безлактозне ультрапастеризоване 2,5% 900г</span>
   <span class="lvl">Молочні продукти і яйця</span>
-  <span class="s">1 шт · 40 ₴</span>
+  <span class="s">1 шт.</span>
+</div>
+</div>
+</div>
+</div>
+</article>
+
+<article class="user" id="u117684"
+  data-gender="—" data-age="—" data-region="Дніпропетровська" data-city="Кривий Ріг"
+  data-kids="—" data-marital="—" data-income="—"
+  data-receipts="2" data-qty="2" data-spend="40.50" data-share="1.4">
+<div class="user-head">
+  <div class="user-id">#117684<small>покупець</small></div>
+  <div class="demo-tags">
+<span class="tag city">Кривий Ріг, Дніпропетровська</span>
+<span class="tag city">>50 тис.</span>
+
+  </div>
+</div>
+<div class="kpi-row">
+  <div class="kpi cyan"><div class="v">2 шт.</div><div class="l">Вода</div></div>
+  <div class="kpi orange"><div class="v">1%</div><div class="l">Частка в кошику</div></div>
+  <div class="kpi"><div class="v">2</div><div class="l">Чеків</div></div>
+  <div class="kpi"><div class="v">39</div><div class="l">Позицій усього</div></div>
+</div>
+<div class="user-body">
+
+<div class="receipt">
+  <div class="rec-head">
+    <span class="date">26.08.2026 · 20:04:32</span>
+    <span class="store">АТБ</span>
+    <span class="cat">Супермаркет</span>
+    
+    <span class="sum">18 SKU · вода 1% кошика</span>
+  </div>
+<div class="water-box"><h4>Мінеральна вода</h4>
+<div class="w-item">
+  <span class="name">Вода 0,5 л Своя Лінія Трускавецька сильногазована ПЕТ</span>
+  <span class="brand">Своя Лінія</span>
+  <span class="nums"><strong>1 шт.</strong></span>
+</div>
+</div>
+<div class="other-box"><h4>Інші товари в чеку</h4>
+<div class="o-header"><span>Назва</span><span>Категорія</span><span style="text-align:right">К-сть</span></div>
+<div class="o-item">
+  <span class="n" title="Крекер 400 г Своя лінія Солоний Salty м/уп">Крекер 400 г Своя лінія Солоний Salty м/уп</span>
+  <span class="lvl">Хлібобулочні вироби</span>
+  <span class="s">1 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Продукт молоковмісний плавлений 70 г Розумний вибір Вершковий 55% фоль">Продукт молоковмісний плавлений 70 г Розумний вибір Вершковий 55% фоль</span>
+  <span class="lvl">Молочні продукти і яйця</span>
+  <span class="s">3 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Папір туалетний 1 шт Розумний вибір PL XXL б/уп">Папір туалетний 1 шт Розумний вибір PL XXL б/уп</span>
+  <span class="lvl">Косметичні аксесуари</span>
+  <span class="s">1 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Банан 1гат">Банан 1гат</span>
+  <span class="lvl">Фрукти</span>
+  <span class="s">1 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Печиво 33г Papita Coconut з кокосовою начинкою та драже, Туреччина">Печиво 33г Papita Coconut з кокосовою начинкою та драже, Туреччина</span>
+  <span class="lvl">Хлібобулочні вироби</span>
+  <span class="s">3 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Капуста 400г Розумний вибір квашена з журавлиною">Капуста 400г Розумний вибір квашена з журавлиною</span>
+  <span class="lvl">Овочі</span>
+  <span class="s">1 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Каструля циліндрична 1,5 л 'Асорті'">Каструля циліндрична 1,5 л 'Асорті'</span>
+  <span class="lvl">Посуд</span>
+  <span class="s">1 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Вата 40 г Сладік солодка">Вата 40 г Сладік солодка</span>
+  <span class="lvl">Кондитерські вироби</span>
+  <span class="s">1 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Хліб Iнгулецкий подовой 0,4 кг(нарізний)">Хліб Iнгулецкий подовой 0,4 кг(нарізний)</span>
+  <span class="lvl">Хлібобулочні вироби</span>
+  <span class="s">1 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Чай (20 ф/п х 1 г) Розумний вибір Tea Way Ромашка трав'яний к/уп">Чай (20 ф/п х 1 г) Розумний вибір Tea Way Ромашка трав'яний к/уп</span>
+  <span class="lvl">Безалкогольні напої</span>
+  <span class="s">1 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Печиво 33г Papita Caramel з карамельною начинкою і драже, Туреччина">Печиво 33г Papita Caramel з карамельною начинкою і драже, Туреччина</span>
+  <span class="lvl">Хлібобулочні вироби</span>
+  <span class="s">2 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Цукерки Конти Джек вагові">Цукерки Конти Джек вагові</span>
+  <span class="lvl">Кондитерські вироби</span>
+  <span class="s">1 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Ковбаса М'ясна лавка/Своя лінія Золотиста с/в">Ковбаса М'ясна лавка/Своя лінія Золотиста с/в</span>
+  <span class="lvl">М'ясні продукти</span>
+  <span class="s">1 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Минтай День у День філе с/м н/ш п/ет">Минтай День у День філе с/м н/ш п/ет</span>
+  <span class="lvl">Риба</span>
+  <span class="s">1 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Крупа 1 кг Розумний вибір гречана м/уп">Крупа 1 кг Розумний вибір гречана м/уп</span>
+  <span class="lvl">Бакалія</span>
+  <span class="s">1 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Продукт молоковмісний 140 г Розумний вибір сирний солодкий з ароматом ">Продукт молоковмісний 140 г Розумний вибір сирний солодкий з ароматом </span>
+  <span class="lvl">Молочні продукти і яйця</span>
+  <span class="s">2 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Чай (20 ф/п х 1,35 г) Розумний вибір Tea Way М'ята трав'яний к/уп">Чай (20 ф/п х 1,35 г) Розумний вибір Tea Way М'ята трав'яний к/уп</span>
+  <span class="lvl">Безалкогольні напої</span>
+  <span class="s">1 шт.</span>
+</div>
+</div>
+</div>
+
+<div class="receipt">
+  <div class="rec-head">
+    <span class="date">02.09.2026 · 16:15:58</span>
+    <span class="store">АТБ</span>
+    <span class="cat">Супермаркет</span>
+    
+    <span class="sum">21 SKU · вода 2% кошика</span>
+  </div>
+<div class="water-box"><h4>Мінеральна вода</h4>
+<div class="w-item">
+  <span class="name">Вода мінеральна Моршинська слабогазована 1,5л</span>
+  <span class="brand">Моршинська</span>
+  <span class="nums"><strong>1 шт.</strong></span>
+</div>
+</div>
+<div class="other-box"><h4>Інші товари в чеку</h4>
+<div class="o-header"><span>Назва</span><span>Категорія</span><span style="text-align:right">К-сть</span></div>
+<div class="o-item">
+  <span class="n" title="Морозиво без цукру зі стевією 0%+0% Ласунка ст 100г">Морозиво без цукру зі стевією 0%+0% Ласунка ст 100г</span>
+  <span class="lvl">Кондитерські вироби</span>
+  <span class="s">1 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Консерви 170 г De Luxe Foods & Goods Selected Філе скумбрії у томатном">Консерви 170 г De Luxe Foods & Goods Selected Філе скумбрії у томатном</span>
+  <span class="lvl">Бакалія</span>
+  <span class="s">1 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Круасан 360 г (6х60г) Eesti Pagar швидкозаморожений п/ет">Круасан 360 г (6х60г) Eesti Pagar швидкозаморожений п/ет</span>
+  <span class="lvl">Напівфабрикати</span>
+  <span class="s">1 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Консерви 202г De Luxe Foods & Goods Selected Печiнка трiски Ісландія">Консерви 202г De Luxe Foods & Goods Selected Печiнка трiски Ісландія</span>
+  <span class="lvl">Риба</span>
+  <span class="s">1 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Сир твердий 160 г Свoя лінія Гауда 45% флoу-пак">Сир твердий 160 г Свoя лінія Гауда 45% флoу-пак</span>
+  <span class="lvl">Молочні продукти і яйця</span>
+  <span class="s">1 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Лящ обсмажений у томатному соусі ТМ 'Море' 230 г [диз. АТБ] ТМ 'МОРЕ'">Лящ обсмажений у томатному соусі ТМ 'Море' 230 г [диз. АТБ] ТМ 'МОРЕ'</span>
+  <span class="lvl">Риба</span>
+  <span class="s">1 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Олія 0,9 л Своя лінія соняшникова рафінована ПЕТ">Олія 0,9 л Своя лінія соняшникова рафінована ПЕТ</span>
+  <span class="lvl">Бакалія</span>
+  <span class="s">1 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Ковбаса М'ясна лавка/Своя лінія Губернаторська с/в">Ковбаса М'ясна лавка/Своя лінія Губернаторська с/в</span>
+  <span class="lvl">М'ясні продукти</span>
+  <span class="s">1 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Крупа 1 кг Розумний вибір пшенична з м'яких сортів пшениці м/уп">Крупа 1 кг Розумний вибір пшенична з м'яких сортів пшениці м/уп</span>
+  <span class="lvl">Бакалія</span>
+  <span class="s">1 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Папір туалетний 1 шт Розумний вибір рожевий з тисненням б/уп">Папір туалетний 1 шт Розумний вибір рожевий з тисненням б/уп</span>
+  <span class="lvl">Косметичні аксесуари</span>
+  <span class="s">2 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Сир плавлений 70 г Своя лінія зі смаком грибів 38% фольга">Сир плавлений 70 г Своя лінія зі смаком грибів 38% фольга</span>
+  <span class="lvl">Молочні продукти і яйця</span>
+  <span class="s">2 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Сир твердий 150 г Комо Чеддер 50% флоу-пак">Сир твердий 150 г Комо Чеддер 50% флоу-пак</span>
+  <span class="lvl">Молочні продукти і яйця</span>
+  <span class="s">1 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Продукт молоковмісний плавлений 70 г Розумний вибір Вершковий 55% фоль">Продукт молоковмісний плавлений 70 г Розумний вибір Вершковий 55% фоль</span>
+  <span class="lvl">Молочні продукти і яйця</span>
+  <span class="s">1 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Крупа кукурудзяна Полента Аттуаль м/у 800г">Крупа кукурудзяна Полента Аттуаль м/у 800г</span>
+  <span class="lvl">Бакалія</span>
+  <span class="s">1 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Пакет п/е 34х55 без/уп">Пакет п/е 34х55 без/уп</span>
+  <span class="lvl">—</span>
+  <span class="s">1 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Морозиво Ласунка Гран-Прі шоколад 155г">Морозиво Ласунка Гран-Прі шоколад 155г</span>
+  <span class="lvl">Кондитерські вироби</span>
+  <span class="s">1 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Паштет печінковий ламістер 85 г">Паштет печінковий ламістер 85 г</span>
+  <span class="lvl">Бакалія</span>
+  <span class="s">2 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Ікра тріски Veladis Pate натуральна ж/б">Ікра тріски Veladis Pate натуральна ж/б</span>
+  <span class="lvl">Риба</span>
+  <span class="s">1 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Ікра 95 г Alaska Wild нерки солона з/б">Ікра 95 г Alaska Wild нерки солона з/б</span>
+  <span class="lvl">Риба</span>
+  <span class="s">1 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Хліб 0,7 кг Криворізький ХЗ 1 XXL Dark формовий">Хліб 0,7 кг Криворізький ХЗ 1 XXL Dark формовий</span>
+  <span class="lvl">Хлібобулочні вироби</span>
+  <span class="s">1 шт.</span>
+</div>
+</div>
+</div>
+</div>
+</article>
+
+<article class="user" id="u99708"
+  data-gender="Жінка" data-age="25–34" data-region="Київська" data-city="Київ"
+  data-kids="Так" data-marital="Одружений/заміжня" data-income="Можу дозволити бажане"
+  data-receipts="1" data-qty="1" data-spend="92.30" data-share="100.0">
+<div class="user-head">
+  <div class="user-id">#99708<small>покупець</small></div>
+  <div class="demo-tags">
+<span class="tag g">Жінка</span>
+<span class="tag age">25–34</span>
+<span class="tag city">Київ, Київська</span>
+<span class="tag city">обл. центр</span>
+<span class="tag kids">є діти</span>
+<span class="tag">Одружений/заміжня</span>
+<span class="tag inc">Можу дозволити бажане</span>
+
+  </div>
+</div>
+<div class="kpi-row">
+  <div class="kpi cyan"><div class="v">1 шт.</div><div class="l">Вода</div></div>
+  <div class="kpi orange"><div class="v">100%</div><div class="l">Частка в кошику</div></div>
+  <div class="kpi"><div class="v">1</div><div class="l">Чеків</div></div>
+  <div class="kpi"><div class="v">1</div><div class="l">Позицій усього</div></div>
+</div>
+<div class="user-body">
+
+<div class="receipt">
+  <div class="rec-head">
+    <span class="date">20.08.2025 · 15:11:08</span>
+    <span class="store">Епіцентр</span>
+    <span class="cat">Будматеріали</span>
+    <span class='solo-badge'>тільки вода</span>
+    <span class="sum">1 SKU · вода 100% кошика</span>
+  </div>
+<div class="water-box"><h4>Мінеральна вода</h4>
+<div class="w-item">
+  <span class="name">Вода мінеральна Карпатська Джерельна негазована 6л</span>
+  <span class="brand">Карпатська джерельна</span>
+  <span class="nums"><strong>1 шт.</strong></span>
+</div>
+</div>
+</div>
+</div>
+</article>
+
+<article class="user" id="u38515"
+  data-gender="Чоловік" data-age="55+" data-region="Рівненська" data-city="Радивилів"
+  data-kids="Так" data-marital="Одружений/заміжня" data-income="Можу дозволити бажане"
+  data-receipts="1" data-qty="1" data-spend="55.00" data-share="18.8">
+<div class="user-head">
+  <div class="user-id">#38515<small>покупець</small></div>
+  <div class="demo-tags">
+<span class="tag m">Чоловік</span>
+<span class="tag age">55+</span>
+<span class="tag city">Радивилів, Рівненська</span>
+<span class="tag city"><50 тис.</span>
+<span class="tag kids">є діти</span>
+<span class="tag">Одружений/заміжня</span>
+<span class="tag inc">Можу дозволити бажане</span>
+
+  </div>
+</div>
+<div class="kpi-row">
+  <div class="kpi cyan"><div class="v">1 шт.</div><div class="l">Вода</div></div>
+  <div class="kpi orange"><div class="v">19%</div><div class="l">Частка в кошику</div></div>
+  <div class="kpi"><div class="v">1</div><div class="l">Чеків</div></div>
+  <div class="kpi"><div class="v">2</div><div class="l">Позицій усього</div></div>
+</div>
+<div class="user-body">
+
+<div class="receipt">
+  <div class="rec-head">
+    <span class="date">19.08.2026 · 22:01:00</span>
+    <span class="store">WOG</span>
+    <span class="cat">АЗС</span>
+    
+    <span class="sum">2 SKU · вода 19% кошика</span>
+  </div>
+<div class="water-box"><h4>Мінеральна вода</h4>
+<div class="w-item">
+  <span class="name">Вода мінеральна Моршинська негазована 1,5л</span>
+  <span class="brand">Моршинська</span>
+  <span class="nums"><strong>1 шт.</strong></span>
+</div>
+</div>
+<div class="other-box"><h4>Інші товари в чеку</h4>
+<div class="o-header"><span>Назва</span><span>Категорія</span><span style="text-align:right">К-сть</span></div>
+<div class="o-item">
+  <span class="n" title="Снеки м'ясні Дмитрук Kabanosy Original зі свинини варено-копчені 80г">Снеки м'ясні Дмитрук Kabanosy Original зі свинини варено-копчені 80г</span>
+  <span class="lvl">Снеки</span>
+  <span class="s">2 шт.</span>
+</div>
+</div>
+</div>
+</div>
+</article>
+
+<article class="user" id="u39673"
+  data-gender="Жінка" data-age="55+" data-region="Київська" data-city="Київ"
+  data-kids="Так" data-marital="Одружений/заміжня" data-income="Вистачає на їжу та базові потреби"
+  data-receipts="1" data-qty="1" data-spend="55.00" data-share="25.1">
+<div class="user-head">
+  <div class="user-id">#39673<small>покупець</small></div>
+  <div class="demo-tags">
+<span class="tag g">Жінка</span>
+<span class="tag age">55+</span>
+<span class="tag city">Київ, Київська</span>
+<span class="tag city">обл. центр</span>
+<span class="tag kids">є діти</span>
+<span class="tag">Одружений/заміжня</span>
+<span class="tag inc">Вистачає на їжу та базові потреби</span>
+
+  </div>
+</div>
+<div class="kpi-row">
+  <div class="kpi cyan"><div class="v">1 шт.</div><div class="l">Вода</div></div>
+  <div class="kpi orange"><div class="v">25%</div><div class="l">Частка в кошику</div></div>
+  <div class="kpi"><div class="v">1</div><div class="l">Чеків</div></div>
+  <div class="kpi"><div class="v">3</div><div class="l">Позицій усього</div></div>
+</div>
+<div class="user-body">
+
+<div class="receipt">
+  <div class="rec-head">
+    <span class="date">07.08.2026 · 15:14:33</span>
+    <span class="store">WOG</span>
+    <span class="cat">АЗС</span>
+    
+    <span class="sum">3 SKU · вода 25% кошика</span>
+  </div>
+<div class="water-box"><h4>Мінеральна вода</h4>
+<div class="w-item">
+  <span class="name">Вода мінеральна Моршинська слабогазована 1,5л</span>
+  <span class="brand">Моршинська</span>
+  <span class="nums"><strong>1 шт.</strong></span>
+</div>
+</div>
+<div class="other-box"><h4>Інші товари в чеку</h4>
+<div class="o-header"><span>Назва</span><span>Категорія</span><span style="text-align:right">К-сть</span></div>
+<div class="o-item">
+  <span class="n" title="Батончик зі смаженим арахісом карамеллю і нугою вкритий молочним шокол">Батончик зі смаженим арахісом карамеллю і нугою вкритий молочним шокол</span>
+  <span class="lvl">Кондитерські вироби</span>
+  <span class="s">1 шт.</span>
+</div>
+<div class="o-item">
+  <span class="n" title="Батончик шок. Bounty 57 г">Батончик шок. Bounty 57 г</span>
+  <span class="lvl">Кондитерські вироби</span>
+  <span class="s">1 шт.</span>
 </div>
 </div>
 </div>
@@ -1132,7 +1387,7 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
 <article class="user" id="u154547"
   data-gender="Чоловік" data-age="35–44" data-region="Харківська" data-city="Харків"
   data-kids="Так" data-marital="Одружений/заміжня" data-income="Вимушений економити"
-  data-receipts="1" data-qty="1" data-spend="44.90">
+  data-receipts="1" data-qty="1" data-spend="44.90" data-share="100.0">
 <div class="user-head">
   <div class="user-id">#154547<small>покупець</small></div>
   <div class="demo-tags">
@@ -1147,12 +1402,10 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
   </div>
 </div>
 <div class="kpi-row">
-  <div class="kpi cyan"><div class="v">1</div><div class="l">Од. води</div></div>
-  <div class="kpi green"><div class="v">45 ₴</div><div class="l">На воду</div></div>
-  <div class="kpi"><div class="v">45 ₴</div><div class="l">Всього</div></div>
-  <div class="kpi orange"><div class="v">100.0%</div><div class="l">Частка води</div></div>
+  <div class="kpi cyan"><div class="v">1 шт.</div><div class="l">Вода</div></div>
+  <div class="kpi orange"><div class="v">100%</div><div class="l">Частка в кошику</div></div>
   <div class="kpi"><div class="v">1</div><div class="l">Чеків</div></div>
-  <div class="kpi"><div class="v">1</div><div class="l">Позицій</div></div>
+  <div class="kpi"><div class="v">1</div><div class="l">Позицій усього</div></div>
 </div>
 <div class="user-body">
 
@@ -1162,262 +1415,13 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
     <span class="store">THRASH! ТРАШ!</span>
     <span class="cat">Мережевий магазин «біля дому»</span>
     <span class='solo-badge'>тільки вода</span>
-    <span class="sum">44.90 ₴ · 1 SKU</span>
+    <span class="sum">1 SKU · вода 100% кошика</span>
   </div>
 <div class="water-box"><h4>Мінеральна вода</h4>
 <div class="w-item">
   <span class="name">Вода мінеральна Buvette Smart Water негазована 5л</span>
   <span class="brand">Buvette</span>
-  <span class="nums">1 × 44.90 = <strong>44.90 ₴</strong></span>
-</div>
-</div>
-</div>
-</div>
-</article>
-
-<article class="user" id="u117684"
-  data-gender="—" data-age="—" data-region="Дніпропетровська" data-city="Кривий Ріг"
-  data-kids="—" data-marital="—" data-income="—"
-  data-receipts="2" data-qty="2" data-spend="40.50">
-<div class="user-head">
-  <div class="user-id">#117684<small>покупець</small></div>
-  <div class="demo-tags">
-<span class="tag city">Кривий Ріг, Дніпропетровська</span>
-<span class="tag city">>50 тис.</span>
-
-  </div>
-</div>
-<div class="kpi-row">
-  <div class="kpi cyan"><div class="v">2</div><div class="l">Од. води</div></div>
-  <div class="kpi green"><div class="v">40 ₴</div><div class="l">На воду</div></div>
-  <div class="kpi"><div class="v">2982 ₴</div><div class="l">Всього</div></div>
-  <div class="kpi orange"><div class="v">1.4%</div><div class="l">Частка води</div></div>
-  <div class="kpi"><div class="v">2</div><div class="l">Чеків</div></div>
-  <div class="kpi"><div class="v">39</div><div class="l">Позицій</div></div>
-</div>
-<div class="user-body">
-
-<div class="receipt">
-  <div class="rec-head">
-    <span class="date">26.08.2026 · 20:04:32</span>
-    <span class="store">АТБ</span>
-    <span class="cat">Супермаркет</span>
-    
-    <span class="sum">1414.66 ₴ · 18 SKU</span>
-  </div>
-<div class="water-box"><h4>Мінеральна вода</h4>
-<div class="w-item">
-  <span class="name">Вода 0,5 л Своя Лінія Трускавецька сильногазована ПЕТ</span>
-  <span class="brand">Своя Лінія</span>
-  <span class="nums">1 × 10.90 = <strong>10.90 ₴</strong></span>
-</div>
-</div>
-<div class="other-box"><h4>Інші товари в чеку</h4>
-<div class="o-header"><span>Назва</span><span>Категорія</span><span style="text-align:right">Сума</span></div>
-<div class="o-item">
-  <span class="n" title="Крекер 400 г Своя лінія Солоний Salty м/уп">Крекер 400 г Своя лінія Солоний Salty м/уп</span>
-  <span class="lvl">Хлібобулочні вироби</span>
-  <span class="s">1 шт · 47 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Продукт молоковмісний плавлений 70 г Розумний вибір Вершковий 55% фоль">Продукт молоковмісний плавлений 70 г Розумний вибір Вершковий 55% фоль</span>
-  <span class="lvl">Молочні продукти і яйця</span>
-  <span class="s">3 шт · 38 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Папір туалетний 1 шт Розумний вибір PL XXL б/уп">Папір туалетний 1 шт Розумний вибір PL XXL б/уп</span>
-  <span class="lvl">Косметичні аксесуари</span>
-  <span class="s">1 шт · 14 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Банан 1гат">Банан 1гат</span>
-  <span class="lvl">Фрукти</span>
-  <span class="s">1 шт · 24 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Печиво 33г Papita Coconut з кокосовою начинкою та драже, Туреччина">Печиво 33г Papita Coconut з кокосовою начинкою та драже, Туреччина</span>
-  <span class="lvl">Хлібобулочні вироби</span>
-  <span class="s">3 шт · 34 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Капуста 400г Розумний вибір квашена з журавлиною">Капуста 400г Розумний вибір квашена з журавлиною</span>
-  <span class="lvl">Овочі</span>
-  <span class="s">1 шт · 62 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Каструля циліндрична 1,5 л 'Асорті'">Каструля циліндрична 1,5 л 'Асорті'</span>
-  <span class="lvl">Посуд</span>
-  <span class="s">1 шт · 279 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Вата 40 г Сладік солодка">Вата 40 г Сладік солодка</span>
-  <span class="lvl">Кондитерські вироби</span>
-  <span class="s">1 шт · 40 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Хліб Iнгулецкий подовой 0,4 кг(нарізний)">Хліб Iнгулецкий подовой 0,4 кг(нарізний)</span>
-  <span class="lvl">Хлібобулочні вироби</span>
-  <span class="s">1 шт · 18 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Чай (20 ф/п х 1 г) Розумний вибір Tea Way Ромашка трав'яний к/уп">Чай (20 ф/п х 1 г) Розумний вибір Tea Way Ромашка трав'яний к/уп</span>
-  <span class="lvl">Безалкогольні напої</span>
-  <span class="s">1 шт · 17 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Печиво 33г Papita Caramel з карамельною начинкою і драже, Туреччина">Печиво 33г Papita Caramel з карамельною начинкою і драже, Туреччина</span>
-  <span class="lvl">Хлібобулочні вироби</span>
-  <span class="s">2 шт · 29 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Цукерки Конти Джек вагові">Цукерки Конти Джек вагові</span>
-  <span class="lvl">Кондитерські вироби</span>
-  <span class="s">1 шт · 204 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Ковбаса М'ясна лавка/Своя лінія Золотиста с/в">Ковбаса М'ясна лавка/Своя лінія Золотиста с/в</span>
-  <span class="lvl">М'ясні продукти</span>
-  <span class="s">1 шт · 174 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Минтай День у День філе с/м н/ш п/ет">Минтай День у День філе с/м н/ш п/ет</span>
-  <span class="lvl">Риба</span>
-  <span class="s">1 шт · 289 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Крупа 1 кг Розумний вибір гречана м/уп">Крупа 1 кг Розумний вибір гречана м/уп</span>
-  <span class="lvl">Бакалія</span>
-  <span class="s">1 шт · 66 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Продукт молоковмісний 140 г Розумний вибір сирний солодкий з ароматом ">Продукт молоковмісний 140 г Розумний вибір сирний солодкий з ароматом </span>
-  <span class="lvl">Молочні продукти і яйця</span>
-  <span class="s">2 шт · 52 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Чай (20 ф/п х 1,35 г) Розумний вибір Tea Way М'ята трав'яний к/уп">Чай (20 ф/п х 1,35 г) Розумний вибір Tea Way М'ята трав'яний к/уп</span>
-  <span class="lvl">Безалкогольні напої</span>
-  <span class="s">1 шт · 17 ₴</span>
-</div>
-</div>
-</div>
-
-<div class="receipt">
-  <div class="rec-head">
-    <span class="date">02.09.2026 · 16:15:58</span>
-    <span class="store">АТБ</span>
-    <span class="cat">Супермаркет</span>
-    
-    <span class="sum">1566.99 ₴ · 21 SKU</span>
-  </div>
-<div class="water-box"><h4>Мінеральна вода</h4>
-<div class="w-item">
-  <span class="name">Вода мінеральна Моршинська слабогазована 1,5л</span>
-  <span class="brand">Моршинська</span>
-  <span class="nums">1 × 29.60 = <strong>29.60 ₴</strong></span>
-</div>
-</div>
-<div class="other-box"><h4>Інші товари в чеку</h4>
-<div class="o-header"><span>Назва</span><span>Категорія</span><span style="text-align:right">Сума</span></div>
-<div class="o-item">
-  <span class="n" title="Морозиво без цукру зі стевією 0%+0% Ласунка ст 100г">Морозиво без цукру зі стевією 0%+0% Ласунка ст 100г</span>
-  <span class="lvl">Кондитерські вироби</span>
-  <span class="s">1 шт · 74 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Консерви 170 г De Luxe Foods & Goods Selected Філе скумбрії у томатном">Консерви 170 г De Luxe Foods & Goods Selected Філе скумбрії у томатном</span>
-  <span class="lvl">Бакалія</span>
-  <span class="s">1 шт · 105 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Круасан 360 г (6х60г) Eesti Pagar швидкозаморожений п/ет">Круасан 360 г (6х60г) Eesti Pagar швидкозаморожений п/ет</span>
-  <span class="lvl">Напівфабрикати</span>
-  <span class="s">1 шт · 100 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Консерви 202г De Luxe Foods & Goods Selected Печiнка трiски Ісландія">Консерви 202г De Luxe Foods & Goods Selected Печiнка трiски Ісландія</span>
-  <span class="lvl">Риба</span>
-  <span class="s">1 шт · 210 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Сир твердий 160 г Свoя лінія Гауда 45% флoу-пак">Сир твердий 160 г Свoя лінія Гауда 45% флoу-пак</span>
-  <span class="lvl">Молочні продукти і яйця</span>
-  <span class="s">1 шт · 60 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Лящ обсмажений у томатному соусі ТМ 'Море' 230 г [диз. АТБ] ТМ 'МОРЕ'">Лящ обсмажений у томатному соусі ТМ 'Море' 230 г [диз. АТБ] ТМ 'МОРЕ'</span>
-  <span class="lvl">Риба</span>
-  <span class="s">1 шт · 67 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Олія 0,9 л Своя лінія соняшникова рафінована ПЕТ">Олія 0,9 л Своя лінія соняшникова рафінована ПЕТ</span>
-  <span class="lvl">Бакалія</span>
-  <span class="s">1 шт · 88 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Ковбаса М'ясна лавка/Своя лінія Губернаторська с/в">Ковбаса М'ясна лавка/Своя лінія Губернаторська с/в</span>
-  <span class="lvl">М'ясні продукти</span>
-  <span class="s">1 шт · 173 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Крупа 1 кг Розумний вибір пшенична з м'яких сортів пшениці м/уп">Крупа 1 кг Розумний вибір пшенична з м'яких сортів пшениці м/уп</span>
-  <span class="lvl">Бакалія</span>
-  <span class="s">1 шт · 20 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Папір туалетний 1 шт Розумний вибір рожевий з тисненням б/уп">Папір туалетний 1 шт Розумний вибір рожевий з тисненням б/уп</span>
-  <span class="lvl">Косметичні аксесуари</span>
-  <span class="s">2 шт · 30 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Сир плавлений 70 г Своя лінія зі смаком грибів 38% фольга">Сир плавлений 70 г Своя лінія зі смаком грибів 38% фольга</span>
-  <span class="lvl">Молочні продукти і яйця</span>
-  <span class="s">2 шт · 46 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Сир твердий 150 г Комо Чеддер 50% флоу-пак">Сир твердий 150 г Комо Чеддер 50% флоу-пак</span>
-  <span class="lvl">Молочні продукти і яйця</span>
-  <span class="s">1 шт · 91 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Продукт молоковмісний плавлений 70 г Розумний вибір Вершковий 55% фоль">Продукт молоковмісний плавлений 70 г Розумний вибір Вершковий 55% фоль</span>
-  <span class="lvl">Молочні продукти і яйця</span>
-  <span class="s">1 шт · 10 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Крупа кукурудзяна Полента Аттуаль м/у 800г">Крупа кукурудзяна Полента Аттуаль м/у 800г</span>
-  <span class="lvl">Бакалія</span>
-  <span class="s">1 шт · 36 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Пакет п/е 34х55 без/уп">Пакет п/е 34х55 без/уп</span>
-  <span class="lvl">—</span>
-  <span class="s">1 шт · 7 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Морозиво Ласунка Гран-Прі шоколад 155г">Морозиво Ласунка Гран-Прі шоколад 155г</span>
-  <span class="lvl">Кондитерські вироби</span>
-  <span class="s">1 шт · 40 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Паштет печінковий ламістер 85 г">Паштет печінковий ламістер 85 г</span>
-  <span class="lvl">Бакалія</span>
-  <span class="s">2 шт · 42 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Ікра тріски Veladis Pate натуральна ж/б">Ікра тріски Veladis Pate натуральна ж/б</span>
-  <span class="lvl">Риба</span>
-  <span class="s">1 шт · 54 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Ікра 95 г Alaska Wild нерки солона з/б">Ікра 95 г Alaska Wild нерки солона з/б</span>
-  <span class="lvl">Риба</span>
-  <span class="s">1 шт · 250 ₴</span>
-</div>
-<div class="o-item">
-  <span class="n" title="Хліб 0,7 кг Криворізький ХЗ 1 XXL Dark формовий">Хліб 0,7 кг Криворізький ХЗ 1 XXL Dark формовий</span>
-  <span class="lvl">Хлібобулочні вироби</span>
-  <span class="s">1 шт · 37 ₴</span>
+  <span class="nums"><strong>1 шт.</strong></span>
 </div>
 </div>
 </div>
@@ -1427,7 +1431,7 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
 <article class="user" id="u269584"
   data-gender="—" data-age="—" data-region="Київська" data-city="Київ"
   data-kids="—" data-marital="—" data-income="—"
-  data-receipts="1" data-qty="1" data-spend="27.00">
+  data-receipts="1" data-qty="1" data-spend="27.00" data-share="8.4">
 <div class="user-head">
   <div class="user-id">#269584<small>покупець</small></div>
   <div class="demo-tags">
@@ -1437,12 +1441,10 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
   </div>
 </div>
 <div class="kpi-row">
-  <div class="kpi cyan"><div class="v">1</div><div class="l">Од. води</div></div>
-  <div class="kpi green"><div class="v">27 ₴</div><div class="l">На воду</div></div>
-  <div class="kpi"><div class="v">321 ₴</div><div class="l">Всього</div></div>
-  <div class="kpi orange"><div class="v">8.4%</div><div class="l">Частка води</div></div>
+  <div class="kpi cyan"><div class="v">1 шт.</div><div class="l">Вода</div></div>
+  <div class="kpi orange"><div class="v">8%</div><div class="l">Частка в кошику</div></div>
   <div class="kpi"><div class="v">1</div><div class="l">Чеків</div></div>
-  <div class="kpi"><div class="v">3</div><div class="l">Позицій</div></div>
+  <div class="kpi"><div class="v">3</div><div class="l">Позицій усього</div></div>
 </div>
 <div class="user-body">
 
@@ -1452,26 +1454,26 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
     <span class="store">Аптека Подорожник</span>
     <span class="cat">Аптека</span>
     
-    <span class="sum">321.30 ₴ · 3 SKU</span>
+    <span class="sum">3 SKU · вода 8% кошика</span>
   </div>
 <div class="water-box"><h4>Мінеральна вода</h4>
 <div class="w-item">
   <span class="name">Вода мінеральна Карпатська Джерельна негазована 0,5л</span>
   <span class="brand">Карпатська джерельна</span>
-  <span class="nums">1 × 27.00 = <strong>27.00 ₴</strong></span>
+  <span class="nums"><strong>1 шт.</strong></span>
 </div>
 </div>
 <div class="other-box"><h4>Інші товари в чеку</h4>
-<div class="o-header"><span>Назва</span><span>Категорія</span><span style="text-align:right">Сума</span></div>
+<div class="o-header"><span>Назва</span><span>Категорія</span><span style="text-align:right">К-сть</span></div>
 <div class="o-item">
   <span class="n" title="Омепразол-Тева капс. 20мг №30">Омепразол-Тева капс. 20мг №30</span>
   <span class="lvl">Медикаменти</span>
-  <span class="s">1 шт · 159 ₴</span>
+  <span class="s">1 шт.</span>
 </div>
 <div class="o-item">
   <span class="n" title="Таблетки 8000 Панкреатин 50шт">Таблетки 8000 Панкреатин 50шт</span>
   <span class="lvl">Медикаменти</span>
-  <span class="s">1 шт · 136 ₴</span>
+  <span class="s">1 шт.</span>
 </div>
 </div>
 </div>
@@ -1481,7 +1483,7 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
 <article class="user" id="u140642"
   data-gender="Жінка" data-age="25–34" data-region="Вінницька" data-city="Літин"
   data-kids="Так" data-marital="Одружений/заміжня" data-income="Вистачає на їжу та базові потреби"
-  data-receipts="1" data-qty="1" data-spend="24.99">
+  data-receipts="1" data-qty="1" data-spend="24.99" data-share="6.1">
 <div class="user-head">
   <div class="user-id">#140642<small>покупець</small></div>
   <div class="demo-tags">
@@ -1496,12 +1498,10 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
   </div>
 </div>
 <div class="kpi-row">
-  <div class="kpi cyan"><div class="v">1</div><div class="l">Од. води</div></div>
-  <div class="kpi green"><div class="v">25 ₴</div><div class="l">На воду</div></div>
-  <div class="kpi"><div class="v">409 ₴</div><div class="l">Всього</div></div>
-  <div class="kpi orange"><div class="v">6.1%</div><div class="l">Частка води</div></div>
+  <div class="kpi cyan"><div class="v">1 шт.</div><div class="l">Вода</div></div>
+  <div class="kpi orange"><div class="v">6%</div><div class="l">Частка в кошику</div></div>
   <div class="kpi"><div class="v">1</div><div class="l">Чеків</div></div>
-  <div class="kpi"><div class="v">8</div><div class="l">Позицій</div></div>
+  <div class="kpi"><div class="v">8</div><div class="l">Позицій усього</div></div>
 </div>
 <div class="user-body">
 
@@ -1511,51 +1511,51 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
     <span class="store">Сільпо</span>
     <span class="cat">Супермаркет</span>
     
-    <span class="sum">408.74 ₴ · 8 SKU</span>
+    <span class="sum">8 SKU · вода 6% кошика</span>
   </div>
 <div class="water-box"><h4>Мінеральна вода</h4>
 <div class="w-item">
   <span class="name">Вода мінеральна Моршинська негазована 0,75 л</span>
   <span class="brand">Моршинська</span>
-  <span class="nums">1 × 24.99 = <strong>24.99 ₴</strong></span>
+  <span class="nums"><strong>1 шт.</strong></span>
 </div>
 </div>
 <div class="other-box"><h4>Інші товари в чеку</h4>
-<div class="o-header"><span>Назва</span><span>Категорія</span><span style="text-align:right">Сума</span></div>
+<div class="o-header"><span>Назва</span><span>Категорія</span><span style="text-align:right">К-сть</span></div>
 <div class="o-item">
   <span class="n" title="Оселедець Norsk Delikatesse норвезький молодий с/с">Оселедець Norsk Delikatesse норвезький молодий с/с</span>
   <span class="lvl">Риба</span>
-  <span class="s">1 шт · 101 ₴</span>
+  <span class="s">1 шт.</span>
 </div>
 <div class="o-item">
   <span class="n" title="Чипси Люкс зі смаком сиру 125г">Чипси Люкс зі смаком сиру 125г</span>
   <span class="lvl">Снеки</span>
-  <span class="s">1 шт · 50 ₴</span>
+  <span class="s">1 шт.</span>
 </div>
 <div class="o-item">
   <span class="n" title="Бублик з кунжутом">Бублик з кунжутом</span>
   <span class="lvl">Хлібобулочні вироби</span>
-  <span class="s">1 шт · 72 ₴</span>
+  <span class="s">1 шт.</span>
 </div>
 <div class="o-item">
   <span class="n" title="Молоко згущене Премія незбиране з цукром 8,5% ж/б">Молоко згущене Премія незбиране з цукром 8,5% ж/б</span>
   <span class="lvl">Молочні продукти і яйця</span>
-  <span class="s">1 шт · 61 ₴</span>
+  <span class="s">1 шт.</span>
 </div>
 <div class="o-item">
   <span class="n" title="Напій кавовий Jacobs 3в1 Original розчинний 12г x 24шт">Напій кавовий Jacobs 3в1 Original розчинний 12г x 24шт</span>
   <span class="lvl">Безалкогольні напої</span>
-  <span class="s">3 шт · 19 ₴</span>
+  <span class="s">3 шт.</span>
 </div>
 <div class="o-item">
   <span class="n" title="Напій кавовий Jacobs 3в1 Iced Latte Original розчинний 21,5г х 10шт">Напій кавовий Jacobs 3в1 Iced Latte Original розчинний 21,5г х 10шт</span>
   <span class="lvl">Безалкогольні напої</span>
-  <span class="s">2 шт · 30 ₴</span>
+  <span class="s">2 шт.</span>
 </div>
 <div class="o-item">
   <span class="n" title="Чіпси Люкс краб">Чіпси Люкс краб</span>
   <span class="lvl">Снеки</span>
-  <span class="s">1 шт · 50 ₴</span>
+  <span class="s">1 шт.</span>
 </div>
 </div>
 </div>
@@ -1565,7 +1565,7 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
 <article class="user" id="u78117"
   data-gender="—" data-age="—" data-region="Київська" data-city="Київ"
   data-kids="—" data-marital="—" data-income="—"
-  data-receipts="1" data-qty="1" data-spend="23.30">
+  data-receipts="1" data-qty="1" data-spend="23.30" data-share="100.0">
 <div class="user-head">
   <div class="user-id">#78117<small>покупець</small></div>
   <div class="demo-tags">
@@ -1575,12 +1575,10 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
   </div>
 </div>
 <div class="kpi-row">
-  <div class="kpi cyan"><div class="v">1</div><div class="l">Од. води</div></div>
-  <div class="kpi green"><div class="v">23 ₴</div><div class="l">На воду</div></div>
-  <div class="kpi"><div class="v">23 ₴</div><div class="l">Всього</div></div>
-  <div class="kpi orange"><div class="v">100.0%</div><div class="l">Частка води</div></div>
+  <div class="kpi cyan"><div class="v">1 шт.</div><div class="l">Вода</div></div>
+  <div class="kpi orange"><div class="v">100%</div><div class="l">Частка в кошику</div></div>
   <div class="kpi"><div class="v">1</div><div class="l">Чеків</div></div>
-  <div class="kpi"><div class="v">1</div><div class="l">Позицій</div></div>
+  <div class="kpi"><div class="v">1</div><div class="l">Позицій усього</div></div>
 </div>
 <div class="user-body">
 
@@ -1590,13 +1588,13 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
     <span class="store">Фора</span>
     <span class="cat">Супермаркет</span>
     <span class='solo-badge'>тільки вода</span>
-    <span class="sum">23.30 ₴ · 1 SKU</span>
+    <span class="sum">1 SKU · вода 100% кошика</span>
   </div>
 <div class="water-box"><h4>Мінеральна вода</h4>
 <div class="w-item">
   <span class="name">Вода мінеральна Моршинська негазована 0,75 л</span>
   <span class="brand">Моршинська</span>
-  <span class="nums">1 × 23.30 = <strong>23.30 ₴</strong></span>
+  <span class="nums"><strong>1 шт.</strong></span>
 </div>
 </div>
 </div>
@@ -1606,7 +1604,7 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
 <article class="user" id="u55985"
   data-gender="Жінка" data-age="35–44" data-region="Київська" data-city="Бровари"
   data-kids="Так" data-marital="Одружений/заміжня" data-income="Вистачає на їжу та базові потреби"
-  data-receipts="1" data-qty="1" data-spend="22.90">
+  data-receipts="1" data-qty="1" data-spend="22.90" data-share="9.0">
 <div class="user-head">
   <div class="user-id">#55985<small>покупець</small></div>
   <div class="demo-tags">
@@ -1621,12 +1619,10 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
   </div>
 </div>
 <div class="kpi-row">
-  <div class="kpi cyan"><div class="v">1</div><div class="l">Од. води</div></div>
-  <div class="kpi green"><div class="v">23 ₴</div><div class="l">На воду</div></div>
-  <div class="kpi"><div class="v">256 ₴</div><div class="l">Всього</div></div>
-  <div class="kpi orange"><div class="v">9.0%</div><div class="l">Частка води</div></div>
+  <div class="kpi cyan"><div class="v">1 шт.</div><div class="l">Вода</div></div>
+  <div class="kpi orange"><div class="v">9%</div><div class="l">Частка в кошику</div></div>
   <div class="kpi"><div class="v">1</div><div class="l">Чеків</div></div>
-  <div class="kpi"><div class="v">3</div><div class="l">Позицій</div></div>
+  <div class="kpi"><div class="v">3</div><div class="l">Позицій усього</div></div>
 </div>
 <div class="user-body">
 
@@ -1636,26 +1632,26 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
     <span class="store">Фора</span>
     <span class="cat">Супермаркет</span>
     
-    <span class="sum">255.55 ₴ · 3 SKU</span>
+    <span class="sum">3 SKU · вода 9% кошика</span>
   </div>
 <div class="water-box"><h4>Мінеральна вода</h4>
 <div class="w-item">
   <span class="name">Вода мінеральна Миргородська сильногазована 1,5л</span>
   <span class="brand">MYRGORODSKA</span>
-  <span class="nums">1 × 22.90 = <strong>22.90 ₴</strong></span>
+  <span class="nums"><strong>1 шт.</strong></span>
 </div>
 </div>
 <div class="other-box"><h4>Інші товари в чеку</h4>
-<div class="o-header"><span>Назва</span><span>Категорія</span><span style="text-align:right">Сума</span></div>
+<div class="o-header"><span>Назва</span><span>Категорія</span><span style="text-align:right">К-сть</span></div>
 <div class="o-item">
   <span class="n" title="Сигарети з фільтром Silver Blue Parliament 20шт">Сигарети з фільтром Silver Blue Parliament 20шт</span>
   <span class="lvl">Табачні вироби</span>
-  <span class="s">1 шт · 190 ₴</span>
+  <span class="s">1 шт.</span>
 </div>
 <div class="o-item">
   <span class="n" title="Огірок екстра">Огірок екстра</span>
   <span class="lvl">Овочі</span>
-  <span class="s">1 шт · 43 ₴</span>
+  <span class="s">1 шт.</span>
 </div>
 </div>
 </div>
@@ -1665,7 +1661,7 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
 <article class="user" id="u87557"
   data-gender="Чоловік" data-age="25–34" data-region="Київська" data-city="Київ"
   data-kids="Ні" data-marital="Одружений/заміжня" data-income="Вистачає на їжу та базові потреби"
-  data-receipts="1" data-qty="1" data-spend="19.99">
+  data-receipts="1" data-qty="1" data-spend="19.99" data-share="100.0">
 <div class="user-head">
   <div class="user-id">#87557<small>покупець</small></div>
   <div class="demo-tags">
@@ -1680,12 +1676,10 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
   </div>
 </div>
 <div class="kpi-row">
-  <div class="kpi cyan"><div class="v">1</div><div class="l">Од. води</div></div>
-  <div class="kpi green"><div class="v">20 ₴</div><div class="l">На воду</div></div>
-  <div class="kpi"><div class="v">20 ₴</div><div class="l">Всього</div></div>
-  <div class="kpi orange"><div class="v">100.0%</div><div class="l">Частка води</div></div>
+  <div class="kpi cyan"><div class="v">1 шт.</div><div class="l">Вода</div></div>
+  <div class="kpi orange"><div class="v">100%</div><div class="l">Частка в кошику</div></div>
   <div class="kpi"><div class="v">1</div><div class="l">Чеків</div></div>
-  <div class="kpi"><div class="v">1</div><div class="l">Позицій</div></div>
+  <div class="kpi"><div class="v">1</div><div class="l">Позицій усього</div></div>
 </div>
 <div class="user-body">
 
@@ -1695,13 +1689,13 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
     <span class="store">Сільпо</span>
     <span class="cat">Супермаркет</span>
     <span class='solo-badge'>тільки вода</span>
-    <span class="sum">19.99 ₴ · 1 SKU</span>
+    <span class="sum">1 SKU · вода 100% кошика</span>
   </div>
 <div class="water-box"><h4>Мінеральна вода</h4>
 <div class="w-item">
   <span class="name">Вода мінеральна Моршинська слабогазована 0,5л</span>
   <span class="brand">Моршинська</span>
-  <span class="nums">1 × 19.99 = <strong>19.99 ₴</strong></span>
+  <span class="nums"><strong>1 шт.</strong></span>
 </div>
 </div>
 </div>
@@ -1711,7 +1705,7 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
 <article class="user" id="u305949"
   data-gender="—" data-age="—" data-region="Львівська" data-city="Львів"
   data-kids="—" data-marital="—" data-income="—"
-  data-receipts="1" data-qty="1" data-spend="19.99">
+  data-receipts="1" data-qty="1" data-spend="19.99" data-share="1.9">
 <div class="user-head">
   <div class="user-id">#305949<small>покупець</small></div>
   <div class="demo-tags">
@@ -1721,12 +1715,10 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
   </div>
 </div>
 <div class="kpi-row">
-  <div class="kpi cyan"><div class="v">1</div><div class="l">Од. води</div></div>
-  <div class="kpi green"><div class="v">20 ₴</div><div class="l">На воду</div></div>
-  <div class="kpi"><div class="v">1063 ₴</div><div class="l">Всього</div></div>
-  <div class="kpi orange"><div class="v">1.9%</div><div class="l">Частка води</div></div>
+  <div class="kpi cyan"><div class="v">1 шт.</div><div class="l">Вода</div></div>
+  <div class="kpi orange"><div class="v">2%</div><div class="l">Частка в кошику</div></div>
   <div class="kpi"><div class="v">1</div><div class="l">Чеків</div></div>
-  <div class="kpi"><div class="v">9</div><div class="l">Позицій</div></div>
+  <div class="kpi"><div class="v">9</div><div class="l">Позицій усього</div></div>
 </div>
 <div class="user-body">
 
@@ -1736,56 +1728,56 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
     <span class="store">Сільпо</span>
     <span class="cat">Супермаркет</span>
     
-    <span class="sum">1063.39 ₴ · 9 SKU</span>
+    <span class="sum">9 SKU · вода 2% кошика</span>
   </div>
 <div class="water-box"><h4>Мінеральна вода</h4>
 <div class="w-item">
   <span class="name">Вода мінеральна Трускавецька негазована 1,5л</span>
   <span class="brand">Трускавецька</span>
-  <span class="nums">1 × 19.99 = <strong>19.99 ₴</strong></span>
+  <span class="nums"><strong>1 шт.</strong></span>
 </div>
 </div>
 <div class="other-box"><h4>Інші товари в чеку</h4>
-<div class="o-header"><span>Назва</span><span>Категорія</span><span style="text-align:right">Сума</span></div>
+<div class="o-header"><span>Назва</span><span>Категорія</span><span style="text-align:right">К-сть</span></div>
 <div class="o-item">
   <span class="n" title="Сметана Галичина 15% 300г">Сметана Галичина 15% 300г</span>
   <span class="lvl">Молочні продукти і яйця</span>
-  <span class="s">1 шт · 43 ₴</span>
+  <span class="s">1 шт.</span>
 </div>
 <div class="o-item">
   <span class="n" title="Піца Барбекю">Піца Барбекю</span>
   <span class="lvl">Напівфабрикати</span>
-  <span class="s">1 шт · 99 ₴</span>
+  <span class="s">1 шт.</span>
 </div>
 <div class="o-item">
   <span class="n" title="Сир 45% м'який чеддерезований Моцарела Ферма в/у 300г">Сир 45% м'який чеддерезований Моцарела Ферма в/у 300г</span>
   <span class="lvl">Молочні продукти і яйця</span>
-  <span class="s">1 шт · 99 ₴</span>
+  <span class="s">1 шт.</span>
 </div>
 <div class="o-item">
   <span class="n" title="Олія соняшникова \&quot;Повна Чаша\&quot; рафінована">Олія соняшникова \"Повна Чаша\" рафінована</span>
   <span class="lvl">Бакалія</span>
-  <span class="s">1 шт · 77 ₴</span>
+  <span class="s">1 шт.</span>
 </div>
 <div class="o-item">
   <span class="n" title="Кава розчина MаcCoffeе Gold 200г">Кава розчина MаcCoffeе Gold 200г</span>
   <span class="lvl">Безалкогольні напої</span>
-  <span class="s">1 шт · 259 ₴</span>
+  <span class="s">1 шт.</span>
 </div>
 <div class="o-item">
   <span class="n" title="Сир кисломолочний Молокія 5% 350г">Сир кисломолочний Молокія 5% 350г</span>
   <span class="lvl">Молочні продукти і яйця</span>
-  <span class="s">1 шт · 260 ₴</span>
+  <span class="s">1 шт.</span>
 </div>
 <div class="o-item">
   <span class="n" title="Вершки Буренка стерилізовані 10%">Вершки Буренка стерилізовані 10%</span>
   <span class="lvl">Молочні продукти і яйця</span>
-  <span class="s">1 шт · 153 ₴</span>
+  <span class="s">1 шт.</span>
 </div>
 <div class="o-item">
   <span class="n" title="Цукор Повна Чаша білий кристалічний">Цукор Повна Чаша білий кристалічний</span>
   <span class="lvl">Бакалія</span>
-  <span class="s">2 шт · 53 ₴</span>
+  <span class="s">2 шт.</span>
 </div>
 </div>
 </div>
@@ -1795,7 +1787,7 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
 <article class="user" id="u66200"
   data-gender="Жінка" data-age="25–34" data-region="Волинська" data-city="Маневичі"
   data-kids="Ні" data-marital="Сам/ а" data-income="Вистачає на їжу та базові потреби"
-  data-receipts="1" data-qty="1" data-spend="19.90">
+  data-receipts="1" data-qty="1" data-spend="19.90" data-share="6.2">
 <div class="user-head">
   <div class="user-id">#66200<small>покупець</small></div>
   <div class="demo-tags">
@@ -1810,12 +1802,10 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
   </div>
 </div>
 <div class="kpi-row">
-  <div class="kpi cyan"><div class="v">1</div><div class="l">Од. води</div></div>
-  <div class="kpi green"><div class="v">20 ₴</div><div class="l">На воду</div></div>
-  <div class="kpi"><div class="v">318 ₴</div><div class="l">Всього</div></div>
-  <div class="kpi orange"><div class="v">6.2%</div><div class="l">Частка води</div></div>
+  <div class="kpi cyan"><div class="v">1 шт.</div><div class="l">Вода</div></div>
+  <div class="kpi orange"><div class="v">6%</div><div class="l">Частка в кошику</div></div>
   <div class="kpi"><div class="v">1</div><div class="l">Чеків</div></div>
-  <div class="kpi"><div class="v">7</div><div class="l">Позицій</div></div>
+  <div class="kpi"><div class="v">7</div><div class="l">Позицій усього</div></div>
 </div>
 <div class="user-body">
 
@@ -1825,46 +1815,46 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
     <span class="store">Епіцентр</span>
     <span class="cat">Будматеріали</span>
     
-    <span class="sum">318.40 ₴ · 7 SKU</span>
+    <span class="sum">7 SKU · вода 6% кошика</span>
   </div>
 <div class="water-box"><h4>Мінеральна вода</h4>
 <div class="w-item">
   <span class="name">Вода мінеральна Buvette Vital №3 слабогазована 0,5л</span>
   <span class="brand">Buvette</span>
-  <span class="nums">1 × 19.90 = <strong>19.90 ₴</strong></span>
+  <span class="nums"><strong>1 шт.</strong></span>
 </div>
 </div>
 <div class="other-box"><h4>Інші товари в чеку</h4>
-<div class="o-header"><span>Назва</span><span>Категорія</span><span style="text-align:right">Сума</span></div>
+<div class="o-header"><span>Назва</span><span>Категорія</span><span style="text-align:right">К-сть</span></div>
 <div class="o-item">
   <span class="n" title="Йогурт Груша-ваніль 1,4% пляшка 0,25 кг Молокія">Йогурт Груша-ваніль 1,4% пляшка 0,25 кг Молокія</span>
   <span class="lvl">Молочні продукти і яйця</span>
-  <span class="s">1 шт · 30 ₴</span>
+  <span class="s">1 шт.</span>
 </div>
 <div class="o-item">
   <span class="n" title="Йогурт Суниця-м'ята 1,4% пляшка 0,25 кг Молокія">Йогурт Суниця-м'ята 1,4% пляшка 0,25 кг Молокія</span>
   <span class="lvl">Молочні продукти і яйця</span>
-  <span class="s">1 шт · 30 ₴</span>
+  <span class="s">1 шт.</span>
 </div>
 <div class="o-item">
   <span class="n" title="Йогурт Чорниця-лаванда 1,4% пляшка 0,25кг Молокія">Йогурт Чорниця-лаванда 1,4% пляшка 0,25кг Молокія</span>
   <span class="lvl">Молочні продукти і яйця</span>
-  <span class="s">1 шт · 30 ₴</span>
+  <span class="s">1 шт.</span>
 </div>
 <div class="o-item">
   <span class="n" title="Йогурт Персик-обліпиха 1,4% пляшка 0,25 кг Молокія">Йогурт Персик-обліпиха 1,4% пляшка 0,25 кг Молокія</span>
   <span class="lvl">Молочні продукти і яйця</span>
-  <span class="s">1 шт · 30 ₴</span>
+  <span class="s">1 шт.</span>
 </div>
 <div class="o-item">
   <span class="n" title="Корм для кошенят Cats птиця-овочі соус 85г">Корм для кошенят Cats птиця-овочі соус 85г</span>
   <span class="lvl">Коти</span>
-  <span class="s">10 шт · 109 ₴</span>
+  <span class="s">10 шт.</span>
 </div>
 <div class="o-item">
   <span class="n" title="Чипси картопляні зі смаком лисичок Хвилясті Люкс м/у 125г">Чипси картопляні зі смаком лисичок Хвилясті Люкс м/у 125г</span>
   <span class="lvl">Снеки</span>
-  <span class="s">1 шт · 70 ₴</span>
+  <span class="s">1 шт.</span>
 </div>
 </div>
 </div>
@@ -1874,7 +1864,7 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
 <article class="user" id="u145260"
   data-gender="Жінка" data-age="45–54" data-region="Сумська" data-city="Конотоп"
   data-kids="Ні" data-marital="У стосунках" data-income="Вимушений економити"
-  data-receipts="1" data-qty="1" data-spend="18.50">
+  data-receipts="1" data-qty="1" data-spend="18.50" data-share="13.8">
 <div class="user-head">
   <div class="user-id">#145260<small>покупець</small></div>
   <div class="demo-tags">
@@ -1889,12 +1879,10 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
   </div>
 </div>
 <div class="kpi-row">
-  <div class="kpi cyan"><div class="v">1</div><div class="l">Од. води</div></div>
-  <div class="kpi green"><div class="v">18 ₴</div><div class="l">На воду</div></div>
-  <div class="kpi"><div class="v">134 ₴</div><div class="l">Всього</div></div>
-  <div class="kpi orange"><div class="v">13.8%</div><div class="l">Частка води</div></div>
+  <div class="kpi cyan"><div class="v">1 шт.</div><div class="l">Вода</div></div>
+  <div class="kpi orange"><div class="v">14%</div><div class="l">Частка в кошику</div></div>
   <div class="kpi"><div class="v">1</div><div class="l">Чеків</div></div>
-  <div class="kpi"><div class="v">4</div><div class="l">Позицій</div></div>
+  <div class="kpi"><div class="v">4</div><div class="l">Позицій усього</div></div>
 </div>
 <div class="user-body">
 
@@ -1904,31 +1892,31 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
     <span class="store">АТБ</span>
     <span class="cat">Супермаркет</span>
     
-    <span class="sum">133.83 ₴ · 4 SKU</span>
+    <span class="sum">4 SKU · вода 14% кошика</span>
   </div>
 <div class="water-box"><h4>Мінеральна вода</h4>
 <div class="w-item">
   <span class="name">Вода 1,5 л Своя Лінія Трускавецька мінеральна сильногазована ПЕТ</span>
   <span class="brand">Своя Лінія</span>
-  <span class="nums">1 × 18.50 = <strong>18.50 ₴</strong></span>
+  <span class="nums"><strong>1 шт.</strong></span>
 </div>
 </div>
 <div class="other-box"><h4>Інші товари в чеку</h4>
-<div class="o-header"><span>Назва</span><span>Категорія</span><span style="text-align:right">Сума</span></div>
+<div class="o-header"><span>Назва</span><span>Категорія</span><span style="text-align:right">К-сть</span></div>
 <div class="o-item">
   <span class="n" title="Оселедець в олії Norven п/у 250г">Оселедець в олії Norven п/у 250г</span>
   <span class="lvl">Риба</span>
-  <span class="s">1 шт · 74 ₴</span>
+  <span class="s">1 шт.</span>
 </div>
 <div class="o-item">
   <span class="n" title="Буряк 1 гат">Буряк 1 гат</span>
   <span class="lvl">Овочі</span>
-  <span class="s">1 шт · 27 ₴</span>
+  <span class="s">1 шт.</span>
 </div>
 <div class="o-item">
   <span class="n" title="Корінь імбиру 1 гатунок">Корінь імбиру 1 гатунок</span>
   <span class="lvl">Овочі</span>
-  <span class="s">1 шт · 14 ₴</span>
+  <span class="s">1 шт.</span>
 </div>
 </div>
 </div>
@@ -1940,21 +1928,21 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
 <div class="live-kpis" id="live-kpis">
   <div class="lk"><div class="v" id="lk-users">—</div><div class="l">Покупців</div></div>
   <div class="lk"><div class="v" id="lk-receipts">—</div><div class="l">Чеків</div></div>
-  <div class="lk cyan"><div class="v" id="lk-qty">—</div><div class="l">Од. води</div></div>
-  <div class="lk green"><div class="v" id="lk-spend">—</div><div class="l">На воду, ₴</div></div>
-  <div class="lk"><div class="v" id="lk-avg-spend">—</div><div class="l">Сер. на воду, ₴</div></div>
-  <div class="lk orange"><div class="v" id="lk-share">—</div><div class="l">Сер. частка води</div></div>
+  <div class="lk cyan"><div class="v" id="lk-qty">—</div><div class="l">Вода, шт.</div></div>
+  <div class="lk"><div class="v" id="lk-avg-qty">—</div><div class="l">Сер. шт. на покупця</div></div>
+  <div class="lk orange"><div class="v" id="lk-share">—</div><div class="l">Сер. частка в кошику</div></div>
+  <div class="lk green"><div class="v" id="lk-solo">—</div><div class="l">Чеків «тільки вода»</div></div>
 </div>
 <div class="live-grid">
-  <div class="live-card"><h3>Бренди води</h3><div id="live-brands" class="live-list"></div></div>
-  <div class="live-card"><h3>Магазини</h3><div id="live-stores" class="live-list"></div></div>
-  <div class="live-card"><h3>Супутні категорії</h3><div id="live-cats" class="live-list"></div></div>
+  <div class="live-card"><h3>Бренди води (шт.)</h3><div id="live-brands" class="live-list"></div></div>
+  <div class="live-card"><h3>Магазини (чеків)</h3><div id="live-stores" class="live-list"></div></div>
+  <div class="live-card"><h3>Супутні категорії (шт.)</h3><div id="live-cats" class="live-list"></div></div>
   <div class="live-card"><h3>Демографія вибірки</h3><div id="live-demo" class="live-list"></div></div>
 </div>
 <div class="insight" id="live-insight" style="margin-top:14px"></div>
 </section>
 
-<footer>Зібрано з реєстрів покупців, чеків та товарів · інтерактивний підсумок оновлюється за фільтрами</footer>
+<footer>Акцент на кількості (шт.) · вартість лише як % кошика · підсумок оновлюється за фільтрами</footer>
 </div>
 
 <script>
@@ -1967,13 +1955,12 @@ const USER_DATA = {"29176": {"gender": "Жінка", "age": "55+", "region": "Ч
   const fReceipts = document.getElementById('f-receipts');
   const fQtyMin = document.getElementById('f-qty-min');
   const fQtyMax = document.getElementById('f-qty-max');
-  const fSpendMin = document.getElementById('f-spend-min');
-  const fSpendMax = document.getElementById('f-spend-max');
+  const fShareMin = document.getElementById('f-share-min');
+  const fShareMax = document.getElementById('f-share-max');
   const tocRows = document.querySelectorAll('#toc-body tr');
   const userCards = document.querySelectorAll('article.user');
   const shownCount = document.getElementById('shown-count');
   const noResults = document.getElementById('no-results');
-  const total = 17;
 
   function numOrNull(el) {
     const v = el.value.trim();
@@ -1991,10 +1978,10 @@ const USER_DATA = {"29176": {"gender": "Жінка", "age": "55+", "region": "Ч
     const qtyMin = numOrNull(fQtyMin), qtyMax = numOrNull(fQtyMax);
     if (qtyMin !== null && qty < qtyMin) return false;
     if (qtyMax !== null && qty > qtyMax) return false;
-    const spend = parseFloat(el.dataset.spend);
-    const spendMin = numOrNull(fSpendMin), spendMax = numOrNull(fSpendMax);
-    if (spendMin !== null && spend < spendMin) return false;
-    if (spendMax !== null && spend > spendMax) return false;
+    const share = parseFloat(el.dataset.share);
+    const shareMin = numOrNull(fShareMin), shareMax = numOrNull(fShareMax);
+    if (shareMin !== null && share < shareMin) return false;
+    if (shareMax !== null && share > shareMax) return false;
     return true;
   }
 
@@ -2016,12 +2003,9 @@ const USER_DATA = {"29176": {"gender": "Жінка", "age": "55+", "region": "Ч
 
   function updateSummary(visibleIds) {
     if (!visibleIds.length) {
-      document.getElementById('lk-users').textContent = '0';
-      document.getElementById('lk-receipts').textContent = '0';
-      document.getElementById('lk-qty').textContent = '0';
-      document.getElementById('lk-spend').textContent = '0';
-      document.getElementById('lk-avg-spend').textContent = '—';
-      document.getElementById('lk-share').textContent = '—';
+      ['lk-users','lk-receipts','lk-qty','lk-avg-qty','lk-share','lk-solo'].forEach(id => {
+        document.getElementById(id).textContent = id.includes('avg') || id.includes('share') ? '—' : '0';
+      });
       renderList(document.getElementById('live-brands'), [], 'немає даних');
       renderList(document.getElementById('live-stores'), [], 'немає даних');
       renderList(document.getElementById('live-cats'), [], 'немає даних');
@@ -2031,52 +2015,48 @@ const USER_DATA = {"29176": {"gender": "Жінка", "age": "55+", "region": "Ч
     }
 
     let nUsers = visibleIds.length;
-    let nRec = 0, qty = 0, spend = 0, totalSpend = 0;
+    let nRec = 0, qty = 0, soloEst = 0;
     const brands = {}, stores = {}, cats = {};
     const genders = {}, ages = {}, incomes = {};
+    let shareSum = 0;
 
     visibleIds.forEach(id => {
       const u = USER_DATA[id];
       if (!u) return;
       nRec += u.receipts;
       qty += u.qty;
-      spend += u.spend;
-      totalSpend += u.total;
+      shareSum += (u.share || 0);
+      // approximate solo: share ~100%
+      if ((u.share || 0) >= 99) soloEst += u.receipts;
       genders[u.gender] = (genders[u.gender] || 0) + 1;
       ages[u.age] = (ages[u.age] || 0) + 1;
       if (u.income && u.income !== '—') incomes[u.income] = (incomes[u.income] || 0) + 1;
       Object.entries(u.brands || {}).forEach(([b, v]) => {
-        if (!brands[b]) brands[b] = {qty: 0, sum: 0};
+        if (!brands[b]) brands[b] = {qty: 0};
         brands[b].qty += v.qty;
-        brands[b].sum += v.sum;
       });
       Object.entries(u.stores || {}).forEach(([s, c]) => {
         stores[s] = (stores[s] || 0) + c;
       });
       Object.entries(u.cats || {}).forEach(([c, v]) => {
-        if (!cats[c]) cats[c] = {sum: 0, n: 0};
-        cats[c].sum += v.sum;
-        cats[c].n += v.n;
+        if (!cats[c]) cats[c] = {qty: 0};
+        cats[c].qty += v.qty;
       });
     });
 
-    const avgSpend = nUsers ? (spend / nUsers) : 0;
-    const avgShare = nUsers ? (visibleIds.reduce((a, id) => a + (USER_DATA[id]?.share || 0), 0) / nUsers) : 0;
+    const avgQty = nUsers ? (qty / nUsers) : 0;
+    const avgShare = nUsers ? (shareSum / nUsers) : 0;
 
     document.getElementById('lk-users').textContent = nUsers;
     document.getElementById('lk-receipts').textContent = nRec;
-    document.getElementById('lk-qty').textContent = qty;
-    document.getElementById('lk-spend').textContent = Math.round(spend).toLocaleString('uk-UA');
-    document.getElementById('lk-avg-spend').textContent = Math.round(avgSpend).toLocaleString('uk-UA');
+    document.getElementById('lk-qty').textContent = qty + ' шт.';
+    document.getElementById('lk-avg-qty').textContent = avgQty.toFixed(1);
     document.getElementById('lk-share').textContent = avgShare.toFixed(0) + '%';
+    document.getElementById('lk-solo').textContent = soloEst;
 
-    const brandRows = topN(brands, 6, 'sum').map(([b, v]) =>
-      [b, v.qty + ' од. · ' + Math.round(v.sum) + ' ₴']
-    );
+    const brandRows = topN(brands, 6, 'qty').map(([b, v]) => [b, v.qty + ' шт.']);
     const storeRows = topN(stores, 6).map(([s, c]) => [s, c + ' чек.']);
-    const catRows = topN(cats, 6, 'sum').map(([c, v]) =>
-      [c, Math.round(v.sum) + ' ₴']
-    );
+    const catRows = topN(cats, 6, 'qty').map(([c, v]) => [c, v.qty + ' шт.']);
     const demoRows = [];
     topN(genders, 3).forEach(([k, v]) => { if (k !== '—') demoRows.push([k, v + ' ос.']); });
     topN(ages, 4).forEach(([k, v]) => { if (k !== '—') demoRows.push(['вік ' + k, v + ' ос.']); });
@@ -2090,17 +2070,11 @@ const USER_DATA = {"29176": {"gender": "Жінка", "age": "55+", "region": "Ч
     renderList(document.getElementById('live-cats'), catRows, 'немає супутніх товарів');
     renderList(document.getElementById('live-demo'), demoRows, 'немає даних');
 
-    // Insight text
-    let insight = '<strong>Вибірка:</strong> ' + nUsers + ' покупців, ' + nRec + ' чеків, ' + qty + ' од. води на ' + Math.round(spend) + ' ₴.';
-    if (brandRows.length) {
-      insight += ' Лідер бренду — <strong>' + brandRows[0][0] + '</strong>.';
-    }
-    if (catRows.length) {
-      insight += ' Найчастіший супутник — <strong>' + catRows[0][0] + '</strong>.';
-    }
-    if (storeRows.length) {
-      insight += ' Топ-магазин — <strong>' + storeRows[0][0] + '</strong>.';
-    }
+    let insight = '<strong>Вибірка:</strong> ' + nUsers + ' покупців, ' + nRec + ' чеків, <strong>' + qty + ' шт.</strong> води.';
+    insight += ' Середня частка вартості води в кошику — <strong>' + avgShare.toFixed(0) + '%</strong>.';
+    if (brandRows.length) insight += ' Лідер за кількістю — <strong>' + brandRows[0][0] + '</strong> (' + brandRows[0][1] + ').';
+    if (catRows.length) insight += ' Найчастіший супутник — <strong>' + catRows[0][0] + '</strong>.';
+    if (storeRows.length) insight += ' Топ-магазин — <strong>' + storeRows[0][0] + '</strong>.';
     document.getElementById('live-insight').innerHTML = insight;
   }
 
@@ -2108,8 +2082,7 @@ const USER_DATA = {"29176": {"gender": "Жінка", "age": "55+", "region": "Ч
     let shown = 0;
     const visibleIds = [];
     tocRows.forEach(row => {
-      const m = matchEl(row);
-      row.classList.toggle('hidden', !m);
+      row.classList.toggle('hidden', !matchEl(row));
     });
     userCards.forEach(card => {
       const m = matchEl(card);
@@ -2126,16 +2099,15 @@ const USER_DATA = {"29176": {"gender": "Жінка", "age": "55+", "region": "Ч
 
   catFilters.forEach(f => selects[f].addEventListener('change', applyFilters));
   fReceipts.addEventListener('change', applyFilters);
-  [fQtyMin, fQtyMax, fSpendMin, fSpendMax].forEach(el => el.addEventListener('input', applyFilters));
+  [fQtyMin, fQtyMax, fShareMin, fShareMax].forEach(el => el.addEventListener('input', applyFilters));
   document.getElementById('btn-reset').addEventListener('click', () => {
     catFilters.forEach(f => { selects[f].value = ''; });
     fReceipts.value = '';
     fQtyMin.value = ''; fQtyMax.value = '';
-    fSpendMin.value = ''; fSpendMax.value = '';
+    fShareMin.value = ''; fShareMax.value = '';
     applyFilters();
   });
 
-  // Initial
   applyFilters();
 })();
 </script>
