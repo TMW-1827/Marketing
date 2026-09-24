@@ -1936,7 +1936,7 @@ footer { text-align: center; color: var(--muted); font-size: .75rem; margin-top:
 <div class="live-grid">
   <div class="live-card"><h3>Бренди води (шт.)</h3><div id="live-brands" class="live-list"></div></div>
   <div class="live-card"><h3>Магазини (чеків)</h3><div id="live-stores" class="live-list"></div></div>
-  <div class="live-card"><h3>Супутні категорії (шт.)</h3><div id="live-cats" class="live-list"></div></div>
+  <div class="live-card"><h3>Супутні категорії</h3><div id="live-cats" class="live-list"></div></div>
   <div class="live-card"><h3>Демографія вибірки</h3><div id="live-demo" class="live-list"></div></div>
 </div>
 <div class="insight" id="live-insight" style="margin-top:14px"></div>
@@ -2039,8 +2039,9 @@ const USER_DATA = {"29176": {"gender": "Жінка", "age": "55+", "region": "Ч
         stores[s] = (stores[s] || 0) + c;
       });
       Object.entries(u.cats || {}).forEach(([c, v]) => {
-        if (!cats[c]) cats[c] = {qty: 0};
+        if (!cats[c]) cats[c] = {qty: 0, n: 0};
         cats[c].qty += v.qty;
+        cats[c].n += (v.n || 0);
       });
     });
 
@@ -2056,7 +2057,7 @@ const USER_DATA = {"29176": {"gender": "Жінка", "age": "55+", "region": "Ч
 
     const brandRows = topN(brands, 6, 'qty').map(([b, v]) => [b, v.qty + ' шт.']);
     const storeRows = topN(stores, 6).map(([s, c]) => [s, c + ' чек.']);
-    const catRows = topN(cats, 6, 'qty').map(([c, v]) => [c, v.qty + ' шт.']);
+    const catRows = topN(cats, 6, 'qty').map(([c, v]) => [c, v.qty + ' шт. · ' + v.n + ' чек.']);
     const demoRows = [];
     topN(genders, 3).forEach(([k, v]) => { if (k !== '—') demoRows.push([k, v + ' ос.']); });
     topN(ages, 4).forEach(([k, v]) => { if (k !== '—') demoRows.push(['вік ' + k, v + ' ос.']); });
