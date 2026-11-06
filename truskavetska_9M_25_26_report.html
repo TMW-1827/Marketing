@@ -808,35 +808,28 @@ Chart.defaults.plugins.tooltip.cornerRadius = 8;
 Chart.defaults.plugins.tooltip.titleFont = {weight:'600',size:13};
 Chart.defaults.plugins.tooltip.bodyFont = {weight:'400',size:12};
 Chart.defaults.plugins.tooltip.boxPadding = 6;
-// Підказка з'являється при наведенні на всю колонку/рядок — щоб читалися й дуже малі стовпчики
+// Точкове наведення: підказка з'являється при наведенні на елемент і показує всі дані цієї колонки/рядка
 Chart.defaults.interaction.mode = 'index';
-Chart.defaults.interaction.intersect = false;
+Chart.defaults.interaction.intersect = true;
 
 const COLORS = {
   trusk: '#0b5fcc',
-  truskNoPL: '#0097a7',
-  truskPL: '#8fb4ea',
+  truskNoPL: '#0a9e7a',
   category: '#8fa8c4',
-  morsh: '#c2185b',
-  karp: '#e6a100',
-  myrh: '#7b3fc4',
+  morsh: '#c0184a',
+  karp: '#c07a00',
+  myrh: '#6b38b8',
   buvet: '#8d5a2b',
-  devay: '#6aa313',
-  pos: '#2e9d4a',
-  neg: '#c62828',
+  devay: '#0a7a3a',
+  pos: '#0a8a52',
+  neg: '#c0231a',
   neutral: '#8fa8c4',
-  promo: '#e65100',
+  promo: '#c07a00',
   bg: '#ffffff',
   bgDeep: '#f0f4f8',
   violet: '#6b38b8',
 };
 
-// Єдині кольори брендів на всіх графіках
-const BRAND_COLOR = {
-  'Трускавецька': COLORS.trusk, 'Трускавецька з PL': COLORS.trusk, 'Власний бренд': COLORS.truskNoPL, 'Трускавецька без PL': COLORS.truskNoPL,
-  'Моршинська': COLORS.morsh, 'Карпатська Джерельна': COLORS.karp, 'Карпатська Дж.': COLORS.karp,
-  'Миргородська': COLORS.myrh, 'Buvette': COLORS.buvet, 'Девайтіс': COLORS.devay,
-};
 const hexA = (hex,a) => { const n=parseInt(hex.slice(1),16); return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`; };
 // Легенда для графіків, де стовпчики 2026 мають кольори брендів/типів
 const yearLegend = chart => chart.data.datasets.map((ds,i)=>({
@@ -916,8 +909,8 @@ function initOverview(){
     data:{
       labels:['9 міс. 2025','9 міс. 2026'],
       datasets:[
-        {label:'Трускавецька · 9 міс. 2025', data:[SH25, null], backgroundColor:'rgba(140,165,195,0.55)', borderRadius:6, barThickness:40, stack:'s'},
-        {label:'Трускавецька · 9 міс. 2026', data:[null, SH26], backgroundColor:COLORS.trusk, borderRadius:6, barThickness:40, stack:'s'},
+        {label:'Трускавецька · 9 міс. 2025', data:[SH25, null], backgroundColor:COLORS.trusk, borderRadius:6, barThickness:40, stack:'s'},
+        {label:'Трускавецька · 9 міс. 2026', data:[null, SH26], backgroundColor:COLORS.truskNoPL, borderRadius:6, barThickness:40, stack:'s'},
         {label:'Решта ринку · 9 міс. 2025', data:[100-SH25, null], backgroundColor:'rgba(140,165,195,0.35)', borderRadius:6, barThickness:40, stack:'s'},
         {label:'Решта ринку · 9 міс. 2026', data:[null, 100-SH26], backgroundColor:'rgba(140,165,195,0.55)', borderRadius:6, barThickness:40, stack:'s'},
       ]
@@ -948,7 +941,7 @@ function initOverview(){
       labels:['9 міс. 2025\nТрускавецька','+ Власний бренд','+ Приватні марки\n(Своя Лінія + Сірко)','9 міс. 2026\nТрускавецька'],
       datasets:[{
         data:[data.summary.p2025.truskavetska_with_pl, noPLGrowth, plGrowth, data.summary.p2026.truskavetska_with_pl],
-        backgroundColor:[COLORS.trusk, COLORS.truskNoPL, COLORS.truskPL, COLORS.trusk],
+        backgroundColor:[COLORS.trusk, COLORS.truskNoPL, COLORS.karp, COLORS.trusk],
         borderRadius: 6,
       }]
     },
@@ -973,7 +966,7 @@ function initCompetitors(){
   const SHORT = {'Карпатська Джерельна':'Карпатська Дж.','Трускавецька з PL':'Трускавецька'};
   const competitors = ORDER.map(l => {
     const c = data.competitors.find(x => x.label === l);
-    return c ? {label: SHORT[l] || l, d25: c.d25, d26: c.d26, highlight: !!c.highlight, color: BRAND_COLOR[l]} : null;
+    return c ? {label: SHORT[l] || l, d25: c.d25, d26: c.d26, highlight: !!c.highlight} : null;
   }).filter(Boolean).sort((a,b) => b.d26 - a.d26);
 
   function makeBrandsChart(scale){
@@ -984,7 +977,7 @@ function initCompetitors(){
         labels:competitors.map(c=>c.label),
         datasets:[
           {label:'9 міс. 2025', data:competitors.map(c=>c.d25), backgroundColor:'rgba(140,165,195,0.55)', borderRadius:4},
-          {label:'9 міс. 2026', data:competitors.map(c=>c.d26), backgroundColor:competitors.map(c=>c.color), borderRadius:4},
+          {label:'9 міс. 2026', data:competitors.map(c=>c.d26), backgroundColor:competitors.map(c=>c.highlight?COLORS.trusk:COLORS.karp), borderRadius:4},
         ]
       },
       options:{
@@ -994,7 +987,7 @@ function initCompetitors(){
           x:{grid:{display:false},ticks:{font:{size:11}, maxRotation:30, minRotation:30}}
         },
         plugins:{
-          legend:{position:'bottom', labels:{generateLabels: yearLegend}},
+          legend:{position:'bottom'},
           tooltip:{callbacks:{label:c=>c.dataset.label+': '+fmt(c.parsed.y)+' пляшок'}}
         }
       }
@@ -1122,7 +1115,7 @@ function initCompetitors(){
       labels:shareData.map(c=>c.label),
       datasets:[
         {label:'Частка 9 міс. 2025', data:shareData.map(c=>c.sh25), backgroundColor:'rgba(140,165,195,0.55)', borderRadius:4},
-        {label:'Частка 9 міс. 2026', data:shareData.map(c=>c.sh26), backgroundColor:shareData.map(c=>c.color), borderRadius:4},
+        {label:'Частка 9 міс. 2026', data:shareData.map(c=>c.sh26), backgroundColor:shareData.map(c=>c.highlight?COLORS.trusk:COLORS.karp), borderRadius:4},
       ]
     },
     options:{
@@ -1133,7 +1126,7 @@ function initCompetitors(){
         x:{grid:{display:false},ticks:{font:{size:11}, maxRotation:30, minRotation:30}}
       },
       plugins:{
-        legend:{position:'bottom', labels:{generateLabels: yearLegend}},
+        legend:{position:'bottom'},
         tooltip:{callbacks:{
           label:c=>c.dataset.label+': '+c.parsed.y.toFixed(2).replace('.',',').replace('-','−')+'%',
           afterBody:(items)=>{
@@ -1154,12 +1147,13 @@ function initCompetitors(){
       labels:data.monthly.months,
       datasets:[
         ...[
-          ['Моршинська','morshynska',[]],['Трускавецька','truskavetska_with_pl',[]],['Миргородська','myrhorodska',[]],
-          ['Карпатська Дж.','karpatska',[]],['Buvette','buvette',[4,4]],['Девайтіс','devaytis',[2,4]]
-        ].map(([lbl,key,dash]) => ({label:lbl, data:data.monthly[key], borderColor:BRAND_COLOR[lbl], backgroundColor:hexA(BRAND_COLOR[lbl],0.05),
-             tension:0.35, borderWidth:lbl==='Трускавецька'?3:2, pointRadius:lbl==='Трускавецька'?4:3, borderDash:dash,
-             _sum: data.monthly[key].slice(9).reduce((x,y)=>x+y,0)}))
-          .sort((a,b)=>b._sum-a._sum),
+          {label:'Моршинська', data:data.monthly.morshynska, borderColor:COLORS.morsh, backgroundColor:'rgba(236,103,136,0.05)', tension:0.35, borderWidth:2, pointRadius:3},
+          {label:'Карпатська Дж.', data:data.monthly.karpatska, borderColor:COLORS.karp, backgroundColor:'rgba(244,197,96,0.05)', tension:0.35, borderWidth:2, pointRadius:3},
+          {label:'Миргородська', data:data.monthly.myrhorodska, borderColor:COLORS.myrh, backgroundColor:'rgba(167,132,224,0.05)', tension:0.35, borderWidth:2, pointRadius:3},
+          {label:'Трускавецька', data:data.monthly.truskavetska_with_pl, borderColor:COLORS.trusk, backgroundColor:"rgba(11,95,204,0.06)", tension:0.35, borderWidth:3, pointRadius:4},
+          {label:'Buvette', data:data.monthly.buvette, borderColor:COLORS.buvet, backgroundColor:'rgba(141,90,43,0.05)', tension:0.35, borderWidth:2, pointRadius:3, borderDash:[4,4]},
+          {label:'Девайтіс', data:data.monthly.devaytis, borderColor:COLORS.devay, backgroundColor:'rgba(93,211,148,0.05)', tension:0.35, borderWidth:2, pointRadius:3, borderDash:[2,4]},
+        ].map(d => ({...d, _sum: d.data.slice(9).reduce((x,y)=>x+y,0)})).sort((a,b)=>b._sum-a._sum),
       ]
     },
     options:{
@@ -2083,7 +2077,7 @@ function initPromo(){
     data:{
       labels:['Січень','Лютий','Березень','Квітень','Травень','Червень','Липень','Серпень','Вересень'],
       datasets:[
-        {label:'9 міс. 2025', data:data.promo.monthly_avg_2025, borderColor:COLORS.neutral, backgroundColor:'rgba(143,168,196,0.10)', tension:0.35, borderWidth:2, pointRadius:4, fill:true},
+        {label:'9 міс. 2025', data:data.promo.monthly_avg_2025, borderColor:COLORS.violet||'#6b38b8', backgroundColor:'rgba(107,56,184,0.08)', tension:0.35, borderWidth:2, pointRadius:4, fill:true},
         {label:'9 міс. 2026', data:data.promo.monthly_avg_2026, borderColor:COLORS.trusk, backgroundColor:"rgba(11,95,204,0.06)", tension:0.35, borderWidth:3, pointRadius:5, fill:true},
       ]
     },
@@ -2230,6 +2224,9 @@ function initConclusions(){
     is: !!c.highlight
   })).sort((a,b) => b.size - a.size);
 
+  // Кожен бренд — своїм кольором (як у розділі «Конкуренти»), щоб бульбашки не плутались
+  const MATRIX_COLOR = {'Трускавецька':COLORS.trusk,'Власний бренд':COLORS.truskNoPL,'Моршинська':COLORS.morsh,'Миргородська':COLORS.myrh,
+    'Карпатська Дж.':COLORS.karp,'Buvette':COLORS.buvet,'Девайтіс':COLORS.devay};
   new Chart(document.getElementById('chartMatrix'), {
     type:'bubble',
     data:{
@@ -2240,8 +2237,8 @@ function initConclusions(){
           y:c.growth,
           r:Math.max(8, Math.sqrt(c.size)/200)
         }],
-        backgroundColor:hexA(BRAND_COLOR[c.label]||COLORS.neutral, 0.55),
-        borderColor:BRAND_COLOR[c.label]||COLORS.neutral,
+        backgroundColor:hexA(MATRIX_COLOR[c.label]||COLORS.neutral, 0.5),
+        borderColor:MATRIX_COLOR[c.label]||COLORS.neutral,
         borderWidth:2
       }))
     },
