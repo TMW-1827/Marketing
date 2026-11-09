@@ -1776,8 +1776,45 @@ function initSku(){
     .filter(v => v.q25 > 500 || v.q26 > 500)
     .sort((a,b) => b.q26 - a.q26);
 
+  // Підказка при наведенні на назву формату під віссю або на бейдж із % — така ж, як при наведенні на стовпчик
+  const labelHoverPlugin = {
+    id:'labelHover',
+    beforeEvent(chart, args){
+      const e = args.event;
+      if(e.type !== 'mousemove') return;
+      const x = chart.scales.x, area = chart.chartArea;
+      let idx = null;
+      (chart.$badges || []).forEach(b => {
+        if(e.x >= b.x && e.x <= b.x + b.w && e.y >= b.y && e.y <= b.y + b.h) idx = b.i;
+      });
+      if(idx === null && e.y > area.bottom && e.y <= x.bottom + 4 && e.x >= x.left - 30 && e.x <= x.right){
+        const n = chart.data.labels.length, band = (x.right - x.left) / n;
+        // якщо підписи повернуті, текст іде вниз-ліворуч від центру колонки — зсуваємо зону на кут повороту
+        const rot = (x.labelRotation || 0) * Math.PI / 180;
+        const shift = rot > 0.05 ? (e.y - x.top) / Math.tan(rot) : 0;
+        const i = Math.floor((e.x + shift - x.left) / band);
+        if(i >= 0 && i < n) idx = i;
+      }
+      if(idx === null){
+        if(chart.$labelHover != null){ chart.$labelHover = null; chart.canvas.style.cursor = ''; }
+        return;
+      }
+      if(chart.$labelHover !== idx){
+        const els = chart.data.datasets.map((d, di) => ({datasetIndex: di, index: idx}))
+          .filter(el => chart.isDatasetVisible(el.datasetIndex) && chart.data.datasets[el.datasetIndex].data[idx] != null);
+        chart.setActiveElements(els);
+        chart.tooltip.setActiveElements(els, {x: e.x, y: e.y});
+        chart.$labelHover = idx;
+        chart.canvas.style.cursor = 'pointer';
+        chart.render();
+      }
+      return false; // подію оброблено — не скидати підказку
+    }
+  };
+
   new Chart(document.getElementById('chartSku'), {
     type:'bar',
+    plugins:[labelHoverPlugin],
     data:{
       labels:ranked.map(s=>s.name),
       datasets:[
@@ -1848,7 +1885,7 @@ function initSku(){
         const boxX = Math.max(chart.chartArea.left, Math.min(cx - boxW/2, chart.chartArea.right - boxW));
         let boxY = topY - boxH;
         while(placed.some(p => boxX < p.x+p.w+3 && boxX+boxW > p.x-3 && boxY < p.y+p.h+3 && boxY+boxH > p.y-3)) boxY -= boxH + 4;
-        placed.push({x:boxX, y:boxY, w:boxW, h:boxH});
+        placed.push({x:boxX, y:boxY, w:boxW, h:boxH, i});
 
         ctx.fillStyle = isPositive ? 'rgba(10,138,82,0.12)' : 'rgba(192,35,26,0.10)';
         ctx.strokeStyle = color;
@@ -1874,12 +1911,13 @@ function initSku(){
         ctx.fillText(text, boxX + boxW/2, boxY + boxH/2);
         ctx.restore();
       });
+      chart.$badges = placed; // для підказки при наведенні на бейдж
     }
   };
 
   new Chart(document.getElementById('chartSkuVolume'), {
     type:'bar',
-    plugins:[skuVolumePlugin],
+    plugins:[skuVolumePlugin, labelHoverPlugin],
     data:{
       labels:volQ1.map(v=>v.label),
       datasets:[
