@@ -413,7 +413,7 @@ td.center,th.center{text-align:center}
 
 <div class="chart-card">
 <h3>Динаміка по місяцях: Категорія vs Трускавецька</h3>
-<div class="desc">Помісячний обсяг категорії у пляшках за січень — вересень обох років. Стовпець розділено на Бренд, АТБ та решту категорії; у підказці — частки та Трускавецька разом.</div>
+<div class="desc">Помісячний обсяг категорії у пляшках за січень — вересень обох років. Стовпець розділено на Трускавецьку та решту категорії; у підказці — частки, в т.ч. Бренд і АТБ.</div>
 <div class="chart-wrap" style="height:400px"><canvas id="chartMonthly" role="img" aria-label="Помісячна динаміка категорії та Трускавецької">Графік помісячної динаміки</canvas></div>
 </div>
 
@@ -915,7 +915,7 @@ function initOverview(){
   const yearGroups = {
     id:'yearGroups',
     afterDraw(chart){
-      const {ctx} = chart, meta=chart.getDatasetMeta(2), xs=chart.scales.x;
+      const {ctx} = chart, meta=chart.getDatasetMeta(1), xs=chart.scales.x;
       const y0 = xs.bottom + 8, narrow = chart.width<600;
       ctx.save();
       G.forEach((g,gi)=>{
@@ -945,8 +945,7 @@ function initOverview(){
     data:{
       labels: months,
       datasets:[
-        {label:'Бренд', data:mOwn, backgroundColor:COLORS.truskNoPL, stack:'m'},
-        {label:'АТБ', short:'АТБ', data:mPL, backgroundColor:COLORS.trusk, stack:'m'},
+        {label:'Трускавецька', data:M.truskavetska_with_pl, backgroundColor:COLORS.trusk, stack:'m'},
         {label:'Решта категорії', data:mRest, backgroundColor:'rgba(140,165,195,0.45)', stack:'m'},
       ]
     },
@@ -959,12 +958,15 @@ function initOverview(){
       },
       plugins:{
         tooltip:{
-          itemSort:(a,b)=>b.parsed.y-a.parsed.y,
+          itemSort:(a,b)=>a.datasetIndex-b.datasetIndex,
           callbacks:{
-            label:c=>{ const n=c.chart.width<500; return (n&&c.dataset.short||c.dataset.label)+': '+fmt(c.parsed.y)+(n?'':' пляшок')+' ('+(c.parsed.y/M.category[c.dataIndex]*100).toFixed(1).replace('.',',')+'%)'; },
-            footer:items=>{ const i=items[0].dataIndex, t=M.truskavetska_with_pl[i], u=items[0].chart.width<500?'':' пляшок';
-              return ['Трускавецька разом: '+fmt(t)+u+' ('+(t/M.category[i]*100).toFixed(1).replace('.',',')+'%)',
-                      'Категорія: '+fmt(M.category[i])+u]; }
+            label:c=>{ const n=c.chart.width<500, i=c.dataIndex, u=n?'':' пляшок';
+              const p=v=>' ('+(v/M.category[i]*100).toFixed(1).replace('.',',')+'%)';
+              const main=c.dataset.label+': '+fmt(c.parsed.y)+u+p(c.parsed.y);
+              if(c.datasetIndex!==0) return main;
+              return [main, '   в т.ч. Бренд: '+fmt(mOwn[i])+u+p(mOwn[i]), '   в т.ч. АТБ: '+fmt(mPL[i])+u+p(mPL[i])]; },
+            footer:items=>{ const i=items[0].dataIndex, u=items[0].chart.width<500?'':' пляшок';
+              return 'Категорія: '+fmt(M.category[i])+u; }
           }
         },
         legend:{position:'top', labels:{boxWidth:10, padding:12, font:{size:11}}}
