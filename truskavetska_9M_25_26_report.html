@@ -956,7 +956,24 @@ function initOverview(){
       },
       plugins:{
         legend:{position:'bottom', labels:{boxWidth:10, padding:12, font:{size:11}}},
-        tooltip:{callbacks:{label:c=>c.dataset.label+': '+(c.parsed.x||0).toFixed(2).replace('.',',').replace('-','−')+'%'}}
+        tooltip:{
+          filter:c=>c.raw!=null,
+          callbacks:{
+            title:items=>items[0].label,
+            label:c=>{
+              const y = c.dataIndex===0 ? data.summary.p2025 : data.summary.p2026;
+              const own = c.datasetIndex<2;
+              const vol = own ? y.truskavetska_with_pl : y.category - y.truskavetska_with_pl;
+              return (own?'Трускавецька':'Решта ринку')+': '+c.parsed.x.toFixed(2).replace('.',',')+'% · '+fmt(vol)+' пляшок';
+            },
+            afterBody:items=>{
+              const i=items[0].dataIndex, y = i===0 ? data.summary.p2025 : data.summary.p2026;
+              const out=['Ринок: '+fmt(y.category)+' пляшок'];
+              if(i===1){ const d=SH26-SH25; out.push('Зміна частки: '+(d>=0?'+':'−')+Math.abs(d).toFixed(2).replace('.',',')+' в.п.'); }
+              return out;
+            }
+          }
+        }
       },
       layout:{padding:{top:8, bottom:4}}
     }
