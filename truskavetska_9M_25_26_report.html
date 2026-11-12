@@ -1312,9 +1312,10 @@ function initPrices(){
         legend:{position:'bottom', labels:{generateLabels:yearLegend}},
         tooltip:{callbacks:{
           title:items=>{ const k=b15[items[0].dataIndex].key; return META[k].full || items[0].label; },
-          label:c=>c.dataset.label+': '+uah(c.parsed.y),
+          label:c=>{ const b=b15[c.dataIndex], v=c.datasetIndex?b.v26:b.v25;
+            return c.dataset.label+': '+uah(c.parsed.y)+' · '+fmt(v)+(c.chart.width<500?'':' пляшок'); },
           afterBody:items=>{ const b=b15[items[0].dataIndex];
-            return ['Зміна ціни: '+pct(b.p25,b.p26), 'Обсяг 1,5 л за 9 міс. 2026: '+fmt(b.v26)+' пляшок']; }
+            return ['Зміна ціни: '+pct(b.p25,b.p26), 'Зміна продажів 1,5 л: '+pct(b.v25,b.v26)]; }
         }}
       }
     }
