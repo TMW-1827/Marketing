@@ -414,8 +414,8 @@ td.center,th.center{text-align:center}
 <div class="two-thirds-one-third">
 <div class="chart-card">
 <h3>Динаміка по місяцях: Категорія vs Трускавецька</h3>
-<div class="desc">Помісячний обсяг продажів у пляшках за січень — вересень обох років.</div>
-<div class="chart-wrap" style="height:300px"><canvas id="chartMonthly" role="img" aria-label="Помісячна динаміка категорії та Трускавецької">Графік помісячної динаміки</canvas></div>
+<div class="desc">Помісячний обсяг категорії у пляшках за січень — вересень обох років. Стовпець розділено на власний бренд Трускавецької, приватні марки на воді Трускавецька та решту категорії; у підказці — частки та Трускавецька разом.</div>
+<div class="chart-wrap" style="height:340px"><canvas id="chartMonthly" role="img" aria-label="Помісячна динаміка категорії та Трускавецької">Графік помісячної динаміки</canvas></div>
 </div>
 <div class="chart-card">
 <h3>Зростання частки ринку</h3>
@@ -908,27 +908,38 @@ function initChartsForSection(id){
 function initOverview(){
   const months = data.monthly.months;
 
+  const M = data.monthly;
+  const mOwn = M.truskavetska_no_pl;
+  const mPL = M.truskavetska_with_pl.map((v,i)=>v-mOwn[i]);
+  const mRest = M.category.map((v,i)=>v-M.truskavetska_with_pl[i]);
   new Chart(document.getElementById('chartMonthly'), {
     type:'bar',
     data:{
       labels: months,
       datasets:[
-        {label:'Категорія (всього)', data: data.monthly.category, backgroundColor:'rgba(100,115,148,0.3)', borderColor:COLORS.category, borderWidth:1, yAxisID:'y'},
-        {label:'Трускавецька', data: data.monthly.truskavetska_with_pl, backgroundColor:COLORS.trusk, borderColor:COLORS.trusk, borderWidth:1, yAxisID:'y2'},
-        {label:'Власний бренд', data: data.monthly.truskavetska_no_pl, backgroundColor:COLORS.truskNoPL, borderColor:COLORS.truskNoPL, borderWidth:1, yAxisID:'y2'},
+        {label:'Власний бренд', data:mOwn, backgroundColor:COLORS.truskNoPL, stack:'m'},
+        {label:'Приватні марки (Своя Лінія + Сірко)', short:'Приватні марки', data:mPL, backgroundColor:COLORS.karp, stack:'m'},
+        {label:'Решта категорії', data:mRest, backgroundColor:'rgba(140,165,195,0.45)', stack:'m'},
       ]
     },
     options:{
       responsive:true, maintainAspectRatio:false,
-      interaction:{mode:'index'},
+      interaction:{mode:'index', intersect:true},
       scales:{
-        y:{position:'left',grid:{color:'rgba(30,80,140,0.08)'},ticks:{callback:v=>fmtM(v)}},
-        y2:{position:'right',grid:{display:false},ticks:{callback:v=>fmtM(v),color:COLORS.truskNoPL}},
-        x:{grid:{display:false},ticks:{font:{size:10},maxRotation:45,minRotation:45}}
+        y:{stacked:true, grid:{color:'rgba(30,80,140,0.08)'}, ticks:{callback:v=>v===0?'0':fmtAxis(v)}},
+        x:{stacked:true, grid:{display:false}, ticks:{font:{size:10}, maxRotation:45, minRotation:45}}
       },
       plugins:{
-        tooltip:{callbacks:{label:c=>c.dataset.label+': '+fmt(c.parsed.y)+' пляшок'}},
-        legend:{position:'bottom'}
+        tooltip:{
+          itemSort:(a,b)=>b.parsed.y-a.parsed.y,
+          callbacks:{
+            label:c=>{ const n=c.chart.width<500; return (n&&c.dataset.short||c.dataset.label)+': '+fmt(c.parsed.y)+(n?'':' пляшок')+' ('+(c.parsed.y/M.category[c.dataIndex]*100).toFixed(1).replace('.',',')+'%)'; },
+            footer:items=>{ const i=items[0].dataIndex, t=M.truskavetska_with_pl[i], u=items[0].chart.width<500?'':' пляшок';
+              return ['Трускавецька разом: '+fmt(t)+u+' ('+(t/M.category[i]*100).toFixed(1).replace('.',',')+'%)',
+                      'Категорія: '+fmt(M.category[i])+u]; }
+          }
+        },
+        legend:{position:'bottom', labels:{boxWidth:10, padding:12, font:{size:11}}}
       }
     }
   });
