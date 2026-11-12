@@ -1238,7 +1238,7 @@ function initCompetitors(){
       },
       plugins:{
         legend:{position:'bottom'},
-        tooltip:{itemSort:(a,b)=>b.parsed.y-a.parsed.y, callbacks:{label:c=>c.dataset.label+': '+fmt(c.parsed.y)+' пляшок'}}
+        tooltip:{itemSort:(a,b)=>b.parsed.y-a.parsed.y, callbacks:{label:c=>c.dataset.label+': '+fmt(c.parsed.y)+(c.chart.width<500?'':' пляшок')+' · '+(c.parsed.y/data.monthly.category[c.dataIndex]*100).toFixed(1).replace('.',',')+'%', footer:items=>'Категорія: '+fmt(data.monthly.category[items[0].dataIndex])+' пляшок'}}
       }
     }
   });
