@@ -415,7 +415,7 @@ td.center,th.center{text-align:center}
 <div class="chart-card">
 <h3>Динаміка по місяцях: Категорія vs Трускавецька</h3>
 <div class="desc">Помісячний обсяг категорії у пляшках за січень — вересень обох років. Стовпець розділено на власний бренд Трускавецької, приватні марки на воді Трускавецька та решту категорії; у підказці — частки та Трускавецька разом.</div>
-<div class="chart-wrap" style="height:340px"><canvas id="chartMonthly" role="img" aria-label="Помісячна динаміка категорії та Трускавецької">Графік помісячної динаміки</canvas></div>
+<div class="chart-wrap" style="height:400px"><canvas id="chartMonthly" role="img" aria-label="Помісячна динаміка категорії та Трускавецької">Графік помісячної динаміки</canvas></div>
 </div>
 <div class="chart-card">
 <h3>Зростання частки ринку</h3>
@@ -912,8 +912,41 @@ function initOverview(){
   const mOwn = M.truskavetska_no_pl;
   const mPL = M.truskavetska_with_pl.map((v,i)=>v-mOwn[i]);
   const mRest = M.category.map((v,i)=>v-M.truskavetska_with_pl[i]);
+  // Групування місяців за роками з підсумками 9 міс. під віссю
+  const sum = a => a.reduce((x,y)=>x+y,0);
+  const mlnS = v => (v/1e6).toFixed(1).replace('.',',')+'\u00a0млн';
+  const G = [0,1].map(g=>{ const idx=months.map((m,i)=>i).filter(i=>months[i].endsWith(g?'2026':'2025'));
+    return {idx, year:g?'2026':'2025', cat:sum(idx.map(i=>M.category[i])), tr:sum(idx.map(i=>M.truskavetska_with_pl[i]))}; });
+  const yearGroups = {
+    id:'yearGroups',
+    afterDraw(chart){
+      const {ctx} = chart, meta=chart.getDatasetMeta(2), xs=chart.scales.x;
+      const y0 = xs.bottom + 8, narrow = chart.width<600;
+      ctx.save();
+      G.forEach((g,gi)=>{
+        const a=meta.data[g.idx[0]], b=meta.data[g.idx[g.idx.length-1]];
+        const x1=a.x-a.width/2, x2=b.x+b.width/2, cx=(x1+x2)/2;
+        ctx.strokeStyle='#8aa0bd'; ctx.lineWidth=1;
+        ctx.beginPath(); ctx.moveTo(x1,y0); ctx.lineTo(x1,y0+5); ctx.lineTo(x2,y0+5); ctx.lineTo(x2,y0); ctx.stroke();
+        ctx.textAlign='center'; ctx.textBaseline='top';
+        ctx.fillStyle='#0f2440'; ctx.font='700 '+(narrow?11:12)+'px Manrope';
+        let head='9 міс. '+g.year;
+        if(gi===1) head+=' ('+fmtPct((g.cat/G[0].cat-1)*100)+' категорія, '+fmtPct((g.tr/G[0].tr-1)*100)+' Трускавецька)';
+        if(narrow && gi===1) head='9 міс. '+g.year;
+        ctx.fillText(head, cx, y0+11);
+        ctx.font='500 '+(narrow?10:12)+'px Manrope'; ctx.fillStyle='#3a5372';
+        if(narrow){
+          ctx.fillText('Категорія '+mlnS(g.cat), cx, y0+27);
+          ctx.fillText('Трускавецька '+mlnS(g.tr), cx, y0+41);
+        } else {
+          ctx.fillText('Категорія: '+mlnS(g.cat)+'  ·  Трускавецька: '+mlnS(g.tr)+' ('+(g.tr/g.cat*100).toFixed(1).replace('.',',')+'%)', cx, y0+29);
+        }
+      });
+      ctx.restore();
+    }
+  };
   new Chart(document.getElementById('chartMonthly'), {
-    type:'bar',
+    type:'bar', plugins:[yearGroups],
     data:{
       labels: months,
       datasets:[
@@ -923,11 +956,11 @@ function initOverview(){
       ]
     },
     options:{
-      responsive:true, maintainAspectRatio:false,
+      responsive:true, maintainAspectRatio:false, layout:{padding:{bottom:62}},
       interaction:{mode:'index', intersect:true},
       scales:{
         y:{stacked:true, grid:{color:'rgba(30,80,140,0.08)'}, ticks:{callback:v=>v===0?'0':fmtAxis(v)}},
-        x:{stacked:true, grid:{display:false}, ticks:{font:{size:10}, maxRotation:45, minRotation:45}}
+        x:{stacked:true, grid:{display:false}, ticks:{font:{size:10}, maxRotation:45, minRotation:0, autoSkip:false, callback:function(v){ return this.getLabelForValue(v).split(' ')[0]; }}}
       },
       plugins:{
         tooltip:{
@@ -939,7 +972,7 @@ function initOverview(){
                       'Категорія: '+fmt(M.category[i])+u]; }
           }
         },
-        legend:{position:'bottom', labels:{boxWidth:10, padding:12, font:{size:11}}}
+        legend:{position:'top', labels:{boxWidth:10, padding:12, font:{size:11}}}
       }
     }
   });
