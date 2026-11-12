@@ -411,17 +411,10 @@ td.center,th.center{text-align:center}
 </div>
 </div>
 
-<div class="two-thirds-one-third">
 <div class="chart-card">
 <h3>Динаміка по місяцях: Категорія vs Трускавецька</h3>
 <div class="desc">Помісячний обсяг категорії у пляшках за січень — вересень обох років. Стовпець розділено на власний бренд Трускавецької, приватні марки на воді Трускавецька та решту категорії; у підказці — частки та Трускавецька разом.</div>
 <div class="chart-wrap" style="height:400px"><canvas id="chartMonthly" role="img" aria-label="Помісячна динаміка категорії та Трускавецької">Графік помісячної динаміки</canvas></div>
-</div>
-<div class="chart-card">
-<h3>Зростання частки ринку</h3>
-<div class="desc">Трускавецька наростила частку з 11,90% до 12,31% (+0,42&nbsp;в.п.).</div>
-<div class="chart-wrap" style="height:260px"><canvas id="chartShare" role="img" aria-label="Зростання частки ринку Трускавецької">Графік частки</canvas></div>
-</div>
 </div>
 
 <div class="insight success">
@@ -974,52 +967,6 @@ function initOverview(){
         },
         legend:{position:'top', labels:{boxWidth:10, padding:12, font:{size:11}}}
       }
-    }
-  });
-
-  // Share comparison bar chart
-  const SH25 = data.summary.p2025.truskavetska_with_pl / data.summary.p2025.category * 100;
-  const SH26 = data.summary.p2026.truskavetska_with_pl / data.summary.p2026.category * 100;
-  new Chart(document.getElementById('chartShare'), {
-    type:'bar',
-    data:{
-      labels:['9 міс. 2025','9 міс. 2026'],
-      datasets:[
-        {label:'Трускавецька · 9 міс. 2025', data:[SH25, null], backgroundColor:COLORS.trusk, borderRadius:6, barThickness:40, stack:'s'},
-        {label:'Трускавецька · 9 міс. 2026', data:[null, SH26], backgroundColor:COLORS.truskNoPL, borderRadius:6, barThickness:40, stack:'s'},
-        {label:'Решта ринку · 9 міс. 2025', data:[100-SH25, null], backgroundColor:'rgba(140,165,195,0.35)', borderRadius:6, barThickness:40, stack:'s'},
-        {label:'Решта ринку · 9 міс. 2026', data:[null, 100-SH26], backgroundColor:'rgba(140,165,195,0.55)', borderRadius:6, barThickness:40, stack:'s'},
-      ]
-    },
-    options:{
-      responsive:true, maintainAspectRatio:false,
-      indexAxis:'y',
-      scales:{
-        x:{stacked:true, grid:{color:'rgba(30,80,140,0.08)'}, ticks:{callback:v=>v+'%'}, max:100},
-        y:{stacked:true, grid:{display:false}}
-      },
-      plugins:{
-        legend:{position:'bottom', labels:{boxWidth:10, padding:12, font:{size:11}}},
-        tooltip:{
-          filter:c=>c.raw!=null,
-          callbacks:{
-            title:items=>items[0].label,
-            label:c=>{
-              const y = c.dataIndex===0 ? data.summary.p2025 : data.summary.p2026;
-              const own = c.datasetIndex<2;
-              const vol = own ? y.truskavetska_with_pl : y.category - y.truskavetska_with_pl;
-              return (own?'Трускавецька':'Решта ринку')+': '+c.parsed.x.toFixed(2).replace('.',',')+'% · '+fmt(vol)+' пляшок';
-            },
-            afterBody:items=>{
-              const i=items[0].dataIndex, y = i===0 ? data.summary.p2025 : data.summary.p2026;
-              const out=['Ринок: '+fmt(y.category)+' пляшок'];
-              if(i===1){ const d=SH26-SH25; out.push('Зміна частки: '+(d>=0?'+':'−')+Math.abs(d).toFixed(2).replace('.',',')+' в.п.'); }
-              return out;
-            }
-          }
-        }
-      },
-      layout:{padding:{top:8, bottom:4}}
     }
   });
 
