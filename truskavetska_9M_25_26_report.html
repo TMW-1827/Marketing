@@ -435,7 +435,7 @@ td.center,th.center{text-align:center}
 
 <div class="chart-card">
 <h3>Структура зростання: власний бренд vs приватні марки</h3>
-<div class="desc">Звідки приріст +3,48&nbsp;млн пляшок: 57% — власний бренд Трускавецька, 43% — приватні марки (Своя Лінія в АТБ, Сірко в Рукавичка). Вісь обсягу починається не з нуля, щоб приріст було видно.</div>
+<div class="desc">Звідки приріст +3,48&nbsp;млн пляшок: 57% — власний бренд Трускавецька, 43% — приватні марки (Своя Лінія в АТБ, Сірко в Рукавичка).</div>
 <div class="chart-wrap" style="height:320px"><canvas id="chartWaterfall" role="img" aria-label="Структура зростання">Декомпозиція приросту</canvas></div>
 </div>
 
@@ -1022,9 +1022,9 @@ function initOverview(){
     data:{
       labels:['9 міс. 2025','9 міс. 2026'],
       datasets:[
-        {label:'Обсяг 9 міс. 2025', short:'9 міс. 2025', data:[T25, T25], backgroundColor:'rgba(140,165,195,0.55)', stack:'w', maxBarThickness:120},
-        {label:'Приріст: власний бренд', short:'Власний бренд', data:[null, noPLGrowth], backgroundColor:COLORS.truskNoPL, stack:'w', maxBarThickness:120},
-        {label:'Приріст: приватні марки (Своя Лінія + Сірко)', short:'Приватні марки', data:[null, plGrowth], backgroundColor:COLORS.trusk, stack:'w', maxBarThickness:120},
+        {label:'Обсяг 9 міс. 2025', short:'9 міс. 2025', data:[T25, T25], backgroundColor:'rgba(140,165,195,0.55)', stack:'w', barPercentage:0.92, categoryPercentage:0.88},
+        {label:'Приріст: власний бренд', short:'Власний бренд', data:[null, noPLGrowth], backgroundColor:COLORS.truskNoPL, stack:'w', barPercentage:0.92, categoryPercentage:0.88},
+        {label:'Приріст: приватні марки (Своя Лінія + Сірко)', short:'Приватні марки', data:[null, plGrowth], backgroundColor:COLORS.trusk, stack:'w', barPercentage:0.92, categoryPercentage:0.88},
       ]
     },
     options:{
