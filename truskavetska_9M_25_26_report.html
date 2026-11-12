@@ -435,8 +435,8 @@ td.center,th.center{text-align:center}
 
 <div class="chart-card">
 <h3>Структура зростання: власний бренд vs приватні марки</h3>
-<div class="desc">Звідки приріст +3,48&nbsp;млн пляшок: 57% — власний бренд Трускавецька, 43% — приватні марки (Своя Лінія в АТБ, Сірко в Рукавичка).</div>
-<div class="chart-wrap short"><canvas id="chartWaterfall" role="img" aria-label="Структура зростання">Декомпозиція приросту</canvas></div>
+<div class="desc">Звідки приріст +3,48&nbsp;млн пляшок: 57% — власний бренд Трускавецька, 43% — приватні марки (Своя Лінія в АТБ, Сірко в Рукавичка). Вісь обсягу починається не з нуля, щоб приріст було видно.</div>
+<div class="chart-wrap" style="height:320px"><canvas id="chartWaterfall" role="img" aria-label="Структура зростання">Декомпозиція приросту</canvas></div>
 </div>
 
 </section>
@@ -995,25 +995,56 @@ function initOverview(){
   const noPLGrowth = data.summary.p2026.truskavetska_no_pl - data.summary.p2025.truskavetska_no_pl;
   const plGrowth = totalGrowthPL - noPLGrowth;
 
+  const T25 = data.summary.p2025.truskavetska_with_pl, T26 = data.summary.p2026.truskavetska_with_pl;
+  const yMin = Math.floor(T25*0.8/2e6)*2e6;
+  const mln = v => (v/1e6).toFixed(2).replace('.',',')+'\u00a0млн';
+  const segLabels = {
+    id:'segLabels',
+    afterDatasetsDraw(chart){
+      const {ctx} = chart; ctx.save(); ctx.textBaseline='middle';
+      // підписи всередині сегментів приросту
+      [[1,noPLGrowth],[2,plGrowth]].forEach(([di,v])=>{
+        const el = chart.getDatasetMeta(di).data[1]; if(!el) return;
+        const h = Math.abs(el.base-el.y);
+        ctx.font='700 12px Manrope'; ctx.fillStyle='#fff'; ctx.textAlign='center';
+        if(h>=16) ctx.fillText('+'+mln(v), el.x, (el.y+el.base)/2);
+      });
+      // підсумки над стовпцями
+      ctx.font='700 13px Manrope'; ctx.fillStyle='#0f2440'; ctx.textAlign='center';
+      const e0=chart.getDatasetMeta(0).data[0], e2=chart.getDatasetMeta(2).data[1];
+      ctx.fillText(mln(T25), e0.x, e0.y-12);
+      ctx.fillText(mln(T26)+' ('+fmtPct((T26/T25-1)*100)+')', e2.x, e2.y-12);
+      ctx.restore();
+    }
+  };
   new Chart(document.getElementById('chartWaterfall'), {
-    type:'bar',
+    type:'bar', plugins:[segLabels],
     data:{
-      labels:['9 міс. 2025\nТрускавецька','+ Власний бренд','+ Приватні марки\n(Своя Лінія + Сірко)','9 міс. 2026\nТрускавецька'],
-      datasets:[{
-        data:[data.summary.p2025.truskavetska_with_pl, noPLGrowth, plGrowth, data.summary.p2026.truskavetska_with_pl],
-        backgroundColor:[COLORS.trusk, COLORS.truskNoPL, COLORS.karp, COLORS.trusk],
-        borderRadius: 6,
-      }]
+      labels:['9 міс. 2025','9 міс. 2026'],
+      datasets:[
+        {label:'Обсяг 9 міс. 2025', short:'9 міс. 2025', data:[T25, T25], backgroundColor:'rgba(140,165,195,0.55)', stack:'w', maxBarThickness:120},
+        {label:'Приріст: власний бренд', short:'Власний бренд', data:[null, noPLGrowth], backgroundColor:COLORS.truskNoPL, stack:'w', maxBarThickness:120},
+        {label:'Приріст: приватні марки (Своя Лінія + Сірко)', short:'Приватні марки', data:[null, plGrowth], backgroundColor:COLORS.trusk, stack:'w', maxBarThickness:120},
+      ]
     },
     options:{
-      responsive:true, maintainAspectRatio:false, indexAxis:'x',
+      responsive:true, maintainAspectRatio:false, layout:{padding:{top:24}},
       scales:{
-        y:{grid:{color:'rgba(30,80,140,0.08)'},ticks:{callback:v=>fmtM(v)}},
-        x:{grid:{display:false},ticks:{font:{size:11}}}
+        y:{stacked:true, min:yMin, grid:{color:'rgba(30,80,140,0.08)'}, ticks:{callback:v=>fmtM(v)}},
+        x:{stacked:true, grid:{display:false}, ticks:{font:{size:12, weight:'600'}}}
       },
       plugins:{
-        legend:{display:false},
-        tooltip:{callbacks:{label:c=>fmt(c.parsed.y)+' пляшок'}}
+        legend:{position:'bottom', labels:{boxWidth:10, padding:12, font:{size:11}}},
+        tooltip:{
+          filter:c=>c.raw!=null,
+          itemSort:(a,b)=>b.parsed.y-a.parsed.y,
+          callbacks:{
+            label:c=>{ const v=c.raw, n=c.chart.width<500;
+              const extra = c.datasetIndex ? ' ('+(v/(T26-T25)*100).toFixed(0)+'%'+(n?'':' приросту')+')' : '';
+              return (n?c.dataset.short:c.dataset.label)+': '+(c.datasetIndex?'+':'')+fmt(v)+(n?'':' пляшок')+extra; },
+            footer:items=>items[0].dataIndex===1 ? ['Разом 9 міс. 2026: '+fmt(T26)+' пляшок', 'Приріст: +'+fmt(T26-T25)+' ('+fmtPct((T26/T25-1)*100)+')'] : []
+          }
+        }
       }
     }
   });
