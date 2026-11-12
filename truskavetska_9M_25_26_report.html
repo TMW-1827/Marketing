@@ -419,7 +419,7 @@ td.center,th.center{text-align:center}
 
 <div class="chart-card">
 <h3>Структура зростання: Бренд vs АТБ</h3>
-<div class="desc">Звідки приріст +3,48&nbsp;млн пляшок: 57% — Бренд, 43% — АТБ.</div>
+<div class="desc">Продажі Трускавецької за 9&nbsp;міс. 2025 і 9&nbsp;міс. 2026 у розрізі Бренд і АТБ із часткою ринку. Приріст +3,48&nbsp;млн пляшок: 57% — Бренд, 43% — АТБ.</div>
 <div class="chart-wrap" style="height:320px"><canvas id="chartWaterfall" role="img" aria-label="Структура зростання">Декомпозиція приросту</canvas></div>
 </div>
 
@@ -977,25 +977,31 @@ function initOverview(){
   const noPLGrowth = data.summary.p2026.truskavetska_no_pl - data.summary.p2025.truskavetska_no_pl;
   const plGrowth = totalGrowthPL - noPLGrowth;
 
-  const T25 = data.summary.p2025.truskavetska_with_pl, T26 = data.summary.p2026.truskavetska_with_pl;
-  const yMin = Math.floor(T25*0.8/2e6)*2e6;
+  const S25 = data.summary.p2025, S26 = data.summary.p2026;
+  const SEG = [
+    {label:'Бренд', c:COLORS.truskNoPL, v:[S25.truskavetska_no_pl, S26.truskavetska_no_pl]},
+    {label:'АТБ', c:COLORS.trusk, v:[S25.truskavetska_with_pl-S25.truskavetska_no_pl, S26.truskavetska_with_pl-S26.truskavetska_no_pl]},
+  ];
+  const CAT = [S25.category, S26.category], TOT=[S25.truskavetska_with_pl, S26.truskavetska_with_pl];
   const mln = v => (v/1e6).toFixed(2).replace('.',',')+'\u00a0млн';
+  const shr = (v,i) => (v/CAT[i]*100).toFixed(2).replace('.',',')+'%';
+  const dpp = (a,b) => { const d=b-a; return (d>=0?'+':'−')+Math.abs(d).toFixed(2).replace('.',',')+'\u00a0в.п.'; };
   const segLabels = {
     id:'segLabels',
     afterDatasetsDraw(chart){
-      const {ctx} = chart; ctx.save(); ctx.textBaseline='middle';
-      // підписи всередині сегментів приросту
-      [[1,noPLGrowth],[2,plGrowth]].forEach(([di,v])=>{
-        const el = chart.getDatasetMeta(di).data[1]; if(!el) return;
-        const h = Math.abs(el.base-el.y);
-        ctx.font='700 12px Manrope'; ctx.fillStyle='#fff'; ctx.textAlign='center';
-        if(h>=16) ctx.fillText('+'+mln(v), el.x, (el.y+el.base)/2);
-      });
-      // підсумки над стовпцями
-      ctx.font='700 13px Manrope'; ctx.fillStyle='#0f2440'; ctx.textAlign='center';
-      const e0=chart.getDatasetMeta(0).data[0], e2=chart.getDatasetMeta(2).data[1];
-      ctx.fillText(mln(T25), e0.x, e0.y-12);
-      ctx.fillText(mln(T26)+' ('+fmtPct((T26/T25-1)*100)+')', e2.x, e2.y-12);
+      const {ctx} = chart; ctx.save(); ctx.textAlign='center'; ctx.textBaseline='middle';
+      SEG.forEach((g,di)=>chart.getDatasetMeta(di).data.forEach((el,i)=>{
+        const h=Math.abs(el.base-el.y), cy=(el.y+el.base)/2;
+        ctx.fillStyle='#fff';
+        if(h>=34){ ctx.font='700 13px Manrope'; ctx.fillText(g.label+' · '+mln(g.v[i]), el.x, cy-9);
+          ctx.font='500 12px Manrope'; ctx.fillText(shr(g.v[i],i)+' ринку', el.x, cy+9); }
+        else if(h>=16){ ctx.font='700 12px Manrope'; ctx.fillText(g.label+' · '+mln(g.v[i]), el.x, cy); }
+      }));
+      const nr=chart.width<500;
+      ctx.font='700 '+(nr?11:13)+'px Manrope'; ctx.fillStyle='#0f2440';
+      const top=chart.getDatasetMeta(1).data;
+      ctx.fillText(mln(TOT[0])+' · '+shr(TOT[0],0), top[0].x, top[0].y-12);
+      ctx.fillText(mln(TOT[1])+' · '+shr(TOT[1],1)+(nr?'':' ('+fmtPct((TOT[1]/TOT[0]-1)*100)+')'), top[1].x, top[1].y-12);
       ctx.restore();
     }
   };
@@ -1003,28 +1009,35 @@ function initOverview(){
     type:'bar', plugins:[segLabels],
     data:{
       labels:['9 міс. 2025','9 міс. 2026'],
-      datasets:[
-        {label:'Обсяг 9 міс. 2025', short:'9 міс. 2025', data:[T25, T25], backgroundColor:'rgba(140,165,195,0.55)', stack:'w', barPercentage:0.92, categoryPercentage:0.88},
-        {label:'Приріст: Бренд', short:'Бренд', data:[null, noPLGrowth], backgroundColor:COLORS.truskNoPL, stack:'w', barPercentage:0.92, categoryPercentage:0.88},
-        {label:'Приріст: АТБ', short:'АТБ', data:[null, plGrowth], backgroundColor:COLORS.trusk, stack:'w', barPercentage:0.92, categoryPercentage:0.88},
-      ]
+      datasets:SEG.map(g=>({label:g.label, data:g.v, backgroundColor:g.c, stack:'w', barPercentage:0.92, categoryPercentage:0.88}))
     },
     options:{
-      responsive:true, maintainAspectRatio:false, layout:{padding:{top:24}},
+      responsive:true, maintainAspectRatio:false, layout:{padding:{top:26}},
       scales:{
-        y:{stacked:true, min:yMin, grid:{color:'rgba(30,80,140,0.08)'}, ticks:{callback:v=>fmtM(v)}},
+        y:{stacked:true, beginAtZero:true, grid:{color:'rgba(30,80,140,0.08)'}, ticks:{callback:v=>v===0?'0':fmtM(v)}},
         x:{stacked:true, grid:{display:false}, ticks:{font:{size:12, weight:'600'}}}
       },
       plugins:{
         legend:{position:'bottom', labels:{boxWidth:10, padding:12, font:{size:11}}},
         tooltip:{
-          filter:c=>c.raw!=null,
           itemSort:(a,b)=>b.parsed.y-a.parsed.y,
           callbacks:{
-            label:c=>{ const v=c.raw, n=c.chart.width<500;
-              const extra = c.datasetIndex ? ' ('+(v/(T26-T25)*100).toFixed(0)+'%'+(n?'':' приросту')+')' : '';
-              return (n?c.dataset.short:c.dataset.label)+': '+(c.datasetIndex?'+':'')+fmt(v)+(n?'':' пляшок')+extra; },
-            footer:items=>items[0].dataIndex===1 ? ['Разом 9 міс. 2026: '+fmt(T26)+' пляшок', 'Приріст: +'+fmt(T26-T25)+' ('+fmtPct((T26/T25-1)*100)+')'] : []
+            label:c=>{ const i=c.dataIndex, g=SEG[c.datasetIndex], n=c.chart.width<500;
+              let t=g.label+': '+fmt(g.v[i])+(n?'':' пляшок')+' · '+shr(g.v[i],i)+(n?'':' ринку');
+              if(i===1){ const ch=fmtPct((g.v[1]/g.v[0]-1)*100)+', '+dpp(g.v[0]/CAT[0]*100,g.v[1]/CAT[1]*100);
+                return n ? [t, '   '+ch] : t+' ('+ch+')'; }
+              return t; },
+            footer:items=>{ const i=items[0].dataIndex, n=items[0].chart.width<500;
+              let t='Трускавецька разом: '+fmt(TOT[i])+(n?'':' пляшок')+' · '+shr(TOT[i],i);
+              if(n) t=t.replace('Трускавецька разом','Разом');
+              const out=[t];
+              if(i===1){ const ch=fmtPct((TOT[1]/TOT[0]-1)*100)+', '+dpp(TOT[0]/CAT[0]*100,TOT[1]/CAT[1]*100);
+                if(n) out.push('   '+ch); else out[0]+=' ('+ch+')'; }
+              out.push( 'Структура: Бренд '+(SEG[0].v[i]/TOT[i]*100).toFixed(1).replace('.',',')+'% / АТБ '+(SEG[1].v[i]/TOT[i]*100).toFixed(1).replace('.',',')+'%');
+              if(i===1){ const p0=Math.round((SEG[0].v[1]-SEG[0].v[0])/(TOT[1]-TOT[0])*100), p1=100-p0;
+                out.push(n ? 'Приріст: Бренд '+p0+'%, АТБ '+p1+'%'
+                  : 'Приріст: Бренд +'+fmt(SEG[0].v[1]-SEG[0].v[0])+' ('+p0+'%), АТБ +'+fmt(SEG[1].v[1]-SEG[1].v[0])+' ('+p1+'%)'); }
+              return out; }
           }
         }
       }
