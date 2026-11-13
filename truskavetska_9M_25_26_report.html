@@ -319,6 +319,8 @@ td.center,th.center{text-align:center}
 .pf-row{display:flex;align-items:flex-start;gap:12px}
 .pf-label{flex:0 0 112px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-dim);font-weight:600;padding-top:9px}
 .pf-row .net-tabs-wrap{margin:0;flex:1}
+.pf-multi{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--text-muted);cursor:pointer;user-select:none;margin-top:2px}
+.pf-multi input{width:16px;height:16px;accent-color:var(--accent);cursor:pointer}
 .pf-count{font-size:12px;color:var(--text-dim);margin:4px 0 10px}
 #priceTable th.sortable{cursor:pointer;user-select:none;white-space:nowrap}
 #priceTable th.sortable:hover{color:var(--accent)}
@@ -491,11 +493,12 @@ td.center,th.center{text-align:center}
 
 <div class="chart-card">
 <h3>Ціни по SKU</h3>
-<div class="desc">Позиції згруповано за брендом, лінійкою (Спорт, №7, Vital тощо), об'ємом і матеріалом пляшки, усі види газації разом. Набори перераховано в окремі пляшки й додано до відповідних позицій. Показано позиції з продажами від 1 000&nbsp;пляшок за 9&nbsp;міс. 2026; об'єми 0,3&nbsp;л і 0,33&nbsp;л об'єднано в 0,3&nbsp;л. У фільтрах можна обрати кілька значень одночасно. Таблицю можна сортувати натисканням на назву стовпця.</div>
+<div class="desc">Позиції згруповано за брендом, лінійкою (Спорт, №7, Vital тощо), об'ємом і матеріалом пляшки, усі види газації разом. Набори перераховано в окремі пляшки й додано до відповідних позицій. Показано позиції з продажами від 1 000&nbsp;пляшок за 9&nbsp;міс. 2026; об'єми 0,3&nbsp;л і 0,33&nbsp;л об'єднано в 0,3&nbsp;л. Щоб обрати кілька значень у фільтрі одночасно, увімкніть «Вибір кількох значень». Таблицю можна сортувати натисканням на назву стовпця.</div>
 <div class="price-filters">
 <div class="pf-row"><span class="pf-label">Бренд</span><div class="net-tabs-wrap" id="priceBrandTabs"></div></div>
 <div class="pf-row"><span class="pf-label">Об'єм пляшки</span><div class="net-tabs-wrap" id="priceVolTabs"></div></div>
 <div class="pf-row"><span class="pf-label">Пакування</span><div class="net-tabs-wrap" id="priceMatTabs"></div></div>
+<label class="pf-multi"><input type="checkbox" id="priceMulti"> Вибір кількох значень у фільтрах</label>
 </div>
 <div class="pf-count" id="priceCount"></div>
 <div class="table-wrap price-table-wrap">
@@ -1381,9 +1384,10 @@ function initPrices(){
   const rowsAll = P.skus.filter(s=>s.b!=='Сірко').map(s=>({...s,
     dv: s.v25 ? (s.v26/s.v25-1)*100 : null,
     dp: (s.p25 && s.p26) ? (s.p26/s.p25-1)*100 : null}));
-  const st = {b:new Set(), v:new Set(), m:new Set(), k:'v26', dir:-1};
+  const st = {b:new Set(), v:new Set(), m:new Set(), multi:false, k:'v26', dir:-1};
   const vols = [...new Set(rowsAll.map(s=>s.bv))].sort((a,b)=>num(a)-num(b));
   const brandKeys = byTot.map(b=>b.key).filter(k=>rowsAll.some(s=>s.b===k));
+  const syncs=[];
   function tabRow(elId, field, items){
     const wrap=document.getElementById(elId);
     // множинний вибір: «Усі» скидає фільтр, інші кнопки вмикаються/вимикаються незалежно
@@ -1394,17 +1398,22 @@ function initPrices(){
       btn.className='net-tab'; btn.textContent=label; btn.dataset.val=val;
       btn.addEventListener('click',()=>{
         if(val==='all') st[field].clear();
+        else if(!st.multi){ const only=st[field].size===1 && st[field].has(val); st[field].clear(); if(!only) st[field].add(val); }
         else if(st[field].has(val)) st[field].delete(val); else st[field].add(val);
         if(val!=='all' && st[field].size===items.length-1) st[field].clear();
         sync(); render();
       });
       wrap.appendChild(btn);
     });
-    sync();
+    sync(); syncs.push(sync);
   }
   tabRow('priceBrandTabs','b',[['all','Усі бренди'],...brandKeys.map(k=>[k, META[k].full || META[k].l])]);
   tabRow('priceVolTabs','v',[['all',"Усі об'єми"],...vols.map(v=>[v, v+'\u00a0л'])]);
   tabRow('priceMatTabs','m',[['all','Усі'],['pet','PET'],['glass','Скло']]);
+  document.getElementById('priceMulti').addEventListener('change',e=>{
+    st.multi=e.target.checked;
+    if(!st.multi){ ['b','v','m'].forEach(f=>{ if(st[f].size>1) st[f].clear(); }); syncs.forEach(f=>f()); render(); }
+  });
   const ths=[...document.querySelectorAll('#priceTable thead th')];
   ths.forEach(th=>{
     th.classList.add('sortable');
