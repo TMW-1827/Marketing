@@ -1556,9 +1556,22 @@ function initNetworks(){
   // Плагін: позначка для нової мережі
   const newNetworkPlugin = {
     id: 'newNetworkBadge',
+    beforeEvent(chart, args) {
+      const e = args.event;
+      if(e.type !== 'mousemove') return;
+      const hit = (chart.$newBadges||[]).find(b => e.x>=b.x && e.x<=b.x+b.w && e.y>=b.y && e.y<=b.y+b.h);
+      if(hit){
+        const el=[{datasetIndex:0, index:hit.i}];
+        chart.setActiveElements(el); chart.tooltip.setActiveElements(el,{x:e.x,y:e.y});
+        chart.canvas.style.cursor='pointer'; chart.$newHover=true; chart.render();
+        return false;
+      }
+      if(chart.$newHover){ chart.$newHover=false; chart.canvas.style.cursor=''; }
+    },
     afterDatasetsDraw(chart) {
       const {ctx, scales:{y}} = chart;
       const ds = chart.data.datasets[0];
+      chart.$newBadges = [];
       if(!ds || !ds._isNew) return;
       const meta = chart.getDatasetMeta(0);
       ds._isNew.forEach((isNew, i) => {
@@ -1573,6 +1586,7 @@ function initNetworks(){
         const tw = ctx.measureText(text).width;
         const pad = 8, h = 24;
         const bx = cx - (tw+pad*2)/2, by = zeroY - h - 8;
+        chart.$newBadges.push({i, x:bx, y:by, w:tw+pad*2, h:h+10});
         ctx.fillStyle = 'rgba(11,95,204,0.12)';
         ctx.strokeStyle = '#0b5fcc';
         ctx.lineWidth = 1.5;
@@ -1657,7 +1671,7 @@ function initNetworks(){
           },
           afterLabel: c => {
             const it = c.dataset._items[c.dataIndex], u = c.chart.width<500 ? '' : ' пляшок';
-            return ['9 міс. 2025: '+(it.q25?fmt(it.q25)+u:'—'), '9 міс. 2026: '+fmt(it.q26)+u];
+            return it.q25 ? ['9 міс. 2025: '+fmt(it.q25)+u, '9 міс. 2026: '+fmt(it.q26)+u] : ['Обсяг 9 міс. 2026: '+fmt(it.q26)+u];
           },
         }}
       }
