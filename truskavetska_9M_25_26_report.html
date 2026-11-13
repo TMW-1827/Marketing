@@ -468,7 +468,7 @@ td.center,th.center{text-align:center}
 <div class="subsection">
 <div class="pre">Ціни</div>
 <h3>Середні ціни реалізації по SKU: 9&nbsp;міс. 2025 vs 9&nbsp;міс. 2026</h3>
-<p>Середня ціна реалізації, грн з ПДВ за пляшку, з урахуванням акційних продажів; набори перераховано в окремі пляшки. Трускавецька — Бренд; Своя Лінія і Сірко — продукція на воді Трускавецька для АТБ і Рукавички. Ціни подорожчали в усіх брендів, найбільше — у Трускавецької: 1,5&nbsp;л PET +27,0% (18,82 → 23,91&nbsp;грн). У III кварталі 2026 ціна 1,5&nbsp;л Трускавецької (28,55&nbsp;грн) наблизилася до Моршинської (30,77&nbsp;грн).</p>
+<p>Середня ціна реалізації, грн з ПДВ за пляшку, з урахуванням акційних продажів; набори перераховано в окремі пляшки. Трускавецька — Бренд; Своя Лінія — продукція на воді Трускавецька для АТБ. Ціни подорожчали в усіх брендів, найбільше — у Трускавецької: 1,5&nbsp;л PET +27,0% (18,82 → 23,91&nbsp;грн). У III кварталі 2026 ціна 1,5&nbsp;л Трускавецької (28,55&nbsp;грн) наблизилася до Моршинської (30,77&nbsp;грн).</p>
 </div>
 
 <div class="chart-card">
@@ -1349,7 +1349,7 @@ function initPrices(){
   });
 
   // 3) Ціни за форматами 2026
-  const byTot = [...P.brands].sort((a,b)=>b.tot26-a.tot26);
+  const byTot = [...P.brands].filter(b=>b.key!=='Сірко').sort((a,b)=>b.tot26-a.tot26);
   new Chart(document.getElementById('chartPriceLadder'), {
     type:'bar',
     data:{
@@ -1377,7 +1377,7 @@ function initPrices(){
   // 4) Таблиця SKU: фільтри (бренд, об'єм) і сортування за будь-яким стовпцем
   const tbody = document.getElementById('priceTableBody');
   const num = v => parseFloat(String(v).replace(',','.'));
-  const rowsAll = P.skus.map(s=>({...s,
+  const rowsAll = P.skus.filter(s=>s.b!=='Сірко').map(s=>({...s,
     dv: s.v25 ? (s.v26/s.v25-1)*100 : null,
     dp: s.p25 ? (s.p26/s.p25-1)*100 : null}));
   const st = {b:'all', v:'all', k:'v26', dir:-1};
