@@ -437,11 +437,7 @@ td.center,th.center{text-align:center}
 
 <div class="chart-card">
 <h3>Динаміка обсягів брендів 9&nbsp;міс. 2025 → 9&nbsp;міс. 2026</h3>
-<div class="desc">Стовпчики попарно: 2025 vs 2026. Логарифмічний масштаб для співмірного відображення лідера (Моршинської) та інших брендів.</div>
-<div class="toggle-group" id="competitorsScale">
-<button class="active" data-scale="linear">Лінійна шкала</button>
-<button data-scale="logarithmic">Логарифмічна</button>
-</div>
+<div class="desc">Стовпчики попарно: 2025 vs 2026, бренди впорядковані за обсягом продажів.</div>
 <div class="chart-wrap tall"><canvas id="chartBrands" role="img" aria-label="Динаміка обсягів брендів">Бренди порівняння</canvas></div>
 </div>
 
@@ -1081,13 +1077,6 @@ function initCompetitors(){
   }
   makeBrandsChart('linear');
 
-  document.querySelectorAll('#competitorsScale button').forEach(b => {
-    b.addEventListener('click', () => {
-      document.querySelectorAll('#competitorsScale button').forEach(x => x.classList.remove('active'));
-      b.classList.add('active');
-      makeBrandsChart(b.dataset.scale);
-    });
-  });
 
   // Growth chart
   const sortedByGrowth = [...competitors]; // порядок — за обсягом продажів
