@@ -994,8 +994,14 @@ function initOverview(){
       const nr=chart.width<500;
       ctx.font='700 '+(nr?11:13)+'px Manrope'; ctx.fillStyle='#0f2440';
       const top=chart.getDatasetMeta(1).data;
-      ctx.fillText(mln(TOT[0])+' · '+shr(TOT[0],0), top[0].x, top[0].y-12);
-      ctx.fillText(mln(TOT[1])+' · '+shr(TOT[1],1)+(nr?'':' ('+fmtPct((TOT[1]/TOT[0]-1)*100)+')'), top[1].x, top[1].y-12);
+      const v1=mln(TOT[1])+' ('+fmtPct((TOT[1]/TOT[0]-1)*100)+')', s1=shr(TOT[1],1)+' ('+dpp(TOT[0]/CAT[0]*100,TOT[1]/CAT[1]*100)+')';
+      if(nr){
+        ctx.fillText(mln(TOT[0]), top[0].x, top[0].y-26); ctx.fillText(shr(TOT[0],0), top[0].x, top[0].y-11);
+        ctx.fillText(v1, top[1].x, top[1].y-26); ctx.fillText(s1, top[1].x, top[1].y-11);
+      } else {
+        ctx.fillText(mln(TOT[0])+' · '+shr(TOT[0],0), top[0].x, top[0].y-12);
+        ctx.fillText(v1+' · '+s1, top[1].x, top[1].y-12);
+      }
       ctx.restore();
     }
   };
@@ -1006,7 +1012,7 @@ function initOverview(){
       datasets:SEG.map(g=>({label:g.label, data:g.v, backgroundColor:g.c, stack:'w', barPercentage:0.92, categoryPercentage:0.88}))
     },
     options:{
-      responsive:true, maintainAspectRatio:false, layout:{padding:{top:26}},
+      responsive:true, maintainAspectRatio:false, layout:{padding:c=>({top:c.chart.width<500?40:26})},
       scales:{
         y:{stacked:true, beginAtZero:true, grid:{color:'rgba(30,80,140,0.08)'}, ticks:{callback:v=>v===0?'0':fmtM(v)}},
         x:{stacked:true, grid:{display:false}, ticks:{font:{size:12, weight:'600'}}}
