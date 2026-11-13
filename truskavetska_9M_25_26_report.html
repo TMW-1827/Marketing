@@ -570,7 +570,7 @@ td.center,th.center{text-align:center}
 
 <div class="chart-card">
 <h3>Темп зростання по мережах: Трускавецька vs кожен конкурент</h3>
-<div class="desc">Оберіть мережу, щоб побачити темп зростання кожного бренду окремо. «Решта категорії» — всі інші бренди разом. Показано всі 20 мереж, де бренд присутній у 9&nbsp;міс. 2026.</div>
+<div class="desc">Оберіть мережу, щоб побачити темп зростання кожного бренду окремо. Бренди впорядковані за обсягом продажів у мережі за 9&nbsp;міс. 2026; «Решта категорії» — уся категорія мережі без Трускавецької. Показано всі 20 мереж, де бренд присутній у 9&nbsp;міс. 2026.</div>
 <div class="net-tabs-wrap" id="networkTabsWrap"></div>
 <div style="position:relative;width:100%;height:320px;margin-top:16px">
   <canvas id="chartNetworkGrowth" role="img" aria-label="Темп зростання у мережах"></canvas>
@@ -1544,8 +1544,12 @@ function initNetworks(){
       }
       return {brand, growth};
     }).filter(d => d.growth !== null && d.growth !== undefined)
-      .map(d => ({...d, vol: d.brand==='Трускавецька' ? (netEnriched?netEnriched.t26:0)
-                         : d.brand==='Решта категорії' ? -1 : ((bbn[d.brand]||{}).q26||0)}))
+      .map(d => {
+        const q = d.brand==='Трускавецька' ? [netEnriched.t25, netEnriched.t26]
+          : d.brand==='Решта категорії' ? [netEnriched.cat25-netEnriched.t25, netEnriched.cat26-netEnriched.t26]
+          : [(bbn[d.brand]||{}).q25||0, (bbn[d.brand]||{}).q26||0];
+        return {...d, q25:q[0], q26:q[1], vol: d.brand==='Решта категорії' ? -1 : q[1]};
+      })
       .sort((a,b) => b.vol - a.vol);
   }
 
@@ -1649,7 +1653,11 @@ function initNetworks(){
             const ds = c.dataset;
             if(ds._isNew && ds._isNew[c.dataIndex]) return 'Нова мережа — перші продажі у 2026';
             const realVal = ds._realData ? ds._realData[c.dataIndex] : c.parsed.y;
-            return fmtPct(realVal);
+            return 'Зміна: '+fmtPct(realVal);
+          },
+          afterLabel: c => {
+            const it = c.dataset._items[c.dataIndex], u = c.chart.width<500 ? '' : ' пляшок';
+            return ['9 міс. 2025: '+(it.q25?fmt(it.q25)+u:'—'), '9 міс. 2026: '+fmt(it.q26)+u];
           },
         }}
       }
@@ -1678,6 +1686,7 @@ function initNetworks(){
       _realData: realValues,
       _hasCapped: hasCapped,
       _isNew: items.map(d => !!d.isNew),
+      _items: items,
       backgroundColor: items.map(d=> d.brand==='Трускавецька'
         ? COLORS.trusk
         : d.growth >= 0 ? 'rgba(140,165,195,0.55)' : "rgba(192,35,26,0.40)"),
